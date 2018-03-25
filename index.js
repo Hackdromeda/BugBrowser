@@ -34,6 +34,8 @@ var getMoreInfoRepromtMessage = "what vulnerability would you like to hear more 
 
 var hearMoreMessage = "Would you like to hear about another top program in BugCrowd?";
 
+var noProgramErrorMessage = "There is no program with this number.";
+
 var getMoreInfoMessage = "OK, " + getMoreInfoRepromtMessage;
 
 var goodbyeMessage = "OK, BugBrowser shutting down.";
@@ -46,27 +48,65 @@ var output = "";
 
 var alexa;
 
-var bugbountytitles = [];
-var bugbountyrewards = [];
-
-const options = {
-  uri: `https://bugcrowd.com/programs/reward`,
-  transform: function (body) {
-    return cheerio.load(body);
+function getPrograms() {
+    return rp({
+      uri: `https://bugcrowd.com/programs/reward`,
+      transform: function (body) {
+        return cheerio.load(body);
+      }
+    }).then(($) => {
+      programs = [];
+      $('.bc-panel__title').each(function(i, elem) {
+        programs.push($(this).text().trim());
+      });
+      return programs;
+    })
   }
-};
 
-rp(options)
-  .then(($) => {
-    $('.bc-panel__title').each(function(i, elem) {
-      bugbountytitles.push($(this).text());
-    });
-    $('.bc-stat__title').each(function(i, elem) {
-      bugbountyrewards.push($(this).text());
-    });
-  })
-  .catch((err) => {
-    console.log(err);
+  function getRewards() {
+    return rp({
+      uri: `https://bugcrowd.com/programs/reward`,
+      transform: function (body) {
+        return cheerio.load(body);
+      }
+    }).then(($) => {
+      rewards = [];
+      $('.bc-stat__title').each(function(i, elem) {
+        rewards.push($(this).text().trim());
+      });
+
+      return rewards;
+    })
+  }
+
+  function getVrt(output) {
+    return rp({
+      uri: `https://raw.githubusercontent.com/bugcrowd/vulnerability-rating-taxonomy/master/vulnerability-rating-taxonomy.json`,
+      transform: function (body) {
+        return JSON.parse(body);
+      }
+    }).then(($) => {
+      console.log($);
+      return output;
+    })
+  }
+
+function main() {
+  return Promise.resolve(getPrograms()).then(Promise.resolve(getRewards()));
+}
+
+main().then(function(result) {
+  console.log(result);
+});
+
+var promisedPrograms = Promise.resolve(getPrograms());
+var programs = promisedPrograms.then(function(value) {
+  return(value);
+});
+
+var promisedRewards = Promise.resolve(getRewards());
+var rewards = promisedRewards.then(function(value) {
+  return(value);
 });
 
 var contents = fs.readFileSync("bugcrowddata.json");
@@ -88,7 +128,9 @@ var newSessionHandlers = {
     },
     'getProgramsIntent': function () {
         this.handler.state = states.SEARCHMODE;
-        this.emitWithState('getProgramsIntent');
+        setTimeout(() => {
+            this.emitWithState('getProgramsIntent')
+        }, 2000);
     },
     'AMAZON.StopIntent': function () {
         this.emit(':tell', goodbyeMessage);
@@ -116,8 +158,8 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
         var cardTitle = "Top BugCrowd Programs";
         var output = "";
 
-        for (var counter = 0; counter < bugbountytitles.length; counter++) {
-            output += "BugCrowd Program Number " + (counter + 1) + ": " + bugbountytitles[counter] + newline + newline;
+        for (var counter = 0; counter < programs.length; counter++) {
+            output += "BugCrowd Program Number " + (counter + 1) + ": " + programs[counter] + newline + newline;
         }
         output += moreInfoProgram;
         this.handler.state = states.TOPFIVE;
@@ -204,22 +246,24 @@ var topFiveHandlers = Alexa.CreateStateHandler(states.TOPFIVE, {
     },
     'getProgramsIntent': function () {
         this.handler.state = states.SEARCHMODE;
-        this.emitWithState('getProgramsIntent');
+        setTimeout(() => {
+            this.emitWithState('getProgramsIntent')
+        }, 2000);
     },
     'getMoreInfoIntent': function () {
         var slotValue = this.event.request.intent.slots.program.value;
         var index = parseInt(slotValue) - 1;
 
-        var selectedProgram = bugbountyrewards[index];
+        var selectedProgram = rewards[index];
         if (selectedProgram) {
 
-            output = bugbountytitles[index] + " is offering a bounty of " + bugbountyrewards[index] + "." + hearMoreMessage;
-            var cardTitle = bugbountytitles[index];
-            var cardContent = bugbountytitles[index] + " is offering a bounty of " + bugbountyrewards[index] + ".";
+            output = programs[index] + " is offering a bounty of " + rewards[index] + "." + hearMoreMessage;
+            var cardTitle = programs[index];
+            var cardContent = programs[index] + " is offering a bounty of " + rewards[index] + ".";
 
             this.emit(':askWithCard', output, hearMoreMessage, cardTitle, cardContent);
         } else {
-            this.emit(':ask', noAttractionErrorMessage);
+            this.emit(':ask', noProgramErrorMessage);
         }
     },
 

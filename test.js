@@ -1,40 +1,38 @@
 const rp = require('request-promise');
 const cheerio = require('cheerio');
-var names = [];
-var rewards = [];
 
-var bugcrowd = {
-  getPrograms: function(output) {
+  function getPrograms() {
     return rp({
       uri: `https://bugcrowd.com/programs/reward`,
       transform: function (body) {
         return cheerio.load(body);
       }
     }).then(($) => {
-      output['programs'] = [];
+      programs = [];
       $('.bc-panel__title').each(function(i, elem) {
-        output['programs'].push($(this).text().trim());
+        programs.push($(this).text().trim());
       });
-
-      return output;
+      return programs;
     })
-  },
-  getRewards: function(output) {
+  }
+
+  function getRewards() {
     return rp({
       uri: `https://bugcrowd.com/programs/reward`,
       transform: function (body) {
         return cheerio.load(body);
       }
     }).then(($) => {
-      output['rewards'] = [];
+      rewards = [];
       $('.bc-stat__title').each(function(i, elem) {
-        output['rewards'].push($(this).text().trim());
+        rewards.push($(this).text().trim());
       });
 
-      return output;
+      return rewards;
     })
-  },
-  getVrt: function(output) {
+  }
+
+  function getVrt(output) {
     return rp({
       uri: `https://raw.githubusercontent.com/bugcrowd/vulnerability-rating-taxonomy/master/vulnerability-rating-taxonomy.json`,
       transform: function (body) {
@@ -44,19 +42,22 @@ var bugcrowd = {
       console.log($);
       return output;
     })
-  },
-}
+  }
 
 function main() {
-  var output = {};
-  return bugcrowd.getPrograms(output).then(bugcrowd.getRewards(output));
+  return Promise.resolve(getPrograms()).then(Promise.resolve(getRewards()));
 }
 
 main().then(function(result) {
   console.log(result);
-  bugcrowd.getPrograms(names);
-  bugcrowd.getRewards(rewards);
+});
 
-  console.log(names);
-  console.log(rewards);
+var promisedPrograms = Promise.resolve(getPrograms());
+var programs = promisedPrograms.then(function(value) {
+  return value;
+});
+
+var promisedRewards = Promise.resolve(getRewards());
+var rewards = promisedRewards.then(function(value) {
+  return value;
 });
