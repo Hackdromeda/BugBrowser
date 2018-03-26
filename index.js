@@ -3,7 +3,6 @@ var http = require('http');
 var cheerio = require('cheerio');
 var request = require('request');
 var rp = require('request-promise');
-var fs = require("fs");
 
 var states = {
     SEARCHMODE: '_SEARCHMODE',
@@ -109,9 +108,6 @@ var rewards = promisedRewards.then(function(value) {
   return(value);
 });
 
-var contents = fs.readFileSync("bugcrowddata.json");
-var jsonContent = JSON.parse(contents);
-
 var newSessionHandlers = {
     'LaunchRequest': function () {
         this.handler.state = states.SEARCHMODE;
@@ -130,7 +126,7 @@ var newSessionHandlers = {
         this.handler.state = states.SEARCHMODE;
         setTimeout(() => {
             this.emitWithState('getProgramsIntent')
-        }, 2000);
+        }, 8000);
     },
     'AMAZON.StopIntent': function () {
         this.emit(':tell', goodbyeMessage);
@@ -245,10 +241,10 @@ var topFiveHandlers = Alexa.CreateStateHandler(states.TOPFIVE, {
         this.emit(':ask', output, HelpMessage);
     },
     'getProgramsIntent': function () {
-        this.handler.state = states.SEARCHMODE;
+        this.handler.state = states.TOPFIVE;
         setTimeout(() => {
             this.emitWithState('getProgramsIntent')
-        }, 2000);
+        }, 8000);
     },
     'getMoreInfoIntent': function () {
         var slotValue = this.event.request.intent.slots.program.value;
