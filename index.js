@@ -125,8 +125,8 @@ var newSessionHandlers = {
     'getProgramsIntent': function () {
         this.handler.state = states.SEARCHMODE;
         setTimeout(() => {
-            this.emitWithState('getProgramsIntent')
-        }, 8000);
+            this.emitWithState('getProgramsIntent');
+        }, 6000);
     },
     'AMAZON.StopIntent': function () {
         this.emit(':tell', goodbyeMessage);
@@ -153,13 +153,18 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
     'getProgramsIntent': function () {
         var cardTitle = "Top BugCrowd Programs";
         var output = "";
-
-        for (var counter = 0; counter < programs.length; counter++) {
-            output += "BugCrowd Program Number " + (counter + 1) + ": " + programs[counter] + newline + newline;
+        var retrieveError = "I was unable to retrieve any active programs";
+        var anyValues = programs;
+        if (anyValues) {
+            
+            for (var counter = 0; counter < programs.length; counter++) {
+                output += "BugCrowd Program Number " + (counter + 1) + ": " + programs[counter] + newline + newline;
+            }
+            this.handler.state = states.TOPFIVE;
+            this.emit(':askWithCard', output, moreInfoProgram, cardTitle, output);
+        } else {
+            this.emit(':tell', retrieveError);
         }
-        output += moreInfoProgram;
-        this.handler.state = states.TOPFIVE;
-        this.emit(':askWithCard', output, moreInfoProgram, cardTitle, output);
     },
     'AMAZON.YesIntent': function () {
         output = HelpMessage;
@@ -241,10 +246,10 @@ var topFiveHandlers = Alexa.CreateStateHandler(states.TOPFIVE, {
         this.emit(':ask', output, HelpMessage);
     },
     'getProgramsIntent': function () {
-        this.handler.state = states.TOPFIVE;
+        this.handler.state = states.SEARCHMODE;
         setTimeout(() => {
-            this.emitWithState('getProgramsIntent')
-        }, 8000);
+            this.emitWithState('getProgramsIntent');
+        }, 6000);
     },
     'getMoreInfoIntent': function () {
         var slotValue = this.event.request.intent.slots.program.value;
@@ -253,16 +258,15 @@ var topFiveHandlers = Alexa.CreateStateHandler(states.TOPFIVE, {
         var selectedProgram = rewards[index];
         if (selectedProgram) {
 
-            output = programs[index] + " is offering a bounty of " + rewards[index] + "." + hearMoreMessage;
+            output = programs[index] + " is offering a bounty of " + rewards[index+1] + "." + hearMoreMessage;
             var cardTitle = programs[index];
-            var cardContent = programs[index] + " is offering a bounty of " + rewards[index] + ".";
+            var cardContent = programs[index] + " is offering a bounty of " + rewards[index+1] + ".";
 
             this.emit(':askWithCard', output, hearMoreMessage, cardTitle, cardContent);
         } else {
-            this.emit(':ask', noProgramErrorMessage);
+            this.emit(':tell', noProgramErrorMessage);
         }
     },
-
     'AMAZON.YesIntent': function () {
         output = getMoreInfoMessage;
         alexa.emit(':ask', output, getMoreInfoRepromtMessage);
