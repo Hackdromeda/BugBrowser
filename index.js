@@ -9,15 +9,15 @@ var states = {
     TOPFIVE: '_TOPFIVE',
 };
 
-var appName = "BugBrowser";
+var appName = "Bug Browser";
 
 var newsKey = "54c1f13414d24544a837a4bdccbf5d21";
 
 var numberOfResults = 3;
 
-var welcomeMessage = "Welcome to " + appName + ". You can ask me for a flash briefing on recent hacks and security vulnerabilities around the world, information about BugCrowd, active BugCrowd programs, and reports from your own BugCrowd program. What will it be?";
+var welcomeMessage = "Welcome to " + appName + ". You can ask me for a flash briefing on recent hacks and security vulnerabilities around the world, information about BugCrowd, and active BugCrowd programs. What will it be?";
 
-var welcomeReprompt = "You can ask me for a flash briefing on recent hacks and security vulnerabilities around the world, information about BugCrowd, active BugCrowd programs, reports from your own BugCrowd program, or ask for help. What will it be?";
+var welcomeReprompt = "You can ask me for a flash briefing on recent hacks and security vulnerabilities around the world, information about BugCrowd, active BugCrowd programs, or ask for help. What will it be?";
 
 var overview = "BugCrowd connects organizations to a global crowd of trusted security researchers. BugCrowd programs allow the developers to discover and resolve bugs before the general public is aware of them, preventing incidents of widespread abuse. What else would you like to know?";
 
@@ -27,11 +27,11 @@ var moreInformation = "See your Alexa app for more information."
 
 var tryAgainMessage = "Please try again."
 
-var moreInfoProgram = " You can tell me a program number for more information. For example open number one.";
+var moreInfoProgram = " You can tell me a program number for more information. For example open number one. What program would you like more information on?";
 
 var getMoreInfoRepromtMessage = "what vulnerability would you like to hear more about?";
 
-var hearMoreMessage = "Would you like to hear about another top program in BugCrowd?";
+var hearMoreMessage = " Would you like to hear about another top program in BugCrowd? You can tell me a program number for more information. For example open number two.";
 
 var noProgramErrorMessage = "There is no program with this number.";
 
@@ -153,15 +153,20 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
     'getProgramsIntent': function () {
         var cardTitle = "Top BugCrowd Programs";
         var output = "";
-        var retrieveError = "I was unable to retrieve any active programs";
+        var read = "";
+        var retrieveError = "I was unable to retrieve any active programs.";
         var anyValues = programs;
         if (anyValues) {
             
+            read = "Here are the top active programs at BugCrowd. ";
+            output += "BugCrowd Programs: " + newline + newline;
             for (var counter = 0; counter < programs.length; counter++) {
-                output += "BugCrowd Program Number " + (counter + 1) + ": " + programs[counter] + newline + newline;
+                output += "Number " + (counter + 1) + ": " + programs[counter] + newline + newline;
+                read += "Number " + (counter + 1) + ": " + programs[counter] + newline + newline;
             }
+            read += moreInfoProgram;
             this.handler.state = states.TOPFIVE;
-            this.emit(':askWithCard', output, moreInfoProgram, cardTitle, output);
+            this.emit(':askWithCard', read, read, cardTitle, output);
         } else {
             this.emit(':tell', retrieveError);
         }
@@ -255,7 +260,7 @@ var topFiveHandlers = Alexa.CreateStateHandler(states.TOPFIVE, {
         var slotValue = this.event.request.intent.slots.program.value;
         var index = parseInt(slotValue) - 1;
 
-        var selectedProgram = rewards[index];
+        var selectedProgram = programs[index];
         if (selectedProgram) {
 
             output = programs[index] + " is offering a bounty of " + rewards[index+1] + "." + hearMoreMessage;
