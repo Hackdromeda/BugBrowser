@@ -64,24 +64,6 @@ function fetchPrograms() {
       console.log(error);
     });
   }
-/*
-  function fetchVrt() {
-    return rp({
-      uri: `https://raw.githubusercontent.com/bugcrowd/vulnerability-rating-taxonomy/master/vulnerability-rating-taxonomy.json`,
-      transform: function(body) {
-        return JSON.parse(body);
-      }
-    })
-  }
-
-function getVrt() {
-    return Promise.resolve(fetchVrt());
-}
-
-    getVrt().then(function(data) {
-    //Use returned data
-    });
-*/
   
   function readPrograms() {
     return JSON.parse(fs.readFileSync('./programs.json').toString());
@@ -90,7 +72,6 @@ function getVrt() {
   function readRewards() {
     return JSON.parse(fs.readFileSync('./rewards.json').toString());
   }
-
 
   writeProgramsAndRewards();
   
