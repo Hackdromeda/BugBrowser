@@ -161,15 +161,17 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                 var retrieveError = "I was unable to retrieve any vulnerability information.";
                 if (selectedVrt) {
                     
-                    read = "The VRT is intended to provide valuable information for bug bounty stakeholders. ";
-                    output += "BugCrowd VRT: " + newline + newline;
+                    read = "The VRT outlines Bugcrowd’s baseline priority ratings for vulnerabilities. ";
 
-                    output += (selectedVrt.name + " has the following subcategories and priorities: ");
+                    output += (selectedVrt.name + ":" + newline + newline);
+                    read += ("One of the categories on the VRT is " + selectedVrt.name + " which has these subcategories: ");
                     selectedVrt.children.forEach(function(element) {
                         if (element.priority) {
-                            output += (element.name + " has a priority of " + element.priority + ". ");
+                            output += (newline + "Subcategory: " + element.name + " Priority: " + element.priority);
+                            read += (element.name + " has a priority of " + element.priority + ". ");
                         } else {
-                            output += (element.name + " has no specified priority. ");
+                            output += (newline + "Subcategory: " + element.name + " Priority: unspecified");
+                            read += (element.name + " has no specified priority. ");
                         }
                     });
                     this.emit(':askWithCard', read, read, cardTitle, output); 
