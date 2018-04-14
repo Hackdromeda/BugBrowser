@@ -13,7 +13,7 @@ var appName = "Bug Browser";
 
 var newsKey = "54c1f13414d24544a837a4bdccbf5d21";
 
-var numberOfResults = 3;
+var numberOfResults = 4;
 
 var welcomeMessage = "Welcome to " + appName + ". You can ask me for a flash briefing on recent hacks and security vulnerabilities around the world, information about BugCrowd, and active BugCrowd programs. What will it be?";
 
@@ -66,6 +66,14 @@ var newSessionHandlers = {
         setTimeout(() => {
             this.emitWithState('getProgramsIntent');
         }, 6000);
+    },
+    'AMAZON.YesIntent': function () {
+        output = HelpMessage;
+        this.emit(':ask', output, HelpMessage);
+    },
+    'AMAZON.NoIntent': function () {
+        output = HelpMessage;
+        this.emit(':ask', HelpMessage, HelpMessage);
     },
     'AMAZON.StopIntent': function () {
         this.emit(':tell', goodbyeMessage);
@@ -213,8 +221,10 @@ var programHandlers = Alexa.CreateStateHandler(states.MOREDETAILS, {
           }).then(($) => {
             var programs = [];
             var rewards = [];
+            var urls = [];
             $('.bc-panel__title').each(function(i, elem) {
                 programs.push($(this).text().trim());
+                urls.push($(this).find('a').attr('href'));
             });
             $('.bc-stat__title').each(function(i, elem) {
                 rewards.push($(this).text().trim());
@@ -222,18 +232,20 @@ var programHandlers = Alexa.CreateStateHandler(states.MOREDETAILS, {
             var map = new Map();
             map.set(0, programs);
             map.set(1, rewards);
+            map.set(2, urls)
             return map;
           }).then((map) => {
             var programs = map.get(0);
             var rewards = map.get(1);
+            var urls = map.get(2);
             var slotValue = this.event.request.intent.slots.program.value;
             var index = parseInt(slotValue) - 1;
 
             var selectedProgram = programs[index];
             if (selectedProgram) {
-                output = programs[index] + " is offering a bounty of " + rewards[index+1] + "." + hearMoreMessage;
+                output = programs[index] + " is offering a bounty of " + rewards[index+1] + ". Additional details are available at bugcrowd.com" + urls[index] + "." + hearMoreMessage;
                 var cardTitle = programs[index];
-                var cardContent = programs[index] + " is offering a bounty of " + rewards[index+1] + ".";
+                var cardContent = programs[index] + " is offering a bounty of " + rewards[index+1] + ". Additional details are available at bugcrowd.com" + urls[index] + ".";
 
                 this.emit(':askWithCard', output, hearMoreMessage, cardTitle, cardContent);
             } else {
