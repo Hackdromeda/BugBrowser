@@ -260,8 +260,8 @@ var programHandlers = Alexa.CreateStateHandler(states.MOREDETAILS, {
                         var numOfVrts = "";
                     }                       
                     if (information[1]) {
-                        information[1] = information[1].replace('day  ', 'day.') + '. ';
-                        var validationTime = information[1];
+                        information[1] = information[1].replace('day  ', 'day.') + '.';
+                        var validationTime = 'Expect v' + information[1].substring(1, information[1].length);
                     }
                     else{
                         var validationTime = "";
