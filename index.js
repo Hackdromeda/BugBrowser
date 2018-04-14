@@ -6,7 +6,7 @@ const rp = require('request-promise');
 
 var states = {
     SEARCHMODE: '_SEARCHMODE',
-    TOPFIVE: '_TOPFIVE',
+    MOREDETAILS: '_MOREDETAILS',
 };
 
 var appName = "Bug Browser";
@@ -115,7 +115,7 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                         read += "Number " + (counter + 1) + ": " + programs[counter] + newline + newline;
                     }
                     read += moreInfoProgram;
-                    this.handler.state = states.TOPFIVE;
+                    this.handler.state = states.MOREDETAILS;
                     this.emit(':askWithCard', read, read, cardTitle, output);
                 } else {
                     this.emit(':tell', retrieveError);
@@ -174,7 +174,6 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
             alexa.emit(':tellWithCard', output, cardTitle, cardContent);
         });
     },
-
     'AMAZON.RepeatIntent': function () {
         this.emit(':ask', output, HelpMessage);
     },
@@ -192,14 +191,14 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
     }
 });
 
-var topFiveHandlers = Alexa.CreateStateHandler(states.TOPFIVE, {
+var programHandlers = Alexa.CreateStateHandler(states.MOREDETAILS, {
     'getOverview': function () {
         this.handler.state = states.SEARCHMODE;
         this.emitWithState('getOverview');
     },
-    'AMAZON.HelpIntent': function () {
-        output = HelpMessage;
-        this.emit(':ask', output, HelpMessage);
+    'getNewsIntent': function () {
+        this.handler.state = states.SEARCHMODE;
+        this.emitWithState('getNewsIntent');
     },
     'getProgramsIntent': function () {
         this.handler.state = states.SEARCHMODE;
@@ -242,6 +241,10 @@ var topFiveHandlers = Alexa.CreateStateHandler(states.TOPFIVE, {
             }
           });
     },
+    'AMAZON.HelpIntent': function () {
+        output = HelpMessage;
+        this.emit(':ask', output, HelpMessage);
+    },
     'AMAZON.YesIntent': function () {
         output = getMoreInfoMessage;
         alexa.emit(':ask', output, getMoreInfoRepromtMessage);
@@ -263,7 +266,6 @@ var topFiveHandlers = Alexa.CreateStateHandler(states.TOPFIVE, {
     'SessionEndedRequest': function () {
         // Use this function to clear up and save any data needed between sessions
     },
-
     'Unhandled': function () {
         output = HelpMessage;
         this.emit(':ask', output, welcomeReprompt);
@@ -272,7 +274,7 @@ var topFiveHandlers = Alexa.CreateStateHandler(states.TOPFIVE, {
 
 exports.handler = function (event, context, callback) {
     alexa = Alexa.handler(event, context);
-    alexa.registerHandlers(newSessionHandlers, startSearchHandlers, topFiveHandlers);
+    alexa.registerHandlers(newSessionHandlers, startSearchHandlers, programHandlers);
     alexa.execute();
 };
 
