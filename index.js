@@ -241,16 +241,50 @@ var programHandlers = Alexa.CreateStateHandler(states.MOREDETAILS, {
             var slotValue = this.event.request.intent.slots.program.value;
             var index = parseInt(slotValue) - 1;
 
-            var selectedProgram = programs[index];
-            if (selectedProgram) {
-                output = programs[index] + " is offering a bounty of " + rewards[index+1] + ". Additional details are available at bugcrowd.com" + urls[index] + "." + hearMoreMessage;
-                var cardTitle = programs[index];
-                var cardContent = programs[index] + " is offering a bounty of " + rewards[index+1] + ". Additional details are available at bugcrowd.com" + urls[index] + ".";
+                rp({
+                    uri: `https://bugcrowd.com` + urls[index],
+                    transform: function (body) {
+                      return cheerio.load(body);
+                    }
+                  }).then(($) => {
+                      var information = [];
+                    $('.stat').each(function(i, elem) {
+                      information.push($(this).text().trim().replace(/\s/g,' '));
+                    });
 
-                this.emit(':askWithCard', output, hearMoreMessage, cardTitle, cardContent);
-            } else {
-                this.emit(':tell', noProgramErrorMessage);
-            }
+                    if (information[0]) {
+                        information[0] = information[0].replace(/ +(?= )/g,'') + ' to security researchers in total. ';
+                        var numOfVrts = information[0];
+                    }
+                    else{
+                        var numOfVrts = "";
+                    }                       
+                    if (information[1]) {
+                        information[1] = information[1].replace('day  ', 'day.') + '. ';
+                        var validationTime = information[1];
+                    }
+                    else{
+                        var validationTime = "";
+                    }                    
+                    if (information[2]) {
+                        var payout = "This program has a " + information[2].substring(1);
+                    }
+                    else{
+                        var payout = "No payment history is available";
+                    }
+                    var selectedProgram = programs[index];
+                    if (selectedProgram) {
+                        output = programs[index] + " is offering a bounty of " + rewards[index+1] + ". " + numOfVrts + validationTime + payout + ". Additional details are available at bugcrowd.com" + urls[index] + "." + hearMoreMessage;
+                        var cardTitle = programs[index];
+                        var cardContent = programs[index] + " is offering a bounty of " + rewards[index+1] + ". " + numOfVrts + validationTime + payout + ". Additional details are available at bugcrowd.com" + urls[index] + ".";
+        
+                        this.emit(':askWithCard', output, hearMoreMessage, cardTitle, cardContent);
+                    }
+                    else {
+                        this.emit(':tell', noProgramErrorMessage);
+                    }
+                });
+            
           });
     },
     'AMAZON.HelpIntent': function () {
