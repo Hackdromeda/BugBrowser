@@ -147,10 +147,16 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
             var vrts = [];
             data.content.forEach(function(element) {
                 if (element.children) {
-                    vrts.push(element);
+                    element.children.forEach(function(child) {
+                        if (child.children) {
+                            vrts.push(element);
+                        }
+                    })
                 }
             });
+
             var randomSelection = Math.floor(Math.random () * (vrts.length ));
+            var innerRandomSelection = Math.floor(Math.random () * (vrts[randomSelection].children.length ));
             var selectedVrt = vrts[randomSelection];
             return selectedVrt;
             })
