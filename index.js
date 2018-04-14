@@ -472,7 +472,7 @@ function bodyTemplateTypePicker(pNum) {
     return val;
 }
 
-function bodyTemplateMaker(pBodyTemplateType, pImg, pTitle, pText1, pText2, pOutputSpeech, pReprompt, pHint, pBackgroundIMG) {
+function bodyTemplateMaker(pBodyTemplateType, pImg, pTitle, pText1, pText2, pOutputSpeech, pReprompt, pBackgroundIMG) {
     var bodyTemplate = bodyTemplateTypePicker.call(this, pBodyTemplateType);
     var template = bodyTemplate.setTitle(pTitle)
         .build();
@@ -490,11 +490,6 @@ function bodyTemplateMaker(pBodyTemplateType, pImg, pTitle, pText1, pText2, pOut
         bodyTemplate.setBackgroundImage(makeImage(pBackgroundIMG));
     }
 
-    this.response.speak(pOutputSpeech)
-        .renderTemplate(template)
-        .shouldEndSession(null); //Keeps session open without pinging user..
-
-    this.response.hint(pHint || null, "PlainText");
     this.attributes.lastOutputResponse = pOutputSpeech;
 
     if (pReprompt) {
@@ -552,3 +547,79 @@ function listTemplateMaker(pArray, pType, pTitle, pOutputSpeech, bool, pBackgrou
     this.emit(':responseReady');
 }
 
+function isSimulator() {
+    var isSimulator = !this.event.context; //simulator doesn't send context
+    return isSimulator;
+  }
+  
+  function renderTemplate (content) {
+  
+    //create a template for each screen you want to display.
+    //This example has one that I called "factBodyTemplate".
+    //define your templates using one of several built in Display Templates
+    //https://developer.amazon.com/public/solutions/alexa/alexa-skills-kit/docs/display-interface-reference#display-template-reference
+  
+  
+     switch(content.templateToken) {
+         case "factBodyTemplate":
+            // for reference, here's an example of the content object you'd
+            // pass in for this template.
+            //  var content = {
+            //     "hasDisplaySpeechOutput" : "display "+speechOutput,
+            //     "hasDisplayRepromptText" : randomFact,
+            //     "simpleCardTitle" : this.t('SKILL_NAME'),
+            //     "simpleCardContent" : randomFact,
+            //     "bodyTemplateTitle" : this.t('GET_FACT_MESSAGE'),
+            //     "bodyTemplateContent" : randomFact,
+            //     "templateToken" : "factBodyTemplate",
+            //     "sessionAttributes": {}
+            //  };
+  
+             var response = {
+               "version": "1.0",
+               "response": {
+                 "directives": [
+                   {
+                     "type": "Display.RenderTemplate",
+                     "template": {
+                       "type": "BodyTemplate1",
+                       "title": content.bodyTemplateTitle,
+                       "token": content.templateToken,
+                       "textContent": {
+                         "primaryText": {
+                           "type": "RichText",
+                           "text": "<font size = '5'>"+content.bodyTemplateContent+"</font>"
+                         }
+                       },
+                       "backButton": "HIDDEN"
+                     }
+                   }
+                 ],
+                 "outputSpeech": {
+                   "type": "SSML",
+                   "ssml": "<speak>"+content.hasDisplaySpeechOutput+"</speak>"
+                 },
+                 "reprompt": {
+                   "outputSpeech": {
+                     "type": "SSML",
+                     "ssml": "<speak>"+content.hasDisplayRepromptText+"</speak>"
+                   }
+                 },
+                 "shouldEndSession": content.askOrTell==":tell",
+                 "card": {
+                   "type": "Simple",
+                   "title": content.simpleCardTitle,
+                   "content": content.simpleCardContent
+                 }
+               },
+               "sessionAttributes": content.sessionAttributes
+             }
+             this.context.succeed(response);
+             break;
+  
+         default:
+            this.response.speak(goodbyeMessage);
+            this.emit(':responseReady');
+     }
+  
+  }

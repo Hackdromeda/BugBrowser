@@ -1,86 +1,111 @@
 {
-  "interactionModel": {
-      "languageModel": {
-          "invocationName": "bug browser",
-          "intents": [
-              {
-                  "name": "AMAZON.CancelIntent",
-                  "samples": []
-              },
-              {
-                  "name": "AMAZON.HelpIntent",
-                  "samples": []
-              },
-              {
-                  "name": "AMAZON.StopIntent",
-                  "samples": []
-              },
-              {
-                  "name": "getMoreInfoIntent",
-                  "slots": [
-                      {
-                          "name": "program",
-                          "type": "AMAZON.NUMBER"
-                      }
-                  ],
-                  "samples": [
-                      "tell me more about number {program}",
-                      "what is number {program}",
-                      "more about number {program}",
-                      "number {program}",
-                      "{program}"
-                  ]
-              },
-              {
-                  "name": "getNewsIntent",
-                  "slots": [],
-                  "samples": [
-                      "Give me a flash briefing on hacks",
-                      "tell me hacking news",
-                      "what is the latest news",
-                      "flawed software news",
-                      "the latest news on vulnerabilities",
-                      "the news",
-                      "news",
-                      "hacking news",
-                      "vulnerability news"
-                  ]
-              },
-              {
-                  "name": "getOverview",
-                  "slots": [],
-                  "samples": [
-                      "tell me about bugcrowd",
-                      "more information about BugCrowd",
-                      "what's it like in BugCrowd",
-                      "tell me more about BugCrowd",
-                      "tell me some facts about BugCrowd",
-                      "facts about BugCrowd",
-                      "overview of BugCrowd",
-                      "BugCrowd facts",
-                      "BugCrowd overview"
-                  ]
-              },
-              {
-                  "name": "getProgramsIntent",
-                  "slots": [],
-                  "samples": [
-                      "who should I hack",
-                      "What companies should I hack",
-                      "top programs",
-                      "Tell me about top programs"
-                  ]
-              },
-              {
-                  "name": "AMAZON.NoIntent",
-                  "samples": []
-              },
-              {
-                  "name": "AMAZON.YesIntent",
-                  "samples": []
-              }
-          ],
-          "types": []
-      }
-  }
+    "interactionModel": {
+        "languageModel": {
+            "invocationName": "bug browser",
+            "intents": [
+                {
+                    "name": "AMAZON.CancelIntent",
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.HelpIntent",
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.StopIntent",
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.NoIntent",
+                    "samples": [
+                        "Nah",
+                        "Never",
+                        "Negative",
+                        "Not interested",
+                        "Not right now",
+                        "Nope",
+                        "None",
+                        "No",
+                        "No thanks"
+                    ]
+                },
+                {
+                    "name": "AMAZON.YesIntent",
+                    "samples": [
+                        "Affirmative",
+                        "Yes"
+                    ]
+                },
+                {
+                    "name": "getMoreInfoIntent",
+                    "slots": [
+                        {
+                            "name": "program",
+                            "type": "AMAZON.NUMBER"
+                        }
+                    ],
+                    "samples": [
+                        "tell me more about number {program}",
+                        "what is number {program}",
+                        "more about number {program}",
+                        "number {program}",
+                        "{program}"
+                    ]
+                },
+                {
+                    "name": "getNewsIntent",
+                    "slots": [],
+                    "samples": [
+                        "Give me a flash briefing on hacks",
+                        "tell me hacking news",
+                        "what is the latest news",
+                        "flawed software news",
+                        "the latest news on vulnerabilities",
+                        "the news",
+                        "news",
+                        "hacking news",
+                        "vulnerability news"
+                    ]
+                },
+                {
+                    "name": "getOverview",
+                    "slots": [],
+                    "samples": [
+                        "tell me about bugcrowd",
+                        "more information about BugCrowd",
+                        "what's it like in BugCrowd",
+                        "tell me more about BugCrowd",
+                        "tell me some facts about BugCrowd",
+                        "facts about BugCrowd",
+                        "overview of BugCrowd",
+                        "BugCrowd facts",
+                        "BugCrowd overview"
+                    ]
+                },
+                {
+                    "name": "getProgramsIntent",
+                    "slots": [],
+                    "samples": [
+                        "who should I hack",
+                        "What companies should I hack",
+                        "top programs",
+                        "Tell me about top programs"
+                    ]
+                },
+                {
+                    "name": "getVRTIntent",
+                    "slots": [],
+                    "samples": [
+                        "Tell me about the Vulnerability Rating Taxonomy ",
+                        "Tell me about the VRT",
+                        "Read an entry from the Vulnerability Rating Taxonomy ",
+                        "Read an entry from the VRT",
+                        "Give me something from the Vulnerability Rating Taxonomy ",
+                        "Tell me an entry from Vulnerability Rating Taxonomy "
+                    ]
+                }
+            ],
+            "types": []
+        }
+    }
 }
