@@ -15,13 +15,13 @@ var newsKey = "54c1f13414d24544a837a4bdccbf5d21";
 
 var numberOfResults = 4;
 
-var welcomeMessage = "Welcome to " + appName + ". You can ask me for a flash briefing on recent hacks and security vulnerabilities around the world, information about BugCrowd, and active BugCrowd programs. What will it be?";
+var welcomeMessage = "Welcome to " + appName + ". You can ask me for a flash briefing on recent hacks and security vulnerabilities around the world, information about BugCrowd, the VRT, and active BugCrowd programs. What will it be?";
 
 var welcomeReprompt = "You can ask me for a flash briefing on recent hacks and security vulnerabilities around the world, information about BugCrowd, active BugCrowd programs, or ask for help. What will it be?";
 
 var overview = "BugCrowd connects organizations to a global crowd of trusted security researchers. BugCrowd programs allow the developers to discover and resolve bugs before the general public is aware of them, preventing incidents of widespread abuse. What else would you like to know?";
 
-var HelpMessage = "Here are some things you can say: Give me a flash briefing on hacks. Tell me about BugCrowd. Tell me some active BugCrowd programs. What would you like to do?";
+var HelpMessage = "Here are some things you can say: Give me a flash briefing on hacks. Tell me about BugCrowd. Tell me about the VRT. Tell me some active BugCrowd programs. What would you like to do?";
 
 var moreInformation = "See your Alexa app for more information."
 
@@ -155,8 +155,8 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                 }
             });
 
-            var randomSelection = Math.floor(Math.random () * (vrts.length ));
-            var innerRandomSelection = Math.floor(Math.random () * (vrts[randomSelection].children.length ));
+            var randomSelection = Math.floor(Math.random () * (vrts.length));
+            var innerRandomSelection = Math.floor(Math.random () * (vrts[randomSelection].children.length));
             var selectedVrt = vrts[randomSelection];
             return selectedVrt;
             })
@@ -173,10 +173,10 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                     read += ("One of the categories on the VRT is " + selectedVrt.name + " which has these subcategories: ");
                     selectedVrt.children.forEach(function(element) {
                         if (element.priority) {
-                            output += (newline + "Subcategory: " + element.name + " Priority: " + element.priority);
+                            output += (newline + "Subcategory: " + element.name + newline + " Priority: " + element.priority + newline + newline);
                             read += (element.name + " has a priority of " + element.priority + ". ");
                         } else {
-                            output += (newline + "Subcategory: " + element.name + " Priority: unspecified");
+                            output += (newline + "Subcategory: " + element.name + newline + " Priority: unspecified" + newline + newline);
                             read += (element.name + " has no specified priority. ");
                         }
                     });
@@ -207,7 +207,7 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
 
             // Parse the response into a JSON object ready to be formatted.
             var responseData = JSON.parse(response);
-            var cardContent = "Data provided by New York Times\n\n";
+            var cardContent = "Data provided by The New York Times" + newline + newline;
 
             // Check if we have correct data, If not create an error speech out to try again.
             if (responseData == null) {
@@ -224,9 +224,9 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                         var headline = responseData.response.docs[i].headline.main;
                         var index = i + 1;
 
-                        output += " Headline " + index + ": " + headline + ";";
+                        output += "Headline " + index + ": " + headline + "; ";
 
-                        cardContent += " Headline " + index + ".\n";
+                        cardContent += "Headline " + index + ".\n";
                         cardContent += headline + ".\n\n";
                     }
                 }
