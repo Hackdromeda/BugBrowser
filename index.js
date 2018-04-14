@@ -111,11 +111,20 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
               }
             }).then(($) => {
               var programs = [];
+              var images = [];
               $('.bc-panel__title').each(function(i, elem) {
                 programs.push($(this).text().trim());
               });
-              return programs;
-            }).then((programs) => {
+              $('.bc-program-card__header').each(function(i, elem) {
+                images.push($(this).find('img').attr('src'));
+            });
+            var map = new Map();
+            map.set(0, programs);
+            map.set(1, images)
+            return map;
+          }).then((map) => {
+                var programs = map.get(0);
+                var images = map.get(1);
                 var cardTitle = "Top BugCrowd Programs";
                 var output = "";
                 var read = "";
@@ -283,6 +292,7 @@ var programHandlers = Alexa.CreateStateHandler(states.MOREDETAILS, {
             var programs = [];
             var rewards = [];
             var urls = [];
+            var images = [];
             $('.bc-panel__title').each(function(i, elem) {
                 programs.push($(this).text().trim());
                 urls.push($(this).find('a').attr('href'));
@@ -290,15 +300,20 @@ var programHandlers = Alexa.CreateStateHandler(states.MOREDETAILS, {
             $('.bc-stat__title').each(function(i, elem) {
                 rewards.push($(this).text().trim());
             });
+            $('.bc-program-card__header').each(function(i, elem) {
+                images.push($(this).find('img').attr('src'));
+            });
             var map = new Map();
             map.set(0, programs);
             map.set(1, rewards);
             map.set(2, urls)
+            map.set(3, images)
             return map;
           }).then((map) => {
             var programs = map.get(0);
             var rewards = map.get(1);
             var urls = map.get(2);
+            var images = map.get(3);
             var slotValue = this.event.request.intent.slots.program.value;
             var index = parseInt(slotValue) - 1;
 
