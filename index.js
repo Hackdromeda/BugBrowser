@@ -189,7 +189,11 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                             read += (element.name + " has no specified priority. ");
                         }
                     });
-                    this.emit(':askWithCard', read, read, cardTitle, output); 
+                    const vrtObj = {
+                        smallImageUrl: 'https://s3.amazonaws.com/bugbrowser/images/VRT-Logo.png',
+                        largeImageUrl: 'https://assets.bugcrowdusercontent.com/packs/images/tracker/logo/vrt-logo-ba20b1de556f194607f690788f072798.svg'
+                    };
+                    this.emit(':askWithCard', read, read, cardTitle, output, vrtObj); 
                 }                           
                 else {
                     this.emit(':tell', retrieveError);
@@ -353,8 +357,11 @@ var programHandlers = Alexa.CreateStateHandler(states.MOREDETAILS, {
                         output = programs[index] + " is offering a bounty of " + rewards[index+1] + ". " + numOfVrts + validationTime + payout + ". Additional details are available at bugcrowd.com" + urls[index] + "." + hearMoreMessage;
                         var cardTitle = programs[index];
                         var cardContent = programs[index] + " is offering a bounty of " + rewards[index+1] + ". " + numOfVrts + validationTime + payout + ". Additional details are available at bugcrowd.com" + urls[index] + ".";
-        
-                        this.emit(':askWithCard', output, hearMoreMessage, cardTitle, cardContent);
+                        const imageObj = {
+                            smallImageUrl: images[index],
+                            largeImageUrl: images[index]
+                        };
+                        this.emit(':askWithCard', output, hearMoreMessage, cardTitle, cardContent, imageObj);
                     }
                     else {
                         this.emit(':tell', noProgramErrorMessage);
@@ -550,9 +557,9 @@ function listTemplateMaker(pArray, pType, pTitle, pOutputSpeech, bool, pBackgrou
 function isSimulator() {
     var isSimulator = !this.event.context; //simulator doesn't send context
     return isSimulator;
-  }
+}
   
-  function renderTemplate (content) {
+function renderTemplate (content) {
   
     //create a template for each screen you want to display.
     //This example has one that I called "factBodyTemplate".
