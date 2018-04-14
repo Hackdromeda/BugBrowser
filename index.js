@@ -435,3 +435,120 @@ String.prototype.trunc =
       function (n) {
           return this.substr(0, n - 1) + (this.length > n ? '&hellip;' : '');
 };
+
+function supportsDisplay() {
+    var hasDisplay =
+        this.event.context &&
+        this.event.context.System &&
+        this.event.context.System.device &&
+        this.event.context.System.device.supportedInterfaces &&
+        this.event.context.System.device.supportedInterfaces.Display
+
+    return hasDisplay;
+}
+
+function bodyTemplateTypePicker(pNum) {
+    var val;
+
+    switch (pNum) {
+        case 1:
+            val = new Alexa.templateBuilders.BodyTemplate1Builder();
+            break;
+        case 2:
+            val = new Alexa.templateBuilders.BodyTemplate2Builder();
+            break;
+        case 3:
+            val = new Alexa.templateBuilders.BodyTemplate3Builder();
+            break;
+        case 6:
+            val = new Alexa.templateBuilders.BodyTemplate6Builder();
+            break;
+        case 7:
+            val = new Alexa.templateBuilders.BodyTemplate7Builder();
+            break;
+        default:
+            val = null;
+    }
+    return val;
+}
+
+function bodyTemplateMaker(pBodyTemplateType, pImg, pTitle, pText1, pText2, pOutputSpeech, pReprompt, pHint, pBackgroundIMG) {
+    var bodyTemplate = bodyTemplateTypePicker.call(this, pBodyTemplateType);
+    var template = bodyTemplate.setTitle(pTitle)
+        .build();
+
+    if (pBodyTemplateType != 7) {
+        //Text not supported in BodyTemplate7
+        bodyTemplate.setTextContent(makeRichText(pText1) || null, makeRichText(pText2) || null) //Add text or null
+    }
+
+    if (pImg) {
+        bodyTemplate.setImage(makeImage(pImg));
+    }
+
+    if (pBackgroundIMG) {
+        bodyTemplate.setBackgroundImage(makeImage(pBackgroundIMG));
+    }
+
+    this.response.speak(pOutputSpeech)
+        .renderTemplate(template)
+        .shouldEndSession(null); //Keeps session open without pinging user..
+
+    this.response.hint(pHint || null, "PlainText");
+    this.attributes.lastOutputResponse = pOutputSpeech;
+
+    if (pReprompt) {
+        this.response.listen(pReprompt); // .. but we will ping them if we add a reprompt
+    }
+
+    this.emit(':responseReady'); //
+}
+function listTemplateTypePicker(pNum) {
+    var val;
+
+    switch (pNum) {
+        case 1:
+            val = new Alexa.templateBuilders.ListTemplate1Builder();
+            break;
+        case 2:
+            val = new Alexa.templateBuilders.ListTemplate2Builder();
+            break;
+        default:
+            val = null;
+    }
+    return val;
+}
+   //TODO: Change parameter names to match JSON spec
+function listTemplateMaker(pArray, pType, pTitle, pOutputSpeech, bool, pBackgroundIMG) {
+    const listItemBuilder = new Alexa.templateBuilders.ListItemBuilder();
+    var listTemplateBuilder = listTemplateTypePicker(pType);
+
+    if (!bool) {
+        //Insert option name
+        for (let i = 0; i < pArray.length; i++) {
+            listItemBuilder.addItem(makeImage(pArray[i].imageURL), pArray[i].token, makePlainText(capitalizeFirstLetter(pArray[i].name)));
+        }
+    } else {
+        //Do not insert option name if playing the boolean is true
+        for (let i = 0; i < pArray.length; i++) {
+            listItemBuilder.addItem(makeImage(pArray[i].imageURL), pArray[i].token);
+        }
+    }
+
+    var listItems = listItemBuilder.build();
+    var listTemplate = listTemplateBuilder.setTitle(pTitle)
+        .setListItems(listItems)
+        .build();
+
+    if (pBackgroundIMG) {
+        listTemplateBuilder.setBackgroundImage(makeImage(pBackgroundIMG));
+    }
+
+    this.attributes.lastOutputResponse = pOutputSpeech;
+
+    this.response.speak(pOutputSpeech)
+        .renderTemplate(listTemplate)
+        .shouldEndSession(null);
+    this.emit(':responseReady');
+}
+
