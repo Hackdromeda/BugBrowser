@@ -67,6 +67,12 @@ var newSessionHandlers = {
             this.emitWithState('getProgramsIntent');
         }, 6000);
     },
+    'getVRTIntent': function () {
+        this.handler.state = states.SEARCHMODE;
+        setTimeout(() => {
+            this.emitWithState('getVRTIntent');
+        }, 6000);
+    },
     'AMAZON.YesIntent': function () {
         output = HelpMessage;
         this.emit(':ask', output, HelpMessage);
@@ -126,6 +132,49 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                     this.handler.state = states.MOREDETAILS;
                     this.emit(':askWithCard', read, read, cardTitle, output);
                 } else {
+                    this.emit(':tell', retrieveError);
+                }
+            });
+    },
+    'getVRTIntent': function () {
+        rp({
+            uri: `https://raw.githubusercontent.com/bugcrowd/vulnerability-rating-taxonomy/master/vulnerability-rating-taxonomy.json`,
+            transform: function (body) {
+              return JSON.parse(body);
+            }
+          })
+          .then((data) => {
+            var vrts = [];
+            data.content.forEach(function(element) {
+                if (element.children) {
+                    vrts.push(element);
+                }
+            });
+            var randomSelection = Math.floor(Math.random () * (vrts.length ));
+            var selectedVrt = vrts[randomSelection];
+            return selectedVrt;
+            })
+            .then((selectedVrt) => {
+                var cardTitle = "Vulnerability Rating Taxonomy (VRT)";
+                var output = "";
+                var read = "";
+                var retrieveError = "I was unable to retrieve any vulnerability information.";
+                if (selectedVrt) {
+                    
+                    read = "The VRT is intended to provide valuable information for bug bounty stakeholders. ";
+                    output += "BugCrowd VRT: " + newline + newline;
+
+                    output += (selectedVrt.name + " has the following subcategories and priorities: ");
+                    selectedVrt.children.forEach(function(element) {
+                        if (element.priority) {
+                            output += (element.name + " has a priority of " + element.priority + ". ");
+                        } else {
+                            output += (element.name + " has no specified priority. ");
+                        }
+                    });
+                    this.emit(':askWithCard', read, read, cardTitle, output); 
+                }                           
+                else {
                     this.emit(':tell', retrieveError);
                 }
             });
@@ -212,6 +261,10 @@ var programHandlers = Alexa.CreateStateHandler(states.MOREDETAILS, {
         this.handler.state = states.SEARCHMODE;
         this.emitWithState('getProgramsIntent');
     },
+    'getVRTIntent': function () {
+        this.handler.state = states.SEARCHMODE;
+        this.emitWithState('getVRTIntent');
+    },
     'getMoreInfoIntent': function () {
         rp({
             uri: `https://bugcrowd.com/programs/reward`,
@@ -260,14 +313,14 @@ var programHandlers = Alexa.CreateStateHandler(states.MOREDETAILS, {
                         var numOfVrts = "";
                     }                       
                     if (information[1]) {
-                        information[1] = information[1].replace('day  ', 'day.') + '.';
+                        information[1] = information[1].replace('day  ', 'day.').replace('days  ', 'days.') + '. ';
                         var validationTime = 'Expect v' + information[1].substring(1, information[1].length);
                     }
                     else{
                         var validationTime = "";
                     }                    
                     if (information[2]) {
-                        var payout = "This program has a " + information[2].substring(1);
+                        var payout = "This program has a " + information[2].substring(0);
                     }
                     else{
                         var payout = "No payment history is available";
