@@ -17,8 +17,6 @@ var newsKey = "54c1f13414d24544a837a4bdccbf5d21";
 
 var numberOfResults = 4;
 
-var selectedProgramToken;
-
 var welcomeMessage = "Welcome to " + appName + ". You can ask me for a flash briefing on recent hacks and security vulnerabilities around the world, information about BugCrowd, the VRT, and active BugCrowd programs. What will it be?";
 
 var welcomeReprompt = "You can ask me for a flash briefing on recent hacks and security vulnerabilities around the world, information about BugCrowd, active BugCrowd programs, or ask for help. What will it be?";
@@ -200,8 +198,19 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
         this.emitWithState('getMoreInfoIntent');
     },
     "ElementSelected": function() {
-            console.log('In ElementedSelected, the event request token is:' + this.event.request.token)
+        if((this.event.request.token).substring(0, 12) == "programToken"){
+            var selectedToken = parseInt((this.event.request.token).substring(12));
+            this.handler.state = states.MOREDETAILS;
             this.emitWithState('getMoreInfoIntent');
+        }
+        if((this.event.request.token).substring(0, 13) == "listItemToken"){
+            var selectedToken = (this.event.request.token).substring(13);
+            this.emit(':ask', "No additonal information is available about subcategory " + selectedToken + "." + HelpMessage);
+        }
+        if((this.event.request.token).substring(0, 13) == "newsItemToken"){
+            var selectedToken = parseInt((this.event.request.token).substring(13));
+            this.emit(':ask', "See your Alexa app for more information about news headline number " + selectedToken + "." + HelpMessage);
+        }
     },
     'getVRTIntent': function () {
         rp({
@@ -476,8 +485,9 @@ var programHandlers = Alexa.CreateStateHandler(states.MOREDETAILS, {
                                                 .setBackButtonBehavior('VISIBLE')
                                                 .setBackgroundImage(makeImage('https://s3.amazonaws.com/bugbrowser/images/Circuit.png'))
                                                 .setTextContent(makePlainText(cardContent))
-                                                .setImage(makeImage(imageObj.largeImageUrl));
-                            this.response.speak(cardContent).renderTemplate(template).listen(cardContent);                   
+                                                .setImage(makeImage(imageObj.largeImageUrl))
+                                                .build();
+                            this.response.speak(output).listen(hearMoreMessage).renderTemplate(template);                   
                             this.emit(':responseReady');
                         } else {
                             this.emit(':askWithCard', output, hearMoreMessage, cardTitle, cardContent, imageObj);
@@ -543,122 +553,12 @@ function supportsDisplay() {
     return hasDisplay;
 }
 
-function bodyTemplateTypePicker(pNum) {
-    var val;
-
-    switch (pNum) {
-        case 1:
-            val = new Alexa.templateBuilders.BodyTemplate1Builder();
-            break;
-        case 2:
-            val = new Alexa.templateBuilders.BodyTemplate2Builder();
-            break;
-        case 3:
-            val = new Alexa.templateBuilders.BodyTemplate3Builder();
-            break;
-        case 6:
-            val = new Alexa.templateBuilders.BodyTemplate6Builder();
-            break;
-        case 7:
-            val = new Alexa.templateBuilders.BodyTemplate7Builder();
-            break;
-        default:
-            val = null;
-    }
-    return val;
-}
-
-function bodyTemplateMaker(pBodyTemplateType, pImg, pTitle, pText1, pText2, pOutputSpeech, pReprompt, pHint, pBackgroundIMG) {
-    var bodyTemplate = Alexa.utils.bodyTemplateTypePicker.call(this, pBodyTemplateType);
-    bodyTemplate.setTitle(pTitle);
-
-    if (pBodyTemplateType != 7) {
-        //Text not supported in BodyTemplate7
-        bodyTemplate.setTextContent(Alexa.utils.TextUtils.makeRichText(pText1) || null, Alexa.utils.TextUtils.makeRichText(pText2) || null) //Add text or null
-    }
-
-    if (pImg) {
-        bodyTemplate.setImage(Alexa.utils.ImageUtils.makeImage(pImg));
-    }
-
-    if (pBackgroundIMG) {
-        bodyTemplate.setBackgroundImage(Alexa.utils.ImageUtils.makeImage(pBackgroundIMG));
-    }
-
-    var template = bodyTemplate.build();
-
-    this.response.speak(pOutputSpeech)
-        .renderTemplate(template)
-        .shouldEndSession(null); //Keeps session open without pinging user..
-
-    this.response.hint(pHint || null, "PlainText");//Suggests command user should use
-    this.attributes.lastOutputResponse = pOutputSpeech;
-
-    if (pReprompt) {
-        this.response.listen(pReprompt); // .. but we will ping them if we add a reprompt
-    }
-
-    this.emit(':responseReady');
-}
-function listTemplateTypePicker(pNum) {
-    var val;
-
-    switch (pNum) {
-        case 1:
-            val = new Alexa.templateBuilders.ListTemplate1Builder();
-            break;
-        case 2:
-            val = new Alexa.templateBuilders.ListTemplate2Builder();
-            break;
-        default:
-            val = null;
-    }
-    return val;
-}
-   //TODO: Change parameter names to match JSON spec
-function listTemplateMaker(pArray, pListTemplateTypeNum, pTitle, pOutputSpeech, bool, pBackgroundIMG) {
-    const listItemBuilder = new Alexa.templateBuilders.ListItemBuilder();
-    var listTemplateBuilder = listTemplateTypePicker(pListTemplateTypeNum);
-
-    if (bool) {
-        //Insert option name
-        for (let i = 0; i < pArray.length; i++) {
-            listItemBuilder.addItem(makeImage(pArray[i].imageURL), pArray[i].token, makePlainText(pArray[i].name));
-        }
-    } else {
-        //Do not insert option name if playing the boolean is false
-        for (let i = 0; i < pArray.length; i++) {
-            listItemBuilder.addItem(makeImage(pArray[i].imageURL), pArray[i].token);
-        }
-    }
-
-    var listItems = listItemBuilder.build();
-    var listTemplate = listTemplateBuilder.setTitle(pTitle)
-        .setListItems(listItems)
-        .build();
-
-    if (pBackgroundIMG) {
-        listTemplateBuilder.setBackgroundImage(Alexa.utils.makeImage(pBackgroundIMG));
-    }
-
-    this.attributes.lastOutputResponse = pOutputSpeech;
-
-    this.response.speak(pOutputSpeech)
-        .renderTemplate(listTemplate)
-        .shouldEndSession(null);
-    this.emit(':responseReady');
-}
-
 function isSimulator() {
     var isSimulator = !this.event.context; //simulator doesn't send context
     return isSimulator;
 }
   
 function renderTemplate (content) {
-  
-    //create a template for each screen you want to display.
-    //This example has one that I called "factBodyTemplate".
-    //define your templates using one of several built in Display Templates
     //https://developer.amazon.com/public/solutions/alexa/alexa-skills-kit/docs/display-interface-reference#display-template-reference
   
   
