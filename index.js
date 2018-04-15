@@ -271,11 +271,14 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
         this.emit(':ask', output, HelpMessage);
     },
     'getNewsIntent': function () {
-        var articles = [];
-        httpGet(appName, function (response) {
-
-            // Parse the response into a JSON object ready to be formatted.
-            var responseData = JSON.parse(response);
+        rp({
+            uri: 'http://api.nytimes.com/svc/search/v2/articlesearch.json?q=hack&sort=newest&api-key=' + newsKey,
+            transform: function (body) {
+              return JSON.parse(body);
+            }
+          })
+          .then((responseData) => {
+            var articles = [];
             var cardContent = "Data provided by The New York Times" + newline + newline;
             // Check if we have correct data, If not create an error speech out to try again.
             if (responseData == null) {
@@ -291,10 +294,7 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                         var headline = responseData.response.docs[i].headline.main;
                         var index = i + 1;
                         articles[i] = {
-                            name: "Headline " + index + ": " + headline + "; ",
-                            imageURL: null,
-                            info: null,
-                            token: listItemToken + index,
+                            name: headline
                         };
 
                         output += "Headline " + index + ": " + headline + "; ";
@@ -309,12 +309,25 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
 
             var cardTitle = appName + " News";
             if (this.event.context.System.device.supportedInterfaces.Display) {
-                listTemplateMaker(articles, 1, cardTitle, output, true, 'https://s3.amazonaws.com/bugbrowser/images/Circuit.png');
+                const listItemBuilder = new Alexa.templateBuilders.ListItemBuilder();
+                const listTemplateBuilder = new Alexa.templateBuilders.ListTemplate1Builder();
+                for (i = 0; i < articles.length; i++) {
+                    listItemBuilder.addItem(null, 'listItemToken' + i, makeRichText("<font size='1'>" + articles[i].name + "</font>"));
+                }
+                const listItems = listItemBuilder.build();
+                const listTemplate = listTemplateBuilder.setToken('listToken')
+                                        .setTitle(cardTitle)
+                                        .setListItems(listItems)
+                                        .setBackgroundImage(makeImage('https://s3.amazonaws.com/bugbrowser/images/Circuit.png'))
+                                        .build();
+                this.response.speak(output).renderTemplate(listTemplate);
+                this.emit(':responseReady');
             }
             else{
                 alexa.emit(':tellWithCard', output, cardTitle, cardContent);
             }
         });
+        
     },
     'AMAZON.RepeatIntent': function () {
         this.emit(':ask', output, HelpMessage);
@@ -470,37 +483,6 @@ exports.handler = function (event, context, callback) {
     alexa.registerHandlers(newSessionHandlers, startSearchHandlers, programHandlers);
     alexa.execute();
 };
-
-// Create a web request and handle the response.
-function httpGet(query, callback) {
-  console.log("/n QUERY: "+query);
-
-    var options = {
-      //http://api.nytimes.com/svc/search/v2/articlesearch.json?q=hack&sort=newest&api-key=
-        host: 'api.nytimes.com',
-        path: '/svc/search/v2/articlesearch.json?q=' + 'hack' + '&sort=newest&api-key=' + newsKey,
-        method: 'GET'
-    };
-
-    var req = http.request(options, (res) => {
-
-        var body = '';
-
-        res.on('data', (d) => {
-            body += d;
-        });
-
-        res.on('end', function () {
-            callback(body);
-        });
-
-    });
-    req.end();
-
-    req.on('error', (e) => {
-        console.error(e);
-    });
-}
 
 String.prototype.trunc =
       function (n) {
