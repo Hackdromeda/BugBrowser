@@ -168,7 +168,7 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                     this.handler.state = states.MOREDETAILS;
                 if (this.event.context.System.device.supportedInterfaces.Display) {
                     const listItemBuilder = new Alexa.templateBuilders.ListItemBuilder();
-                    const listTemplateBuilder = new Alexa.templateBuilders.ListTemplate1Builder();
+                    const listTemplateBuilder = new Alexa.templateBuilders.ListTemplate2Builder();
                     for (i = 0; i < programs.length; i++) {
                         listItemBuilder.addItem(makeImage(images[i], 400, 400), 'listItemToken' + i, makePlainText(programs[i]))
                     }
