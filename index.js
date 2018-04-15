@@ -425,7 +425,7 @@ var programHandlers = Alexa.CreateStateHandler(states.MOREDETAILS, {
                 console.log('Token Index: ' + index);
             } else if (this.event.request && this.event.request.intent && this.event.request.intent.slots) {
                 console.log('Slot value: ' + this.event.request.intent.slots.program.value)
-                var index = this.event.request.intent.slots.program.value;
+                var index = this.event.request.intent.slots.program.value - 1;
             }
 
                 rp({
