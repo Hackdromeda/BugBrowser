@@ -90,6 +90,10 @@ var newSessionHandlers = {
         this.handler.state = states.SEARCHMODE;
         this.emitWithState('getVRTIntent');
     },
+    'ElementSelected': function () {
+        this.handler.state = states.SEARCHMODE;
+        this.emitWithState('ElementSelected');
+    },
     'AMAZON.YesIntent': function () {
         output = HelpMessage;
         this.emit(':ask', output, HelpMessage);
@@ -188,7 +192,21 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                 this.emit(':tell', retrieveError);
             }
         });
-},
+    },
+    "ElementSelected": function() {
+        if((this.event.request.token).substring(0, 12) == "programToken"){
+            var selectedToken = parseInt((this.event.request.token).substring(12));
+            this.emit('getMoreInfoIntent'+selectedToken);
+        }
+        if((this.event.request.token).substring(0, 13) == "listItemToken"){
+            var selectedToken = (this.event.request.token).substring(13);
+            this.emit(':ask', "No additonal information is available about subcategory " + selectedToken + "." + HelpMessage);
+        }
+        if((this.event.request.token).substring(0, 13) == "newsItemToken"){
+            var selectedToken = parseInt((this.event.request.token).substring(13));
+            this.emit(':ask', "See your Alexa app for more information about news headline number " + selectedToken + "." + HelpMessage);
+        }
+    },
     'getVRTIntent': function () {
         rp({
             uri: `https://raw.githubusercontent.com/bugcrowd/vulnerability-rating-taxonomy/master/vulnerability-rating-taxonomy.json`,
@@ -321,7 +339,7 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                 const listItemBuilder = new Alexa.templateBuilders.ListItemBuilder();
                 const listTemplateBuilder = new Alexa.templateBuilders.ListTemplate1Builder();
                 for (i = 0; i < articles.length; i++) {
-                    listItemBuilder.addItem(null, 'listItemToken' + i, makeRichText("<font size='1'>" + articles[i].name + "</font>"));
+                    listItemBuilder.addItem(null, 'newsItemToken' + i, makeRichText("<font size='1'>" + articles[i].name + "</font>"));
                 }
                 const listItems = listItemBuilder.build();
                 const listTemplate = listTemplateBuilder.setToken('listToken')
