@@ -54,16 +54,17 @@ var newSessionHandlers = {
         output = welcomeMessage;
         if (this.event.context.System.device.supportedInterfaces.Display) {
             var content = {
-                "hasDisplaySpeechOutput" : output,
-                "hasDisplayRepromptText" : welcomeReprompt,
-                "simpleCardTitle" : this.t('Bug Browser'),
-                "simpleCardContent" : output,
-                "bodyTemplateTitle" : this.t('Bug Browser'),
-                "bodyTemplateContent" : output,
-                "templateToken" : "openTemplate",
+                "title": "Bug Browser",
+                "bodyTemplateTitle": "Bug Browser",
+                "speechText" : output,
+                "speechTextReprompt" : welcomeReprompt,
+                "templateToken": "launchRequestTemplate",
+                "bodyTemplateContent": output, 
+                "cardContent": output,
+                "backgroundImage": 'https://s3.amazonaws.com/bugbrowser/images/Motherboard.jpg',
                 "askOrTell" : ":tell",
                 "sessionAttributes": {}
-            };
+              };
             renderTemplate.call(this, content);
         } else {
             this.response.cardRenderer(this.t('Bug Browser'), output);
@@ -586,7 +587,7 @@ function renderTemplate (content) {
   
   
      switch(content.templateToken) {
-         case "openTemplate":
+         case "launchRequestTemplate":
             // for reference, here's an example of the content object you'd
             // pass in for this template.
             //  var content = {
@@ -599,45 +600,52 @@ function renderTemplate (content) {
             //     "templateToken" : "factBodyTemplate",
             //     "sessionAttributes": {}
             //  };
-             var response = {
-               "version": "1.0",
-               "response": {
-                 "directives": [
-                   {
-                     "type": "Display.RenderTemplate",
-                     "template": {
-                       "type": "BodyTemplate6",
-                       "title": content.bodyTemplateTitle,
-                       "token": content.templateToken,
-                       "textContent": {
-                         "primaryText": {
-                           "type": "RichText",
-                           "text": "<font size = '5'>"+content.bodyTemplateContent+"</font>"
-                         }
-                       },
-                       "backButton": "HIDDEN"
-                     }
-                   }
-                 ],
-                 "outputSpeech": {
-                   "type": "SSML",
-                   "ssml": "<speak>"+content.hasDisplaySpeechOutput+"</speak>"
-                 },
-                 "reprompt": {
-                   "outputSpeech": {
-                     "type": "SSML",
-                     "ssml": "<speak>"+content.hasDisplayRepromptText+"</speak>"
-                   }
-                 },
-                 "shouldEndSession": content.askOrTell==":tell",
-                 "card": {
-                   "type": "Simple",
-                   "title": content.simpleCardTitle,
-                   "content": content.simpleCardContent
-                 }
-               },
-               "sessionAttributes": content.sessionAttributes
-             }
+            var response = {
+                'version': '1.0',
+                'response': {
+                  'directives': [
+                    {
+                      'type': 'Display.RenderTemplate',
+                      'template': {
+                        'type': 'BodyTemplate6',
+                        'title': content.title,
+                        'backgroundImage': {
+                          'sources': [
+                            {
+                              'url': content.backgroundImage
+                            }
+                          ]
+                        },
+                        'token': content.templateToken,
+                        'textContent': {
+                          'primaryText': {
+                            'type': 'RichText',
+                            'text': content.bodyTemplateContent
+                          }
+                        },
+                        'backButton': 'HIDDEN'
+                      }
+                    }
+                  ],
+                  'outputSpeech': {
+                    'type': 'SSML',
+                    'ssml': '<speak> ' + content.speechText + ' </speak>'
+                  },
+                  'reprompt': {
+                    'outputSpeech': {
+                      'type': 'SSML',
+                      'ssml': '<speak> ' + content.speechTextReprompt + ' </speak>'
+                    }
+                  },
+                  'card': {
+                    'type': 'Standard',
+                    'title': content.title,
+                    'text': content.cardContent
+                  },
+                  'shouldEndSession': content.askOrTell==":tell"
+                },
+                'sessionAttributes': content.sessionAttributes
+              };
              this.context.succeed(response);
              break;
   
