@@ -165,7 +165,8 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                     const listItems = listItemBuilder.build();
                     const listTemplate = listTemplateBuilder.setToken('listToken')
     										.setTitle('Programs')
-    										.setListItems(listItems)
+                                            .setListItems(listItems)
+                                            .setBackgroundImage(makeImage('https://s3.amazonaws.com/bugbrowser/images/Circuit.png'))
     										.build();
                     this.response.speak(output).renderTemplate(listTemplate);
                     this.emit(':responseReady')
