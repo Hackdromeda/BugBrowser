@@ -59,9 +59,9 @@ var newSessionHandlers = {
                 "speechText" : output,
                 "speechTextReprompt" : welcomeReprompt,
                 "templateToken": "launchRequestTemplate",
-                "bodyTemplateContent": output, 
-                "cardContent": output,
-                "backgroundImage": 'https://s3.amazonaws.com/bugbrowser/images/Motherboard.jpg',
+                "bodyTemplateContent": "Welcome to Bug Browser", 
+                "cardContent": "Welcome to Bug Browser",
+                "backgroundImage": 'https://s3.amazonaws.com/bugbrowser/images/Circuit.jpg',
                 "askOrTell" : ":tell",
                 "sessionAttributes": {}
               };
@@ -620,7 +620,7 @@ function renderTemplate (content) {
                         'textContent': {
                           'primaryText': {
                             'type': 'RichText',
-                            'text': content.bodyTemplateContent
+                            'text': '<font size="7">' + content.bodyTemplateContent + '</font>'
                           }
                         },
                         'backButton': 'HIDDEN'
