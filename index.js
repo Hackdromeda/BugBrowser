@@ -422,8 +422,13 @@ var programHandlers = Alexa.CreateStateHandler(states.MOREDETAILS, {
             var rewards = map.get(1);
             var urls = map.get(2);
             var images = map.get(3);
-            var slotValue = this.event.request.intent.slots.program.value;
-            var index = parseInt(slotValue) - 1;
+            if(this.event.context.System.device.supportedInterfaces.Display || this.selectedToken){
+                var index = parseInt(this.selectedToken);
+            }
+            else{
+                var slotValue = this.event.request.intent.slots.program.value;
+                var index = parseInt(slotValue) - 1;
+            }
 
                 rp({
                     uri: `https://bugcrowd.com` + urls[index],
