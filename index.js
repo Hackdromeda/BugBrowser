@@ -1,4 +1,6 @@
 const Alexa = require('alexa-sdk');
+const makePlainText = Alexa.utils.TextUtils.makePlainText;
+const makeImage = Alexa.utils.ImageUtils.makeImage;
 const http = require('http');
 const cheerio = require('cheerio');
 const request = require('request');
@@ -82,15 +84,11 @@ var newSessionHandlers = {
     },
     'getProgramsIntent': function () {
         this.handler.state = states.SEARCHMODE;
-        setTimeout(() => {
-            this.emitWithState('getProgramsIntent');
-        }, 6000);
+        this.emitWithState('getProgramsIntent');
     },
     'getVRTIntent': function () {
         this.handler.state = states.SEARCHMODE;
-        setTimeout(() => {
-            this.emitWithState('getVRTIntent');
-        }, 6000);
+        this.emitWithState('getVRTIntent');
     },
     'AMAZON.YesIntent': function () {
         output = HelpMessage;
@@ -158,12 +156,28 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                     }
                     read += moreInfoProgram;
                     this.handler.state = states.MOREDETAILS;
-                    this.emit(':askWithCard', read, read, cardTitle, output);
+                if (this.event.context.System.device.supportedInterfaces.Display) {
+                    const listItemBuilder = new Alexa.templateBuilders.ListItemBuilder();
+                    const listTemplateBuilder = new Alexa.templateBuilders.ListTemplate1Builder();
+                    for (i = 0; i < programs.length; i++) {
+                        listItemBuilder.addItem(makeImage(images[i], 400, 400), 'listItemToken' + i, makePlainText(programs[i]))
+                    }
+                    const listItems = listItemBuilder.build();
+                    const listTemplate = listTemplateBuilder.setToken('listToken')
+    										.setTitle('Programs')
+    										.setListItems(listItems)
+    										.build();
+                    this.response.speak(output).renderTemplate(listTemplate);
+                    this.emit(':responseReady')
                 } else {
-                    this.emit(':tell', retrieveError);
+                    this.emit(':askWithCard', read, read, cardTitle, output);
                 }
-            });
-    },
+
+            } else {
+                this.emit(':tell', retrieveError);
+            }
+        });
+},
     'getVRTIntent': function () {
         rp({
             uri: `https://raw.githubusercontent.com/bugcrowd/vulnerability-rating-taxonomy/master/vulnerability-rating-taxonomy.json`,
@@ -273,7 +287,7 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
 
             var cardTitle = appName + " News";
             if (this.event.context.System.device.supportedInterfaces.Display) {
-                listTemplateMaker(articles, 1, cardTitle, output, true, 'https://s3.amazonaws.com/bugbrowser/images/Circuit.png')
+                listTemplateMaker(articles, 1, cardTitle, output, true, 'https://s3.amazonaws.com/bugbrowser/images/Circuit.png');
             }
             else{
                 alexa.emit(':tellWithCard', output, cardTitle, cardContent);
@@ -508,22 +522,23 @@ function bodyTemplateTypePicker(pNum) {
 }
 
 function bodyTemplateMaker(pBodyTemplateType, pImg, pTitle, pText1, pText2, pOutputSpeech, pReprompt, pHint, pBackgroundIMG) {
-    var bodyTemplate = bodyTemplateTypePicker.call(this, pBodyTemplateType);
-    var template = bodyTemplate.setTitle(pTitle)
-        .build();
+    var bodyTemplate = Alexa.utils.bodyTemplateTypePicker.call(this, pBodyTemplateType);
+    bodyTemplate.setTitle(pTitle);
 
     if (pBodyTemplateType != 7) {
         //Text not supported in BodyTemplate7
-        bodyTemplate.setTextContent(makeRichText(pText1) || null, makeRichText(pText2) || null) //Add text or null
+        bodyTemplate.setTextContent(Alexa.utils.TextUtils.makeRichText(pText1) || null, Alexa.utils.TextUtils.makeRichText(pText2) || null) //Add text or null
     }
 
     if (pImg) {
-        bodyTemplate.setImage(makeImage(pImg));
+        bodyTemplate.setImage(Alexa.utils.ImageUtils.makeImage(pImg));
     }
 
     if (pBackgroundIMG) {
-        bodyTemplate.setBackgroundImage(makeImage(pBackgroundIMG));
+        bodyTemplate.setBackgroundImage(Alexa.utils.ImageUtils.makeImage(pBackgroundIMG));
     }
+
+    var template = bodyTemplate.build();
 
     this.response.speak(pOutputSpeech)
         .renderTemplate(template)
@@ -576,7 +591,7 @@ function listTemplateMaker(pArray, pListTemplateTypeNum, pTitle, pOutputSpeech, 
         .build();
 
     if (pBackgroundIMG) {
-        listTemplateBuilder.setBackgroundImage(makeImage(pBackgroundIMG));
+        listTemplateBuilder.setBackgroundImage(Alexa.utils.makeImage(pBackgroundIMG));
     }
 
     this.attributes.lastOutputResponse = pOutputSpeech;
@@ -661,6 +676,64 @@ function renderTemplate (content) {
                 'sessionAttributes': content.sessionAttributes
               };
              this.context.succeed(response);
+             break;
+
+             case "ProgramsTemplate":
+              var response = {
+                "_responseObject": {
+                    "version": "1.0",
+                    "response": {
+                        "shouldEndSession": false,
+                        "outputSpeech": {
+                            "type": "SSML",
+                            "ssml": "<speak> " + content.speechText + " </speak>"
+                        },
+                        "reprompt": {
+                            "outputSpeech": {
+                                "type": "SSML",
+                                "ssml": "<speak> Which program would you like to view details about? </speak>"
+                            }
+                        },
+                        "card": {
+                            "type": "Standard",
+                            "title": content.bodyTemplateTitle,
+                            "image": {
+                                "smallImageUrl": "https://s3.amazonaws.com/bugbrowser/images/Circuit.png",
+                                "largeImageUrl": "https://s3.amazonaws.com/bugbrowser/images/Circuit.png"
+                            },
+                            "text": content.speechText
+                        },
+                        "directives": [
+                            {
+                                "type": "Hint",
+                                "hint": {
+                                    "type": "PlainText",
+                                    "text": "Try asking open program number one"
+                                }
+                            },
+                            {
+                                "type": "Display.RenderTemplate",
+                                "template": {
+                                    "type": "ListTemplate1",
+                                    "title": "ListTemplate1 Display Title",
+                                    "token": "TOKEN",
+                                    "listItems": content.listItems,
+                                    "backgroundImage": {
+                                        "sources": [
+                                            {
+                                                "url": content.backgroundImage
+                                            }
+                                        ]
+                                    },
+                                    "backButton": "HIDDEN"
+                                }
+                            }
+                        ]
+                    },
+                    "sessionAttributes": {}
+                }
+            }  
+              this.context.succeed(response);         
              break;
   
          default:

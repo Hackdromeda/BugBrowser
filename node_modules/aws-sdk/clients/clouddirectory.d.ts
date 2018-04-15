@@ -12,19 +12,19 @@ declare class CloudDirectory extends Service {
   constructor(options?: CloudDirectory.Types.ClientConfiguration)
   config: Config & CloudDirectory.Types.ClientConfiguration;
   /**
-   * Adds a new Facet to an object.
+   * Adds a new Facet to an object. An object can have more than one facet applied on it.
    */
   addFacetToObject(params: CloudDirectory.Types.AddFacetToObjectRequest, callback?: (err: AWSError, data: CloudDirectory.Types.AddFacetToObjectResponse) => void): Request<CloudDirectory.Types.AddFacetToObjectResponse, AWSError>;
   /**
-   * Adds a new Facet to an object.
+   * Adds a new Facet to an object. An object can have more than one facet applied on it.
    */
   addFacetToObject(callback?: (err: AWSError, data: CloudDirectory.Types.AddFacetToObjectResponse) => void): Request<CloudDirectory.Types.AddFacetToObjectResponse, AWSError>;
   /**
-   * Copies the input published schema into the Directory with the same name and version as that of the published schema .
+   * Copies the input published schema, at the specified version, into the Directory with the same name and version as that of the published schema.
    */
   applySchema(params: CloudDirectory.Types.ApplySchemaRequest, callback?: (err: AWSError, data: CloudDirectory.Types.ApplySchemaResponse) => void): Request<CloudDirectory.Types.ApplySchemaResponse, AWSError>;
   /**
-   * Copies the input published schema into the Directory with the same name and version as that of the published schema .
+   * Copies the input published schema, at the specified version, into the Directory with the same name and version as that of the published schema.
    */
   applySchema(callback?: (err: AWSError, data: CloudDirectory.Types.ApplySchemaResponse) => void): Request<CloudDirectory.Types.ApplySchemaResponse, AWSError>;
   /**
@@ -68,11 +68,11 @@ declare class CloudDirectory extends Service {
    */
   batchRead(callback?: (err: AWSError, data: CloudDirectory.Types.BatchReadResponse) => void): Request<CloudDirectory.Types.BatchReadResponse, AWSError>;
   /**
-   * Performs all the write operations in a batch. Either all the operations succeed or none. Batch writes supports only object-related operations.
+   * Performs all the write operations in a batch. Either all the operations succeed or none.
    */
   batchWrite(params: CloudDirectory.Types.BatchWriteRequest, callback?: (err: AWSError, data: CloudDirectory.Types.BatchWriteResponse) => void): Request<CloudDirectory.Types.BatchWriteResponse, AWSError>;
   /**
-   * Performs all the write operations in a batch. Either all the operations succeed or none. Batch writes supports only object-related operations.
+   * Performs all the write operations in a batch. Either all the operations succeed or none.
    */
   batchWrite(callback?: (err: AWSError, data: CloudDirectory.Types.BatchWriteResponse) => void): Request<CloudDirectory.Types.BatchWriteResponse, AWSError>;
   /**
@@ -212,6 +212,14 @@ declare class CloudDirectory extends Service {
    */
   enableDirectory(callback?: (err: AWSError, data: CloudDirectory.Types.EnableDirectoryResponse) => void): Request<CloudDirectory.Types.EnableDirectoryResponse, AWSError>;
   /**
+   * Returns current applied schema version ARN, including the minor version in use.
+   */
+  getAppliedSchemaVersion(params: CloudDirectory.Types.GetAppliedSchemaVersionRequest, callback?: (err: AWSError, data: CloudDirectory.Types.GetAppliedSchemaVersionResponse) => void): Request<CloudDirectory.Types.GetAppliedSchemaVersionResponse, AWSError>;
+  /**
+   * Returns current applied schema version ARN, including the minor version in use.
+   */
+  getAppliedSchemaVersion(callback?: (err: AWSError, data: CloudDirectory.Types.GetAppliedSchemaVersionResponse) => void): Request<CloudDirectory.Types.GetAppliedSchemaVersionResponse, AWSError>;
+  /**
    * Retrieves metadata about a directory.
    */
   getDirectory(params: CloudDirectory.Types.GetDirectoryRequest, callback?: (err: AWSError, data: CloudDirectory.Types.GetDirectoryResponse) => void): Request<CloudDirectory.Types.GetDirectoryResponse, AWSError>;
@@ -227,6 +235,14 @@ declare class CloudDirectory extends Service {
    * Gets details of the Facet, such as facet name, attributes, Rules, or ObjectType. You can call this on all kinds of schema facets -- published, development, or applied.
    */
   getFacet(callback?: (err: AWSError, data: CloudDirectory.Types.GetFacetResponse) => void): Request<CloudDirectory.Types.GetFacetResponse, AWSError>;
+  /**
+   * Retrieves attributes within a facet that are associated with an object.
+   */
+  getObjectAttributes(params: CloudDirectory.Types.GetObjectAttributesRequest, callback?: (err: AWSError, data: CloudDirectory.Types.GetObjectAttributesResponse) => void): Request<CloudDirectory.Types.GetObjectAttributesResponse, AWSError>;
+  /**
+   * Retrieves attributes within a facet that are associated with an object.
+   */
+  getObjectAttributes(callback?: (err: AWSError, data: CloudDirectory.Types.GetObjectAttributesResponse) => void): Request<CloudDirectory.Types.GetObjectAttributesResponse, AWSError>;
   /**
    * Retrieves metadata about an object.
    */
@@ -252,19 +268,19 @@ declare class CloudDirectory extends Service {
    */
   getTypedLinkFacetInformation(callback?: (err: AWSError, data: CloudDirectory.Types.GetTypedLinkFacetInformationResponse) => void): Request<CloudDirectory.Types.GetTypedLinkFacetInformationResponse, AWSError>;
   /**
-   * Lists schemas applied to a directory.
+   * Lists schema major versions applied to a directory. If SchemaArn is provided, lists the minor version.
    */
   listAppliedSchemaArns(params: CloudDirectory.Types.ListAppliedSchemaArnsRequest, callback?: (err: AWSError, data: CloudDirectory.Types.ListAppliedSchemaArnsResponse) => void): Request<CloudDirectory.Types.ListAppliedSchemaArnsResponse, AWSError>;
   /**
-   * Lists schemas applied to a directory.
+   * Lists schema major versions applied to a directory. If SchemaArn is provided, lists the minor version.
    */
   listAppliedSchemaArns(callback?: (err: AWSError, data: CloudDirectory.Types.ListAppliedSchemaArnsResponse) => void): Request<CloudDirectory.Types.ListAppliedSchemaArnsResponse, AWSError>;
   /**
-   * Lists indices attached to an object.
+   * Lists indices attached to the specified object.
    */
   listAttachedIndices(params: CloudDirectory.Types.ListAttachedIndicesRequest, callback?: (err: AWSError, data: CloudDirectory.Types.ListAttachedIndicesResponse) => void): Request<CloudDirectory.Types.ListAttachedIndicesResponse, AWSError>;
   /**
-   * Lists indices attached to an object.
+   * Lists indices attached to the specified object.
    */
   listAttachedIndices(callback?: (err: AWSError, data: CloudDirectory.Types.ListAttachedIndicesResponse) => void): Request<CloudDirectory.Types.ListAttachedIndicesResponse, AWSError>;
   /**
@@ -372,11 +388,11 @@ declare class CloudDirectory extends Service {
    */
   listPolicyAttachments(callback?: (err: AWSError, data: CloudDirectory.Types.ListPolicyAttachmentsResponse) => void): Request<CloudDirectory.Types.ListPolicyAttachmentsResponse, AWSError>;
   /**
-   * Retrieves each published schema Amazon Resource Name (ARN).
+   * Lists the major version families of each published schema. If a major version ARN is provided as SchemaArn, the minor version revisions in that family are listed instead.
    */
   listPublishedSchemaArns(params: CloudDirectory.Types.ListPublishedSchemaArnsRequest, callback?: (err: AWSError, data: CloudDirectory.Types.ListPublishedSchemaArnsResponse) => void): Request<CloudDirectory.Types.ListPublishedSchemaArnsResponse, AWSError>;
   /**
-   * Retrieves each published schema Amazon Resource Name (ARN).
+   * Lists the major version families of each published schema. If a major version ARN is provided as SchemaArn, the minor version revisions in that family are listed instead.
    */
   listPublishedSchemaArns(callback?: (err: AWSError, data: CloudDirectory.Types.ListPublishedSchemaArnsResponse) => void): Request<CloudDirectory.Types.ListPublishedSchemaArnsResponse, AWSError>;
   /**
@@ -412,11 +428,11 @@ declare class CloudDirectory extends Service {
    */
   lookupPolicy(callback?: (err: AWSError, data: CloudDirectory.Types.LookupPolicyResponse) => void): Request<CloudDirectory.Types.LookupPolicyResponse, AWSError>;
   /**
-   * Publishes a development schema with a version. If description and attributes are specified, PublishSchema overrides the development schema description and attributes. If not, the development schema description and attributes are used.
+   * Publishes a development schema with a major version and a recommended minor version.
    */
   publishSchema(params: CloudDirectory.Types.PublishSchemaRequest, callback?: (err: AWSError, data: CloudDirectory.Types.PublishSchemaResponse) => void): Request<CloudDirectory.Types.PublishSchemaResponse, AWSError>;
   /**
-   * Publishes a development schema with a version. If description and attributes are specified, PublishSchema overrides the development schema description and attributes. If not, the development schema description and attributes are used.
+   * Publishes a development schema with a major version and a recommended minor version.
    */
   publishSchema(callback?: (err: AWSError, data: CloudDirectory.Types.PublishSchemaResponse) => void): Request<CloudDirectory.Types.PublishSchemaResponse, AWSError>;
   /**
@@ -483,6 +499,22 @@ declare class CloudDirectory extends Service {
    * Updates a TypedLinkFacet. For more information, see Typed link.
    */
   updateTypedLinkFacet(callback?: (err: AWSError, data: CloudDirectory.Types.UpdateTypedLinkFacetResponse) => void): Request<CloudDirectory.Types.UpdateTypedLinkFacetResponse, AWSError>;
+  /**
+   * Upgrades a single directory in-place using the PublishedSchemaArn with schema updates found in MinorVersion. Backwards-compatible minor version upgrades are instantaneously available for readers on all objects in the directory. Note: This is a synchronous API call and upgrades only one schema on a given directory per call. To upgrade multiple directories from one schema, you would need to call this API on each directory.
+   */
+  upgradeAppliedSchema(params: CloudDirectory.Types.UpgradeAppliedSchemaRequest, callback?: (err: AWSError, data: CloudDirectory.Types.UpgradeAppliedSchemaResponse) => void): Request<CloudDirectory.Types.UpgradeAppliedSchemaResponse, AWSError>;
+  /**
+   * Upgrades a single directory in-place using the PublishedSchemaArn with schema updates found in MinorVersion. Backwards-compatible minor version upgrades are instantaneously available for readers on all objects in the directory. Note: This is a synchronous API call and upgrades only one schema on a given directory per call. To upgrade multiple directories from one schema, you would need to call this API on each directory.
+   */
+  upgradeAppliedSchema(callback?: (err: AWSError, data: CloudDirectory.Types.UpgradeAppliedSchemaResponse) => void): Request<CloudDirectory.Types.UpgradeAppliedSchemaResponse, AWSError>;
+  /**
+   * Upgrades a published schema under a new minor version revision using the current contents of DevelopmentSchemaArn.
+   */
+  upgradePublishedSchema(params: CloudDirectory.Types.UpgradePublishedSchemaRequest, callback?: (err: AWSError, data: CloudDirectory.Types.UpgradePublishedSchemaResponse) => void): Request<CloudDirectory.Types.UpgradePublishedSchemaResponse, AWSError>;
+  /**
+   * Upgrades a published schema under a new minor version revision using the current contents of DevelopmentSchemaArn.
+   */
+  upgradePublishedSchema(callback?: (err: AWSError, data: CloudDirectory.Types.UpgradePublishedSchemaResponse) => void): Request<CloudDirectory.Types.UpgradePublishedSchemaResponse, AWSError>;
 }
 declare namespace CloudDirectory {
   export interface AddFacetToObjectRequest {
@@ -491,7 +523,7 @@ declare namespace CloudDirectory {
      */
     DirectoryArn: Arn;
     /**
-     * Identifiers for the facet that you are adding to the object.
+     * Identifiers for the facet that you are adding to the object. See SchemaFacet for details.
      */
     SchemaFacet: SchemaFacet;
     /**
@@ -555,7 +587,7 @@ declare namespace CloudDirectory {
     /**
      * The Amazon Resource Name (ARN) that is associated with the Directory where both objects reside. For more information, see arns.
      */
-    DirectoryArn?: Arn;
+    DirectoryArn: Arn;
     /**
      * The reference that is associated with the policy object.
      */
@@ -690,6 +722,86 @@ declare namespace CloudDirectory {
      */
     attachedObjectIdentifier?: ObjectIdentifier;
   }
+  export interface BatchAttachPolicy {
+    /**
+     * The reference that is associated with the policy object.
+     */
+    PolicyReference: ObjectReference;
+    /**
+     * The reference that identifies the object to which the policy will be attached.
+     */
+    ObjectReference: ObjectReference;
+  }
+  export interface BatchAttachPolicyResponse {
+  }
+  export interface BatchAttachToIndex {
+    /**
+     * A reference to the index that you are attaching the object to.
+     */
+    IndexReference: ObjectReference;
+    /**
+     * A reference to the object that you are attaching to the index.
+     */
+    TargetReference: ObjectReference;
+  }
+  export interface BatchAttachToIndexResponse {
+    /**
+     * The ObjectIdentifier of the object that was attached to the index.
+     */
+    AttachedObjectIdentifier?: ObjectIdentifier;
+  }
+  export interface BatchAttachTypedLink {
+    /**
+     * Identifies the source object that the typed link will attach to.
+     */
+    SourceObjectReference: ObjectReference;
+    /**
+     * Identifies the target object that the typed link will attach to.
+     */
+    TargetObjectReference: ObjectReference;
+    /**
+     * Identifies the typed link facet that is associated with the typed link.
+     */
+    TypedLinkFacet: TypedLinkSchemaAndFacetName;
+    /**
+     * A set of attributes that are associated with the typed link.
+     */
+    Attributes: AttributeNameAndValueList;
+  }
+  export interface BatchAttachTypedLinkResponse {
+    /**
+     * Returns a typed link specifier as output.
+     */
+    TypedLinkSpecifier?: TypedLinkSpecifier;
+  }
+  export interface BatchCreateIndex {
+    /**
+     * Specifies the attributes that should be indexed on. Currently only a single attribute is supported.
+     */
+    OrderedIndexedAttributeList: AttributeKeyList;
+    /**
+     * Indicates whether the attribute that is being indexed has unique values or not.
+     */
+    IsUnique: Bool;
+    /**
+     * A reference to the parent object that contains the index object.
+     */
+    ParentReference?: ObjectReference;
+    /**
+     * The name of the link between the parent object and the index object.
+     */
+    LinkName?: LinkName;
+    /**
+     * The batch reference name. See Batches for more information.
+     */
+    BatchReferenceName?: BatchReferenceName;
+  }
+  export interface BatchCreateIndexResponse {
+    /**
+     * The ObjectIdentifier of the index created by this operation.
+     */
+    ObjectIdentifier?: ObjectIdentifier;
+  }
   export interface BatchCreateObject {
     /**
      * A list of FacetArns that will be associated with the object. For more information, see arns.
@@ -702,15 +814,15 @@ declare namespace CloudDirectory {
     /**
      * If specified, the parent reference to which this object will be attached.
      */
-    ParentReference: ObjectReference;
+    ParentReference?: ObjectReference;
     /**
      * The name of the link.
      */
-    LinkName: LinkName;
+    LinkName?: LinkName;
     /**
      * The batch reference name. See Batches for more information.
      */
-    BatchReferenceName: BatchReferenceName;
+    BatchReferenceName?: BatchReferenceName;
   }
   export interface BatchCreateObjectResponse {
     /**
@@ -726,6 +838,22 @@ declare namespace CloudDirectory {
   }
   export interface BatchDeleteObjectResponse {
   }
+  export interface BatchDetachFromIndex {
+    /**
+     * A reference to the index object.
+     */
+    IndexReference: ObjectReference;
+    /**
+     * A reference to the object being detached from the index.
+     */
+    TargetReference: ObjectReference;
+  }
+  export interface BatchDetachFromIndexResponse {
+    /**
+     * The ObjectIdentifier of the object that was detached from the index.
+     */
+    DetachedObjectIdentifier?: ObjectIdentifier;
+  }
   export interface BatchDetachObject {
     /**
      * Parent reference from which the object with the specified link name is detached.
@@ -738,13 +866,153 @@ declare namespace CloudDirectory {
     /**
      * The batch reference name. See Batches for more information.
      */
-    BatchReferenceName: BatchReferenceName;
+    BatchReferenceName?: BatchReferenceName;
   }
   export interface BatchDetachObjectResponse {
     /**
      * The ObjectIdentifier of the detached object.
      */
     detachedObjectIdentifier?: ObjectIdentifier;
+  }
+  export interface BatchDetachPolicy {
+    /**
+     * Reference that identifies the policy object.
+     */
+    PolicyReference: ObjectReference;
+    /**
+     * Reference that identifies the object whose policy object will be detached.
+     */
+    ObjectReference: ObjectReference;
+  }
+  export interface BatchDetachPolicyResponse {
+  }
+  export interface BatchDetachTypedLink {
+    /**
+     * Used to accept a typed link specifier as input.
+     */
+    TypedLinkSpecifier: TypedLinkSpecifier;
+  }
+  export interface BatchDetachTypedLinkResponse {
+  }
+  export interface BatchGetObjectAttributes {
+    /**
+     * Reference that identifies the object whose attributes will be retrieved.
+     */
+    ObjectReference: ObjectReference;
+    /**
+     * Identifier for the facet whose attributes will be retrieved. See SchemaFacet for details.
+     */
+    SchemaFacet: SchemaFacet;
+    /**
+     * List of attribute names whose values will be retrieved.
+     */
+    AttributeNames: AttributeNameList;
+  }
+  export interface BatchGetObjectAttributesResponse {
+    /**
+     * The attribute values that are associated with an object.
+     */
+    Attributes?: AttributeKeyAndValueList;
+  }
+  export interface BatchGetObjectInformation {
+    /**
+     * A reference to the object.
+     */
+    ObjectReference: ObjectReference;
+  }
+  export interface BatchGetObjectInformationResponse {
+    /**
+     * The facets attached to the specified object.
+     */
+    SchemaFacets?: SchemaFacetList;
+    /**
+     * The ObjectIdentifier of the specified object.
+     */
+    ObjectIdentifier?: ObjectIdentifier;
+  }
+  export interface BatchListAttachedIndices {
+    /**
+     * A reference to the object that has indices attached.
+     */
+    TargetReference: ObjectReference;
+    /**
+     * The pagination token.
+     */
+    NextToken?: NextToken;
+    /**
+     * The maximum number of results to retrieve.
+     */
+    MaxResults?: NumberResults;
+  }
+  export interface BatchListAttachedIndicesResponse {
+    /**
+     * The indices attached to the specified object.
+     */
+    IndexAttachments?: IndexAttachmentList;
+    /**
+     * The pagination token.
+     */
+    NextToken?: NextToken;
+  }
+  export interface BatchListIncomingTypedLinks {
+    /**
+     * The reference that identifies the object whose attributes will be listed.
+     */
+    ObjectReference: ObjectReference;
+    /**
+     * Provides range filters for multiple attributes. When providing ranges to typed link selection, any inexact ranges must be specified at the end. Any attributes that do not have a range specified are presumed to match the entire range.
+     */
+    FilterAttributeRanges?: TypedLinkAttributeRangeList;
+    /**
+     * Filters are interpreted in the order of the attributes on the typed link facet, not the order in which they are supplied to any API calls.
+     */
+    FilterTypedLink?: TypedLinkSchemaAndFacetName;
+    /**
+     * The pagination token.
+     */
+    NextToken?: NextToken;
+    /**
+     * The maximum number of results to retrieve.
+     */
+    MaxResults?: NumberResults;
+  }
+  export interface BatchListIncomingTypedLinksResponse {
+    /**
+     * Returns one or more typed link specifiers as output.
+     */
+    LinkSpecifiers?: TypedLinkSpecifierList;
+    /**
+     * The pagination token.
+     */
+    NextToken?: NextToken;
+  }
+  export interface BatchListIndex {
+    /**
+     * Specifies the ranges of indexed values that you want to query.
+     */
+    RangesOnIndexedValues?: ObjectAttributeRangeList;
+    /**
+     * The reference to the index to list.
+     */
+    IndexReference: ObjectReference;
+    /**
+     * The maximum number of results to retrieve.
+     */
+    MaxResults?: NumberResults;
+    /**
+     * The pagination token.
+     */
+    NextToken?: NextToken;
+  }
+  export interface BatchListIndexResponse {
+    /**
+     * The objects and indexed values attached to the index.
+     */
+    IndexAttachments?: IndexAttachmentList;
+    /**
+     * The pagination token.
+     */
+    NextToken?: NextToken;
   }
   export interface BatchListObjectAttributes {
     /**
@@ -798,6 +1066,134 @@ declare namespace CloudDirectory {
      */
     NextToken?: NextToken;
   }
+  export interface BatchListObjectParentPaths {
+    /**
+     * The reference that identifies the object whose attributes will be listed.
+     */
+    ObjectReference: ObjectReference;
+    /**
+     * The pagination token.
+     */
+    NextToken?: NextToken;
+    /**
+     * The maximum number of results to retrieve.
+     */
+    MaxResults?: NumberResults;
+  }
+  export interface BatchListObjectParentPathsResponse {
+    /**
+     * Returns the path to the ObjectIdentifiers that are associated with the directory.
+     */
+    PathToObjectIdentifiersList?: PathToObjectIdentifiersList;
+    /**
+     * The pagination token.
+     */
+    NextToken?: NextToken;
+  }
+  export interface BatchListObjectPolicies {
+    /**
+     * The reference that identifies the object whose attributes will be listed.
+     */
+    ObjectReference: ObjectReference;
+    /**
+     * The pagination token.
+     */
+    NextToken?: NextToken;
+    /**
+     * The maximum number of results to retrieve.
+     */
+    MaxResults?: NumberResults;
+  }
+  export interface BatchListObjectPoliciesResponse {
+    /**
+     * A list of policy ObjectIdentifiers, that are attached to the object.
+     */
+    AttachedPolicyIds?: ObjectIdentifierList;
+    /**
+     * The pagination token.
+     */
+    NextToken?: NextToken;
+  }
+  export interface BatchListOutgoingTypedLinks {
+    /**
+     * The reference that identifies the object whose attributes will be listed.
+     */
+    ObjectReference: ObjectReference;
+    /**
+     * Provides range filters for multiple attributes. When providing ranges to typed link selection, any inexact ranges must be specified at the end. Any attributes that do not have a range specified are presumed to match the entire range.
+     */
+    FilterAttributeRanges?: TypedLinkAttributeRangeList;
+    /**
+     * Filters are interpreted in the order of the attributes defined on the typed link facet, not the order they are supplied to any API calls.
+     */
+    FilterTypedLink?: TypedLinkSchemaAndFacetName;
+    /**
+     * The pagination token.
+     */
+    NextToken?: NextToken;
+    /**
+     * The maximum number of results to retrieve.
+     */
+    MaxResults?: NumberResults;
+  }
+  export interface BatchListOutgoingTypedLinksResponse {
+    /**
+     * Returns a typed link specifier as output.
+     */
+    TypedLinkSpecifiers?: TypedLinkSpecifierList;
+    /**
+     * The pagination token.
+     */
+    NextToken?: NextToken;
+  }
+  export interface BatchListPolicyAttachments {
+    /**
+     * The reference that identifies the policy object.
+     */
+    PolicyReference: ObjectReference;
+    /**
+     * The pagination token.
+     */
+    NextToken?: NextToken;
+    /**
+     * The maximum number of results to retrieve.
+     */
+    MaxResults?: NumberResults;
+  }
+  export interface BatchListPolicyAttachmentsResponse {
+    /**
+     * A list of ObjectIdentifiers to which the policy is attached.
+     */
+    ObjectIdentifiers?: ObjectIdentifierList;
+    /**
+     * The pagination token.
+     */
+    NextToken?: NextToken;
+  }
+  export interface BatchLookupPolicy {
+    /**
+     * Reference that identifies the object whose policies will be looked up.
+     */
+    ObjectReference: ObjectReference;
+    /**
+     * The pagination token.
+     */
+    NextToken?: NextToken;
+    /**
+     * The maximum number of results to retrieve.
+     */
+    MaxResults?: NumberResults;
+  }
+  export interface BatchLookupPolicyResponse {
+    /**
+     * Provides list of path to policies. Policies contain PolicyId, ObjectIdentifier, and PolicyType. For more information, see Policies.
+     */
+    PolicyToPathList?: PolicyToPathList;
+    /**
+     * The pagination token.
+     */
+    NextToken?: NextToken;
+  }
   export type BatchOperationIndex = number;
   export interface BatchReadException {
     /**
@@ -809,7 +1205,7 @@ declare namespace CloudDirectory {
      */
     Message?: ExceptionMessage;
   }
-  export type BatchReadExceptionType = "ValidationException"|"InvalidArnException"|"ResourceNotFoundException"|"InvalidNextTokenException"|"AccessDeniedException"|"NotNodeException"|string;
+  export type BatchReadExceptionType = "ValidationException"|"InvalidArnException"|"ResourceNotFoundException"|"InvalidNextTokenException"|"AccessDeniedException"|"NotNodeException"|"FacetValidationException"|"CannotListParentOfRootException"|"NotIndexException"|"NotPolicyException"|"DirectoryNotEnabledException"|"LimitExceededException"|"InternalServiceException"|string;
   export interface BatchReadOperation {
     /**
      * Lists all attributes that are associated with an object.
@@ -819,6 +1215,46 @@ declare namespace CloudDirectory {
      * Returns a paginated list of child objects that are associated with a given object.
      */
     ListObjectChildren?: BatchListObjectChildren;
+    /**
+     * Lists indices attached to an object.
+     */
+    ListAttachedIndices?: BatchListAttachedIndices;
+    /**
+     * Retrieves all available parent paths for any object type such as node, leaf node, policy node, and index node objects. For more information about objects, see Directory Structure.
+     */
+    ListObjectParentPaths?: BatchListObjectParentPaths;
+    /**
+     * Retrieves metadata about an object.
+     */
+    GetObjectInformation?: BatchGetObjectInformation;
+    /**
+     * Retrieves attributes within a facet that are associated with an object.
+     */
+    GetObjectAttributes?: BatchGetObjectAttributes;
+    /**
+     * Returns policies attached to an object in pagination fashion.
+     */
+    ListObjectPolicies?: BatchListObjectPolicies;
+    /**
+     * Returns all of the ObjectIdentifiers to which a given policy is attached.
+     */
+    ListPolicyAttachments?: BatchListPolicyAttachments;
+    /**
+     * Lists all policies from the root of the Directory to the object specified. If there are no policies present, an empty list is returned. If policies are present, and if some objects don't have the policies attached, it returns the ObjectIdentifier for such objects. If policies are present, it returns ObjectIdentifier, policyId, and policyType. Paths that don't lead to the root from the target object are ignored. For more information, see Policies.
+     */
+    LookupPolicy?: BatchLookupPolicy;
+    /**
+     * Lists objects attached to the specified index.
+     */
+    ListIndex?: BatchListIndex;
+    /**
+     * Returns a paginated list of all the outgoing TypedLinkSpecifier information for an object. It also supports filtering by typed link facet and identity attributes. For more information, see Typed link.
+     */
+    ListOutgoingTypedLinks?: BatchListOutgoingTypedLinks;
+    /**
+     * Returns a paginated list of all the incoming TypedLinkSpecifier information for an object. It also supports filtering by typed link facet and identity attributes. For more information, see Typed link.
+     */
+    ListIncomingTypedLinks?: BatchListIncomingTypedLinks;
   }
   export type BatchReadOperationList = BatchReadOperation[];
   export interface BatchReadOperationResponse {
@@ -861,6 +1297,46 @@ declare namespace CloudDirectory {
      * Returns a paginated list of child objects that are associated with a given object.
      */
     ListObjectChildren?: BatchListObjectChildrenResponse;
+    /**
+     * Retrieves metadata about an object.
+     */
+    GetObjectInformation?: BatchGetObjectInformationResponse;
+    /**
+     * Retrieves attributes within a facet that are associated with an object.
+     */
+    GetObjectAttributes?: BatchGetObjectAttributesResponse;
+    /**
+     * Lists indices attached to an object.
+     */
+    ListAttachedIndices?: BatchListAttachedIndicesResponse;
+    /**
+     * Retrieves all available parent paths for any object type such as node, leaf node, policy node, and index node objects. For more information about objects, see Directory Structure.
+     */
+    ListObjectParentPaths?: BatchListObjectParentPathsResponse;
+    /**
+     * Returns policies attached to an object in pagination fashion.
+     */
+    ListObjectPolicies?: BatchListObjectPoliciesResponse;
+    /**
+     * Returns all of the ObjectIdentifiers to which a given policy is attached.
+     */
+    ListPolicyAttachments?: BatchListPolicyAttachmentsResponse;
+    /**
+     * Lists all policies from the root of the Directory to the object specified. If there are no policies present, an empty list is returned. If policies are present, and if some objects don't have the policies attached, it returns the ObjectIdentifier for such objects. If policies are present, it returns ObjectIdentifier, policyId, and policyType. Paths that don't lead to the root from the target object are ignored. For more information, see Policies.
+     */
+    LookupPolicy?: BatchLookupPolicyResponse;
+    /**
+     * Lists objects attached to the specified index.
+     */
+    ListIndex?: BatchListIndexResponse;
+    /**
+     * Returns a paginated list of all the outgoing TypedLinkSpecifier information for an object. It also supports filtering by typed link facet and identity attributes. For more information, see Typed link.
+     */
+    ListOutgoingTypedLinks?: BatchListOutgoingTypedLinksResponse;
+    /**
+     * Returns a paginated list of all the incoming TypedLinkSpecifier information for an object. It also supports filtering by typed link facet and identity attributes. For more information, see Typed link.
+     */
+    ListIncomingTypedLinks?: BatchListIncomingTypedLinksResponse;
   }
   export type BatchReferenceName = string;
   export interface BatchRemoveFacetFromObject {
@@ -891,7 +1367,7 @@ declare namespace CloudDirectory {
      */
     ObjectIdentifier?: ObjectIdentifier;
   }
-  export type BatchWriteExceptionType = "InternalServiceException"|"ValidationException"|"InvalidArnException"|"LinkNameAlreadyInUseException"|"StillContainsLinksException"|"FacetValidationException"|"ObjectNotDetachedException"|"ResourceNotFoundException"|"AccessDeniedException"|string;
+  export type BatchWriteExceptionType = "InternalServiceException"|"ValidationException"|"InvalidArnException"|"LinkNameAlreadyInUseException"|"StillContainsLinksException"|"FacetValidationException"|"ObjectNotDetachedException"|"ResourceNotFoundException"|"AccessDeniedException"|"InvalidAttachmentException"|"NotIndexException"|"NotNodeException"|"IndexedAttributeMissingException"|"ObjectAlreadyDetachedException"|"NotPolicyException"|"DirectoryNotEnabledException"|"LimitExceededException"|"UnsupportedIndexTypeException"|string;
   export interface BatchWriteOperation {
     /**
      * Creates an object.
@@ -921,6 +1397,34 @@ declare namespace CloudDirectory {
      * A batch operation that removes a facet from an object.
      */
     RemoveFacetFromObject?: BatchRemoveFacetFromObject;
+    /**
+     * Attaches a policy object to a regular object. An object can have a limited number of attached policies.
+     */
+    AttachPolicy?: BatchAttachPolicy;
+    /**
+     * Detaches a policy from a Directory.
+     */
+    DetachPolicy?: BatchDetachPolicy;
+    /**
+     * Creates an index object. See Indexing for more information.
+     */
+    CreateIndex?: BatchCreateIndex;
+    /**
+     * Attaches the specified object to the specified index.
+     */
+    AttachToIndex?: BatchAttachToIndex;
+    /**
+     * Detaches the specified object from the specified index.
+     */
+    DetachFromIndex?: BatchDetachFromIndex;
+    /**
+     * Attaches a typed link to a specified source and target object. For more information, see Typed link.
+     */
+    AttachTypedLink?: BatchAttachTypedLink;
+    /**
+     * Detaches a typed link from a specified source and target object. For more information, see Typed link.
+     */
+    DetachTypedLink?: BatchDetachTypedLink;
   }
   export type BatchWriteOperationList = BatchWriteOperation[];
   export interface BatchWriteOperationResponse {
@@ -952,6 +1456,34 @@ declare namespace CloudDirectory {
      * The result of a batch remove facet from object operation.
      */
     RemoveFacetFromObject?: BatchRemoveFacetFromObjectResponse;
+    /**
+     * Attaches a policy object to a regular object. An object can have a limited number of attached policies.
+     */
+    AttachPolicy?: BatchAttachPolicyResponse;
+    /**
+     * Detaches a policy from a Directory.
+     */
+    DetachPolicy?: BatchDetachPolicyResponse;
+    /**
+     * Creates an index object. See Indexing for more information.
+     */
+    CreateIndex?: BatchCreateIndexResponse;
+    /**
+     * Attaches the specified object to the specified index.
+     */
+    AttachToIndex?: BatchAttachToIndexResponse;
+    /**
+     * Detaches the specified object from the specified index.
+     */
+    DetachFromIndex?: BatchDetachFromIndexResponse;
+    /**
+     * Attaches a typed link to a specified source and target object. For more information, see Typed link.
+     */
+    AttachTypedLink?: BatchAttachTypedLinkResponse;
+    /**
+     * Detaches a typed link from a specified source and target object. For more information, see Typed link.
+     */
+    DetachTypedLink?: BatchDetachTypedLinkResponse;
   }
   export type BatchWriteOperationResponseList = BatchWriteOperationResponse[];
   export interface BatchWriteRequest {
@@ -1056,7 +1588,7 @@ declare namespace CloudDirectory {
      */
     DirectoryArn: Arn;
     /**
-     * A list of schema facets to be associated with the object that contains SchemaArn and facet name. For more information, see arns.
+     * A list of schema facets to be associated with the object. Do not provide minor version components. See SchemaFacet for details.
      */
     SchemaFacets: SchemaFacetList;
     /**
@@ -1348,6 +1880,18 @@ declare namespace CloudDirectory {
   export type FacetAttributeUpdateList = FacetAttributeUpdate[];
   export type FacetName = string;
   export type FacetNameList = FacetName[];
+  export interface GetAppliedSchemaVersionRequest {
+    /**
+     * The ARN of the applied schema.
+     */
+    SchemaArn: Arn;
+  }
+  export interface GetAppliedSchemaVersionResponse {
+    /**
+     * Current applied schema ARN, including the minor version in use if one was provided.
+     */
+    AppliedSchemaArn?: Arn;
+  }
   export interface GetDirectoryRequest {
     /**
      * The ARN of the directory.
@@ -1376,6 +1920,34 @@ declare namespace CloudDirectory {
      */
     Facet?: Facet;
   }
+  export interface GetObjectAttributesRequest {
+    /**
+     * The Amazon Resource Name (ARN) that is associated with the Directory where the object resides.
+     */
+    DirectoryArn: Arn;
+    /**
+     * Reference that identifies the object whose attributes will be retrieved.
+     */
+    ObjectReference: ObjectReference;
+    /**
+     * The consistency level at which to retrieve the attributes on an object.
+     */
+    ConsistencyLevel?: ConsistencyLevel;
+    /**
+     * Identifier for the facet whose attributes will be retrieved. See SchemaFacet for details.
+     */
+    SchemaFacet: SchemaFacet;
+    /**
+     * List of attribute names whose values will be retrieved.
+     */
+    AttributeNames: AttributeNameList;
+  }
+  export interface GetObjectAttributesResponse {
+    /**
+     * The attributes that are associated with the object.
+     */
+    Attributes?: AttributeKeyAndValueList;
+  }
   export interface GetObjectInformationRequest {
     /**
      * The ARN of the directory being retrieved.
@@ -1392,7 +1964,7 @@ declare namespace CloudDirectory {
   }
   export interface GetObjectInformationResponse {
     /**
-     * The facets attached to the specified object.
+     * The facets attached to the specified object. Although the response does not include minor version information, the most recently applied minor version of each Facet is in effect. See GetAppliedSchemaVersion for details.
      */
     SchemaFacets?: SchemaFacetList;
     /**
@@ -1438,7 +2010,7 @@ declare namespace CloudDirectory {
      */
     IndexedAttributes?: AttributeKeyAndValueList;
     /**
-     * The ObjectIdentifier of the object attached to the index.
+     * In response to ListIndex, the ObjectIdentifier of the object attached to the index. In response to ListAttachedIndices, the ObjectIdentifier of the index attached to the object. This field will always contain the ObjectIdentifier of the object on the opposite side of the attachment specified in the query.
      */
     ObjectIdentifier?: ObjectIdentifier;
   }
@@ -1450,6 +2022,10 @@ declare namespace CloudDirectory {
      * The ARN of the directory you are listing.
      */
     DirectoryArn: Arn;
+    /**
+     * The response for ListAppliedSchemaArns when this parameter is used will list all minor version ARNs for a major version.
+     */
+    SchemaArn?: Arn;
     /**
      * The pagination token.
      */
@@ -1475,7 +2051,7 @@ declare namespace CloudDirectory {
      */
     DirectoryArn: Arn;
     /**
-     * A reference to the object to that has indices attached.
+     * A reference to the object that has indices attached.
      */
     TargetReference: ObjectReference;
     /**
@@ -1651,7 +2227,7 @@ declare namespace CloudDirectory {
      */
     IndexReference: ObjectReference;
     /**
-     * The maximum number of results to retrieve from the index.
+     * The maximum number of objects in a single page to retrieve from the index during a request. For more information, see AWS Directory Service Limits.
      */
     MaxResults?: NumberResults;
     /**
@@ -1907,6 +2483,10 @@ declare namespace CloudDirectory {
   }
   export interface ListPublishedSchemaArnsRequest {
     /**
+     * The response for ListPublishedSchemaArns when this parameter is used will list all minor version ARNs for a major version.
+     */
+    SchemaArn?: Arn;
+    /**
      * The pagination token.
      */
     NextToken?: NextToken;
@@ -2119,9 +2699,13 @@ declare namespace CloudDirectory {
      */
     DevelopmentSchemaArn: Arn;
     /**
-     * The version under which the schema will be published.
+     * The major version under which the schema will be published. Schemas have both a major and minor version associated with them.
      */
     Version: Version;
+    /**
+     * The minor version under which the schema will be published. This parameter is recommended. Schemas have both a major and minor version associated with them.
+     */
+    MinorVersion?: Version;
     /**
      * The new name under which the schema will be published. If this is not provided, the development schema is considered.
      */
@@ -2156,7 +2740,7 @@ declare namespace CloudDirectory {
      */
     DirectoryArn: Arn;
     /**
-     * The facet to remove.
+     * The facet to remove. See SchemaFacet for details.
      */
     SchemaFacet: SchemaFacet;
     /**
@@ -2185,7 +2769,7 @@ declare namespace CloudDirectory {
   export type RuleType = "BINARY_LENGTH"|"NUMBER_COMPARISON"|"STRING_FROM_SET"|"STRING_LENGTH"|string;
   export interface SchemaFacet {
     /**
-     * The ARN of the schema that contains the facet.
+     * The ARN of the schema that contains the facet with no minor component. See arns and In-Place Schema Upgrade for a description of when to provide minor versions.
      */
     SchemaArn?: Arn;
     /**
@@ -2313,7 +2897,7 @@ declare namespace CloudDirectory {
      */
     Attributes: TypedLinkAttributeDefinitionList;
     /**
-     * The set of attributes that distinguish links made from this facet from each other, in the order of significance. Listing typed links can filter on the values of these attributes. See ListOutgoingTypedLinks and ListIncomingTypeLinks for details.
+     * The set of attributes that distinguish links made from this facet from each other, in the order of significance. Listing typed links can filter on the values of these attributes. See ListOutgoingTypedLinks and ListIncomingTypedLinks for details.
      */
     IdentityAttributeOrder: AttributeNameList;
   }
@@ -2447,6 +3031,54 @@ declare namespace CloudDirectory {
     IdentityAttributeOrder: AttributeNameList;
   }
   export interface UpdateTypedLinkFacetResponse {
+  }
+  export interface UpgradeAppliedSchemaRequest {
+    /**
+     * The revision of the published schema to upgrade the directory to.
+     */
+    PublishedSchemaArn: Arn;
+    /**
+     * The ARN for the directory to which the upgraded schema will be applied.
+     */
+    DirectoryArn: Arn;
+    /**
+     * Used for testing whether the major version schemas are backward compatible or not. If schema compatibility fails, an exception would be thrown else the call would succeed but no changes will be saved. This parameter is optional.
+     */
+    DryRun?: Bool;
+  }
+  export interface UpgradeAppliedSchemaResponse {
+    /**
+     * The ARN of the upgraded schema that is returned as part of the response.
+     */
+    UpgradedSchemaArn?: Arn;
+    /**
+     * The ARN of the directory that is returned as part of the response.
+     */
+    DirectoryArn?: Arn;
+  }
+  export interface UpgradePublishedSchemaRequest {
+    /**
+     * The ARN of the development schema with the changes used for the upgrade.
+     */
+    DevelopmentSchemaArn: Arn;
+    /**
+     * The ARN of the published schema to be upgraded.
+     */
+    PublishedSchemaArn: Arn;
+    /**
+     * Identifies the minor version of the published schema that will be created. This parameter is NOT optional.
+     */
+    MinorVersion: Version;
+    /**
+     * Used for testing whether the Development schema provided is backwards compatible, or not, with the publish schema provided by the user to be upgraded. If schema compatibility fails, an exception would be thrown else the call would succeed. This parameter is optional and defaults to false.
+     */
+    DryRun?: Bool;
+  }
+  export interface UpgradePublishedSchemaResponse {
+    /**
+     * The ARN of the upgraded schema that is returned as part of the response.
+     */
+    UpgradedSchemaArn?: Arn;
   }
   export type Version = string;
   /**

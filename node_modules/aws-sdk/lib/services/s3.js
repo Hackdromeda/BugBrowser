@@ -772,7 +772,14 @@ AWS.util.update(AWS.S3.prototype, {
     var expires = params.Expires || 900;
     delete params.Expires; // we can't validate this
     var request = this.makeRequest(operation, params);
-    return request.presign(expires, callback);
+
+    if (callback) {
+      AWS.util.defer(function() {
+        request.presign(expires, callback);
+      });
+    } else {
+      return request.presign(expires, callback);
+    }
   },
 
 
@@ -910,7 +917,7 @@ AWS.util.update(AWS.S3.prototype, {
     conditions,
     expiresInSeconds
   ) {
-    var now = AWS.util.date.getDate();
+    var now = this.getSkewCorrectedDate();
     if (!credentials || !region || !bucket) {
       throw new Error('Unable to create a POST object policy without a bucket,'
         + ' region, and credentials');
