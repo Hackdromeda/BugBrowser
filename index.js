@@ -169,7 +169,6 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                                             .setBackgroundImage(makeImage('https://s3.amazonaws.com/bugbrowser/images/Circuit.png'))
     										.build();
                     this.response.speak(output).renderTemplate(listTemplate);
-                    this.emit(':responseReady')
                 } else {
                     this.emit(':askWithCard', read, read, cardTitle, output);
                 }
