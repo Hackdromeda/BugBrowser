@@ -17,6 +17,8 @@ var newsKey = "54c1f13414d24544a837a4bdccbf5d21";
 
 var numberOfResults = 4;
 
+var selectedProgramToken;
+
 var welcomeMessage = "Welcome to " + appName + ". You can ask me for a flash briefing on recent hacks and security vulnerabilities around the world, information about BugCrowd, the VRT, and active BugCrowd programs. What will it be?";
 
 var welcomeReprompt = "You can ask me for a flash briefing on recent hacks and security vulnerabilities around the world, information about BugCrowd, active BugCrowd programs, or ask for help. What will it be?";
@@ -62,7 +64,7 @@ var newSessionHandlers = {
                 "speechTextReprompt" : welcomeReprompt,
                 "templateToken": "launchRequestTemplate",
                 "bodyTemplateContent": "Welcome to Bug Browser", 
-                "cardContent": "Welcome to Bug Browser",
+                "cardContent": null,
                 "backgroundImage": 'https://s3.amazonaws.com/bugbrowser/images/Circuit.png',
                 "askOrTell" : ":ask",
                 "sessionAttributes": {}
@@ -85,6 +87,10 @@ var newSessionHandlers = {
     'getProgramsIntent': function () {
         this.handler.state = states.SEARCHMODE;
         this.emitWithState('getProgramsIntent');
+    },
+    'getMoreInfoIntent': function () {
+        this.handler.state = states.MOREDETAILS;
+        this.emitWithState('getMoreInfoIntent');
     },
     'getVRTIntent': function () {
         this.handler.state = states.SEARCHMODE;
@@ -188,6 +194,10 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                 this.emit(':tell', retrieveError);
             }
         });
+    },
+    'getMoreInfoIntent': function () {
+        this.handler.state = states.MOREDETAILS;
+        this.emitWithState('getMoreInfoIntent');
     },
     "ElementSelected": function() {
             console.log('In ElementedSelected, the event request token is:' + this.event.request.token)
@@ -701,11 +711,6 @@ function renderTemplate (content) {
                       'type': 'SSML',
                       'ssml': '<speak> ' + content.speechTextReprompt + ' </speak>'
                     }
-                  },
-                  'card': {
-                    'type': 'Standard',
-                    'title': content.title,
-                    'text': content.cardContent
                   },
                   'shouldEndSession': content.askOrTell==":tell"
                 },
