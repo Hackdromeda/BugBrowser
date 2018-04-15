@@ -433,12 +433,14 @@ var programHandlers = Alexa.CreateStateHandler(states.MOREDETAILS, {
             var rewards = map.get(1);
             var urls = map.get(2);
             var images = map.get(3);
-            if(this.event.context.System.device.supportedInterfaces.Display || selectedProgramToken){
-                var index = parseInt(selectedProgramToken);
+            var index;
+            if(selectedProgramToken != null){
+                index = parseInt(selectedProgramToken);
+                selectedProgramToken = null;
             }
             else{
                 var slotValue = this.event.request.intent.slots.program.value;
-                var index = parseInt(slotValue) - 1;
+                index = parseInt(slotValue) - 1;
             }
 
                 rp({
