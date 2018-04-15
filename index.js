@@ -17,6 +17,8 @@ var newsKey = "54c1f13414d24544a837a4bdccbf5d21";
 
 var numberOfResults = 4;
 
+var selectedProgramToken;
+
 var welcomeMessage = "Welcome to " + appName + ". You can ask me for a flash briefing on recent hacks and security vulnerabilities around the world, information about BugCrowd, the VRT, and active BugCrowd programs. What will it be?";
 
 var welcomeReprompt = "You can ask me for a flash briefing on recent hacks and security vulnerabilities around the world, information about BugCrowd, active BugCrowd programs, or ask for help. What will it be?";
@@ -62,7 +64,7 @@ var newSessionHandlers = {
                 "speechTextReprompt" : welcomeReprompt,
                 "templateToken": "launchRequestTemplate",
                 "bodyTemplateContent": "Welcome to Bug Browser", 
-                "cardContent": "Welcome to Bug Browser",
+                "cardContent": null,
                 "backgroundImage": 'https://s3.amazonaws.com/bugbrowser/images/Circuit.png',
                 "askOrTell" : ":ask",
                 "sessionAttributes": {}
@@ -85,6 +87,10 @@ var newSessionHandlers = {
     'getProgramsIntent': function () {
         this.handler.state = states.SEARCHMODE;
         this.emitWithState('getProgramsIntent');
+    },
+    'getMoreInfoIntent': function () {
+        this.handler.state = states.MOREDETAILS;
+        this.emitWithState('getMoreInfoIntent');
     },
     'getVRTIntent': function () {
         this.handler.state = states.SEARCHMODE;
@@ -128,7 +134,7 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                                     .setBackgroundImage(makeImage('https://s3.amazonaws.com/bugbrowser/images/BugCrowdBR.png'))
                                     .setTextContent(makePlainText(output))
                                     .build();
-            this.response.speak(output).renderTemplate(template);
+            this.response.speak(output).listen(output).renderTemplate(template);
             this.emit(':responseReady');
         } else {
             this.emit(':askWithCard', output, appName, overview);
@@ -182,7 +188,7 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                                             .setListItems(listItems)
                                             .setBackgroundImage(makeImage('https://s3.amazonaws.com/bugbrowser/images/Circuit.png'))
     										.build();
-                    this.response.speak(output).renderTemplate(listTemplate);
+                    this.response.speak(read).listen("I did not get a response." + moreInfoProgram).renderTemplate(listTemplate);
                     this.emit(':responseReady');
                 } else {
                     this.emit(':askWithCard', read, read, cardTitle, output);
@@ -193,10 +199,15 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
             }
         });
     },
+    'getMoreInfoIntent': function () {
+        this.handler.state = states.MOREDETAILS;
+        this.emitWithState('getMoreInfoIntent');
+    },
     "ElementSelected": function() {
         if((this.event.request.token).substring(0, 12) == "programToken"){
-            var selectedToken = parseInt((this.event.request.token).substring(12));
-            this.emit('getMoreInfoIntent'+selectedToken);
+            selectedProgramToken = parseInt((this.event.request.token).substring(12));
+            this.handler.state = states.MOREDETAILS;
+            this.emitWithState('getMoreInfoIntent');
         }
         if((this.event.request.token).substring(0, 13) == "listItemToken"){
             var selectedToken = (this.event.request.token).substring(13);
@@ -422,8 +433,8 @@ var programHandlers = Alexa.CreateStateHandler(states.MOREDETAILS, {
             var rewards = map.get(1);
             var urls = map.get(2);
             var images = map.get(3);
-            if(this.event.context.System.device.supportedInterfaces.Display || this.selectedToken){
-                var index = parseInt(this.selectedToken);
+            if(this.event.context.System.device.supportedInterfaces.Display || selectedProgramToken){
+                var index = parseInt(selectedProgramToken);
             }
             else{
                 var slotValue = this.event.request.intent.slots.program.value;
@@ -707,11 +718,6 @@ function renderTemplate (content) {
                       'type': 'SSML',
                       'ssml': '<speak> ' + content.speechTextReprompt + ' </speak>'
                     }
-                  },
-                  'card': {
-                    'type': 'Standard',
-                    'title': content.title,
-                    'text': content.cardContent
                   },
                   'shouldEndSession': content.askOrTell==":tell"
                 },
