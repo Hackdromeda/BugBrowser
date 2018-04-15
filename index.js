@@ -170,7 +170,7 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                     const listItemBuilder = new Alexa.templateBuilders.ListItemBuilder();
                     const listTemplateBuilder = new Alexa.templateBuilders.ListTemplate2Builder();
                     for (i = 0; i < programs.length; i++) {
-                        listItemBuilder.addItem(makeImage(images[i], 400, 400), 'listItemToken' + i, makePlainText(programs[i]))
+                        listItemBuilder.addItem(makeImage(images[i], 400, 400), 'programToken' + i, makePlainText(programs[i]))
                     }
                     const listItems = listItemBuilder.build();
                     const listTemplate = listTemplateBuilder.setToken('listToken')
@@ -447,7 +447,13 @@ var programHandlers = Alexa.CreateStateHandler(states.MOREDETAILS, {
                             smallImageUrl: images[index],
                             largeImageUrl: images[index]
                         };
+
+                        if (this.event.context.System.device.supportedInterfaces.Display) {
+
+                            this.emit(':responseReady');
+                        } else {
                             this.emit(':askWithCard', output, hearMoreMessage, cardTitle, cardContent, imageObj);
+                        }
                     }
                     else {
                         this.emit(':tell', noProgramErrorMessage);
