@@ -45,13 +45,31 @@ var newline = "\n";
 
 var output = "";
 
+
 var alexa;
 
 var newSessionHandlers = {
     'LaunchRequest': function () {
         this.handler.state = states.SEARCHMODE;
         output = welcomeMessage;
-        this.emit(':ask', output, welcomeReprompt);
+        if (this.event.context.System.device.supportedInterfaces.Display) {
+            var content = {
+                "hasDisplaySpeechOutput" : output,
+                "hasDisplayRepromptText" : welcomeReprompt,
+                "simpleCardTitle" : this.t('Bug Browser'),
+                "simpleCardContent" : output,
+                "bodyTemplateTitle" : this.t('Bug Browser'),
+                "bodyTemplateContent" : output,
+                "templateToken" : "openTemplate",
+                "askOrTell" : ":tell",
+                "sessionAttributes": {}
+            };
+            renderTemplate.call(this, content);
+        } else {
+            this.response.cardRenderer(this.t('Bug Browser'), output);
+            this.response.speak(output);
+            this.emit(':responseReady');
+        }
     },
     'getOverview': function () {
         this.handler.state = states.SEARCHMODE;
@@ -568,7 +586,7 @@ function renderTemplate (content) {
   
   
      switch(content.templateToken) {
-         case "factBodyTemplate":
+         case "openTemplate":
             // for reference, here's an example of the content object you'd
             // pass in for this template.
             //  var content = {
@@ -581,7 +599,6 @@ function renderTemplate (content) {
             //     "templateToken" : "factBodyTemplate",
             //     "sessionAttributes": {}
             //  };
-  
              var response = {
                "version": "1.0",
                "response": {
@@ -589,7 +606,7 @@ function renderTemplate (content) {
                    {
                      "type": "Display.RenderTemplate",
                      "template": {
-                       "type": "BodyTemplate1",
+                       "type": "BodyTemplate6",
                        "title": content.bodyTemplateTitle,
                        "token": content.templateToken,
                        "textContent": {
