@@ -16,27 +16,6 @@
                     "samples": []
                 },
                 {
-                    "name": "AMAZON.NoIntent",
-                    "samples": [
-                        "Nah",
-                        "Never",
-                        "Negative",
-                        "Not interested",
-                        "Not right now",
-                        "Nope",
-                        "None",
-                        "No",
-                        "No thanks"
-                    ]
-                },
-                {
-                    "name": "AMAZON.YesIntent",
-                    "samples": [
-                        "Affirmative",
-                        "Yes"
-                    ]
-                },
-                {
                     "name": "getMoreInfoIntent",
                     "slots": [
                         {
@@ -93,16 +72,48 @@
                     ]
                 },
                 {
-                    "name": "getVRTIntent",
-                    "slots": [],
-                    "samples": [
-                        "Tell me about the Vulnerability Rating Taxonomy ",
-                        "Tell me about the VRT",
-                        "Read an entry from the Vulnerability Rating Taxonomy ",
-                        "Read an entry from the VRT",
-                        "Give me something from the Vulnerability Rating Taxonomy ",
-                        "Tell me an entry from Vulnerability Rating Taxonomy "
-                    ]
+                    "name": "AMAZON.MoreIntent",
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.NavigateHomeIntent",
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.NavigateSettingsIntent",
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.NextIntent",
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.PageUpIntent",
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.PageDownIntent",
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.PreviousIntent",
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.ScrollRightIntent",
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.ScrollDownIntent",
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.ScrollLeftIntent",
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.ScrollUpIntent",
+                    "samples": []
                 }
             ],
             "types": []
