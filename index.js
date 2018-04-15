@@ -61,15 +61,15 @@ var newSessionHandlers = {
                 "templateToken": "launchRequestTemplate",
                 "bodyTemplateContent": "Welcome to Bug Browser", 
                 "cardContent": "Welcome to Bug Browser",
-                "backgroundImage": 'https://s3.amazonaws.com/bugbrowser/images/Circuit.jpg',
+                "backgroundImage": 'https://s3.amazonaws.com/bugbrowser/images/Circuit.png',
                 "askOrTell" : ":tell",
                 "sessionAttributes": {}
               };
             renderTemplate.call(this, content);
+            this.emit(':ask', output, welcomeReprompt);
         } else {
-            this.response.cardRenderer(this.t('Bug Browser'), output);
-            this.response.speak(output);
-            this.emit(':responseReady');
+            this.handler.state = states.SEARCHMODE;
+            this.emit(':ask', output, welcomeReprompt);
         }
     },
     'getOverview': function () {
