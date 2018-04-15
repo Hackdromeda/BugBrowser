@@ -90,10 +90,6 @@ var newSessionHandlers = {
         this.handler.state = states.SEARCHMODE;
         this.emitWithState('getVRTIntent');
     },
-    'ElementSelected': function () {
-        this.handler.state = states.SEARCHMODE;
-        this.emitWithState('ElementSelected');
-    },
     'AMAZON.YesIntent': function () {
         output = HelpMessage;
         this.emit(':ask', output, HelpMessage);
@@ -128,7 +124,7 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                                     .setBackgroundImage(makeImage('https://s3.amazonaws.com/bugbrowser/images/BugCrowdBR.png'))
                                     .setTextContent(makePlainText(output))
                                     .build();
-            this.response.speak(output).renderTemplate(template);
+            this.response.speak(output).renderTemplate(template).listen(output);
             this.emit(':responseReady');
         } else {
             this.emit(':askWithCard', output, appName, overview);
@@ -181,8 +177,8 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
     										.setTitle('Programs')
                                             .setListItems(listItems)
                                             .setBackgroundImage(makeImage('https://s3.amazonaws.com/bugbrowser/images/Circuit.png'))
-    										.build();
-                    this.response.speak(output).renderTemplate(listTemplate);
+                                            .build();
+                    this.response.speak(output).renderTemplate(listTemplate).listen(output);
                     this.emit(':responseReady');
                 } else {
                     this.emit(':askWithCard', read, read, cardTitle, output);
@@ -194,18 +190,8 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
         });
     },
     "ElementSelected": function() {
-        if((this.event.request.token).substring(0, 12) == "programToken"){
-            var selectedToken = parseInt((this.event.request.token).substring(12));
-            this.emit('getMoreInfoIntent'+selectedToken);
-        }
-        if((this.event.request.token).substring(0, 13) == "listItemToken"){
-            var selectedToken = (this.event.request.token).substring(13);
-            this.emit(':ask', "No additonal information is available about subcategory " + selectedToken + "." + HelpMessage);
-        }
-        if((this.event.request.token).substring(0, 13) == "newsItemToken"){
-            var selectedToken = parseInt((this.event.request.token).substring(13));
-            this.emit(':ask', "See your Alexa app for more information about news headline number " + selectedToken + "." + HelpMessage);
-        }
+            console.log('In ElementedSelected, the event request token is:' + this.event.request.token)
+            this.emitWithState('getMoreInfoIntent');
     },
     'getVRTIntent': function () {
         rp({
@@ -271,7 +257,7 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                                                 .setListItems(listItems)
                                                 .setBackgroundImage(makeImage('https://s3.amazonaws.com/bugbrowser/images/Circuit.png'))
                                                 .build();
-                        this.response.speak(read).renderTemplate(listTemplate);
+                        this.response.speak(read).renderTemplate(listTemplate).listen(read);
                         this.emit(':responseReady');
                     } else {
                         this.emit(':askWithCard', read, read, cardTitle, output, vrtObj); 
@@ -347,7 +333,7 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                                         .setListItems(listItems)
                                         .setBackgroundImage(makeImage('https://s3.amazonaws.com/bugbrowser/images/Circuit.png'))
                                         .build();
-                this.response.speak(output).renderTemplate(listTemplate);
+                this.response.speak(output).renderTemplate(listTemplate).listen(output);
                 this.emit(':responseReady');
             }
             else{
@@ -391,6 +377,7 @@ var programHandlers = Alexa.CreateStateHandler(states.MOREDETAILS, {
         this.emitWithState('getVRTIntent');
     },
     'getMoreInfoIntent': function () {
+
         rp({
             uri: `https://bugcrowd.com/programs/reward`,
             transform: function (body) {
@@ -422,12 +409,13 @@ var programHandlers = Alexa.CreateStateHandler(states.MOREDETAILS, {
             var rewards = map.get(1);
             var urls = map.get(2);
             var images = map.get(3);
-            if(this.event.context.System.device.supportedInterfaces.Display || this.selectedToken){
-                var index = parseInt(this.selectedToken);
-            }
-            else{
-                var slotValue = this.event.request.intent.slots.program.value;
-                var index = parseInt(slotValue) - 1;
+
+            if (this.event.context.System.device.supportedInterfaces.Display && this.event.request.token){
+                var index = this.event.request.token;
+                console.log('Token Index: ' + index);
+            } else if (this.event.request && this.event.request.intent && this.event.request.intent.slots) {
+                console.log('Slot value: ' + this.event.request.intent.slots.program.value)
+                var index = this.event.request.intent.slots.program.value;
             }
 
                 rp({
@@ -472,7 +460,13 @@ var programHandlers = Alexa.CreateStateHandler(states.MOREDETAILS, {
                         };
 
                         if (this.event.context.System.device.supportedInterfaces.Display) {
-
+                            const builder = new Alexa.templateBuilders.BodyTemplate2Builder();
+                            const template = builder.setTitle(cardTitle)
+                                                .setBackButtonBehavior('VISIBLE')
+                                                .setBackgroundImage(makeImage('https://s3.amazonaws.com/bugbrowser/images/Circuit.png'))
+                                                .setTextContent(cardContent)
+                                                .setImage(makeImage(imageObj.largeImageUrl));
+                            this.response.speak(cardContent).renderTemplate(template).listen(cardContent);                   
                             this.emit(':responseReady');
                         } else {
                             this.emit(':askWithCard', output, hearMoreMessage, cardTitle, cardContent, imageObj);
