@@ -1,5 +1,6 @@
 const Alexa = require('alexa-sdk');
 const makePlainText = Alexa.utils.TextUtils.makePlainText;
+const makeRichText = Alexa.utils.TextUtils.makeRichText;
 const makeImage = Alexa.utils.ImageUtils.makeImage;
 const http = require('http');
 const cheerio = require('cheerio');
@@ -227,7 +228,27 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                         smallImageUrl: 'https://s3.amazonaws.com/bugbrowser/images/VRT-Logo.png',
                         largeImageUrl: 'https://assets.bugcrowdusercontent.com/packs/images/tracker/logo/vrt-logo-ba20b1de556f194607f690788f072798.svg'
                     };
-                    this.emit(':askWithCard', read, read, cardTitle, output, vrtObj); 
+                    if (this.event.context.System.device.supportedInterfaces.Display) {
+                        const listItemBuilder = new Alexa.templateBuilders.ListItemBuilder();
+                        const listTemplateBuilder = new Alexa.templateBuilders.ListTemplate1Builder();
+                        selectedVrt.children.forEach(function(element) {
+                            if (element.priority) {
+                                listItemBuilder.addItem(null, 'listItemToken' + element.name, makeRichText("<font size='5'>" + element.name + "</font>"), makePlainText("Priority: " + element.priority));
+                            } else {
+                                listItemBuilder.addItem(null, 'listItemToken' + element.name, makeRichText("<font size='5'>" +element.name + "</font>"), makePlainText("Priority: varies"));
+                            }
+                        });
+                        const listItems = listItemBuilder.build();
+                        const listTemplate = listTemplateBuilder.setToken('listToken')
+                                                .setTitle(selectedVrt.name)
+                                                .setListItems(listItems)
+                                                .setBackgroundImage(makeImage('https://s3.amazonaws.com/bugbrowser/images/Circuit.png'))
+                                                .build();
+                        this.response.speak(read).renderTemplate(listTemplate);
+                        this.emit(':responseReady');
+                    } else {
+                        this.emit(':askWithCard', read, read, cardTitle, output, vrtObj); 
+                    }
                 }                           
                 else {
                     this.emit(':tell', retrieveError);
@@ -404,7 +425,7 @@ var programHandlers = Alexa.CreateStateHandler(states.MOREDETAILS, {
                             smallImageUrl: images[index],
                             largeImageUrl: images[index]
                         };
-                        this.emit(':askWithCard', output, hearMoreMessage, cardTitle, cardContent, imageObj);
+                            this.emit(':askWithCard', output, hearMoreMessage, cardTitle, cardContent, imageObj);
                     }
                     else {
                         this.emit(':tell', noProgramErrorMessage);
