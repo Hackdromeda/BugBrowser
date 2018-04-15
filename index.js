@@ -2,7 +2,6 @@ const Alexa = require('alexa-sdk');
 const makePlainText = Alexa.utils.TextUtils.makePlainText;
 const makeRichText = Alexa.utils.TextUtils.makeRichText;
 const makeImage = Alexa.utils.ImageUtils.makeImage;
-const http = require('http');
 const cheerio = require('cheerio');
 const request = require('request');
 const rp = require('request-promise');
@@ -119,7 +118,17 @@ var newSessionHandlers = {
 var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
     'getOverview': function () {
         output = overview;
-        this.emit(':askWithCard', output, appName, overview);
+        if (this.event.context.System.device.supportedInterfaces.Display) {
+            const builder = new Alexa.templateBuilders.BodyTemplate1Builder();
+            const template = builder.setTitle('What is BugCrowd?')
+                                    .setBackgroundImage(makeImage('https://s3.amazonaws.com/bugbrowser/images/BugCrowdBR.png'))
+                                    .setTextContent(makePlainText(output))
+                                    .build();
+            this.response.speak(output).renderTemplate(template);
+            this.emit(':responseReady');
+        } else {
+            this.emit(':askWithCard', output, appName, overview);
+        }
     },
     'getProgramsIntent': function () {
             rp({
