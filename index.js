@@ -37,7 +37,7 @@ var noProgramErrorMessage = "There is no program with this number.";
 
 var getMoreInfoMessage = "OK, " + getMoreInfoRepromtMessage;
 
-var goodbyeMessage = "OK, BugBrowser shutting down.";
+var goodbyeMessage = "OK, Bug Browser shutting down.";
 
 var newsIntroMessage = "These are the " + numberOfResults + " most recent security vulnerability headlines, you can read more on your Alexa app. ";
 
@@ -62,13 +62,13 @@ var newSessionHandlers = {
                 "bodyTemplateContent": "Welcome to Bug Browser", 
                 "cardContent": "Welcome to Bug Browser",
                 "backgroundImage": 'https://s3.amazonaws.com/bugbrowser/images/Circuit.png',
-                "askOrTell" : ":tell",
+                "askOrTell" : ":ask",
                 "sessionAttributes": {}
               };
             renderTemplate.call(this, content);
-            this.emit(':ask', output, welcomeReprompt);
         } else {
             this.handler.state = states.SEARCHMODE;
+            output = welcomeMessage;
             this.emit(':ask', output, welcomeReprompt);
         }
     },
@@ -235,19 +235,18 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
         this.emit(':ask', output, HelpMessage);
     },
     'getNewsIntent': function () {
+        var articles = [];
         httpGet(appName, function (response) {
 
             // Parse the response into a JSON object ready to be formatted.
             var responseData = JSON.parse(response);
             var cardContent = "Data provided by The New York Times" + newline + newline;
-
             // Check if we have correct data, If not create an error speech out to try again.
             if (responseData == null) {
                 output = "There was a problem with getting data please try again";
             }
             else {
                 output = newsIntroMessage;
-
                 // If we have data.
                 for (var i = 0; i < responseData.response.docs.length; i++) {
 
@@ -255,6 +254,12 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                         // Get the name and description JSON structure.
                         var headline = responseData.response.docs[i].headline.main;
                         var index = i + 1;
+                        articles[i] = {
+                            name: "Headline " + index + ": " + headline + "; ",
+                            imageURL: null,
+                            info: null,
+                            token: listItemToken + index,
+                        };
 
                         output += "Headline " + index + ": " + headline + "; ";
 
@@ -267,8 +272,12 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
             }
 
             var cardTitle = appName + " News";
-
-            alexa.emit(':tellWithCard', output, cardTitle, cardContent);
+            if (this.event.context.System.device.supportedInterfaces.Display) {
+                listTemplateMaker(articles, 1, cardTitle, output, true, 'https://s3.amazonaws.com/bugbrowser/images/Circuit.png')
+            }
+            else{
+                alexa.emit(':tellWithCard', output, cardTitle, cardContent);
+            }
         });
     },
     'AMAZON.RepeatIntent': function () {
@@ -498,7 +507,7 @@ function bodyTemplateTypePicker(pNum) {
     return val;
 }
 
-function bodyTemplateMaker(pBodyTemplateType, pImg, pTitle, pText1, pText2, pOutputSpeech, pReprompt, pBackgroundIMG) {
+function bodyTemplateMaker(pBodyTemplateType, pImg, pTitle, pText1, pText2, pOutputSpeech, pReprompt, pHint, pBackgroundIMG) {
     var bodyTemplate = bodyTemplateTypePicker.call(this, pBodyTemplateType);
     var template = bodyTemplate.setTitle(pTitle)
         .build();
@@ -516,13 +525,18 @@ function bodyTemplateMaker(pBodyTemplateType, pImg, pTitle, pText1, pText2, pOut
         bodyTemplate.setBackgroundImage(makeImage(pBackgroundIMG));
     }
 
+    this.response.speak(pOutputSpeech)
+        .renderTemplate(template)
+        .shouldEndSession(null); //Keeps session open without pinging user..
+
+    this.response.hint(pHint || null, "PlainText");//Suggests command user should use
     this.attributes.lastOutputResponse = pOutputSpeech;
 
     if (pReprompt) {
         this.response.listen(pReprompt); // .. but we will ping them if we add a reprompt
     }
 
-    this.emit(':responseReady'); //
+    this.emit(':responseReady');
 }
 function listTemplateTypePicker(pNum) {
     var val;
@@ -540,17 +554,17 @@ function listTemplateTypePicker(pNum) {
     return val;
 }
    //TODO: Change parameter names to match JSON spec
-function listTemplateMaker(pArray, pType, pTitle, pOutputSpeech, bool, pBackgroundIMG) {
+function listTemplateMaker(pArray, pListTemplateTypeNum, pTitle, pOutputSpeech, bool, pBackgroundIMG) {
     const listItemBuilder = new Alexa.templateBuilders.ListItemBuilder();
-    var listTemplateBuilder = listTemplateTypePicker(pType);
+    var listTemplateBuilder = listTemplateTypePicker(pListTemplateTypeNum);
 
-    if (!bool) {
+    if (bool) {
         //Insert option name
         for (let i = 0; i < pArray.length; i++) {
-            listItemBuilder.addItem(makeImage(pArray[i].imageURL), pArray[i].token, makePlainText(capitalizeFirstLetter(pArray[i].name)));
+            listItemBuilder.addItem(makeImage(pArray[i].imageURL), pArray[i].token, makePlainText(pArray[i].name));
         }
     } else {
-        //Do not insert option name if playing the boolean is true
+        //Do not insert option name if playing the boolean is false
         for (let i = 0; i < pArray.length; i++) {
             listItemBuilder.addItem(makeImage(pArray[i].imageURL), pArray[i].token);
         }
