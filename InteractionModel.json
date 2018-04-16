@@ -161,11 +161,6 @@
                     "samples": []
                 },
                 {
-                    "name": "ElementSelected",
-                    "slots": [],
-                    "samples": []
-                },
-                {
                     "name": "getOverviewVideo",
                     "slots": [],
                     "samples": [

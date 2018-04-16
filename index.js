@@ -101,9 +101,9 @@ var newSessionHandlers = {
         this.handler.state = states.SEARCHMODE;
         this.emitWithState('getVRTIntent');
     },
-    'Display.ElementSelected': function () {
-        this.handler.state = states.SEARCHMODE;
-        this.emitWithState('Display.ElementSelected');
+    'ElementSelected': function () {
+        this.handler.state = states.MOREDETAILS;
+        this.emitWithState('ElementSelected');
     },
     'AMAZON.YesIntent': function () {
         output = HelpMessage;
@@ -125,7 +125,7 @@ var newSessionHandlers = {
         this.emit('AMAZON.StopIntent');
     },
     'Unhandled': function () {
-        console.log("First Unhandled event" + this.event);
+        console.log("First Unhandled event" + this.event.request.token);
         output = HelpMessage;
         this.emit(':ask', output, welcomeReprompt);
     },
@@ -312,6 +312,10 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                 }
             });
     },
+    'ElementSelected': function () {
+        this.handler.state = states.MOREDETAILS;
+        this.emitWithState('ElementSelected');
+    },
     'AMAZON.YesIntent': function () {
         output = HelpMessage;
         this.emit(':ask', output, HelpMessage);
@@ -385,117 +389,6 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
             }
         });
         
-    },
-    "Display.ElementSelected": function() {
-        console.log (this.event.request.token);
-        if((this.event.request.token).substring(0, 12) == "programToken"){
-            var index = (this.event.request.token).substring(12) - 1;
-            console.log ('Program Token Detected');
-            rp({
-                uri: `https://bugcrowd.com/programs/reward`,
-                transform: function (body) {
-                  return cheerio.load(body);
-                }
-              }).then(($) => {
-                var programs = [];
-                var rewards = [];
-                var urls = [];
-                var images = [];
-                $('.bc-panel__title').each(function(i, elem) {
-                    programs.push($(this).text().trim());
-                    urls.push($(this).find('a').attr('href'));
-                });
-                $('.bc-stat__title').each(function(i, elem) {
-                    rewards.push($(this).text().trim());
-                });
-                $('.bc-program-card__header').each(function(i, elem) {
-                    images.push($(this).find('img').attr('src'));
-                });
-                var map = new Map();
-                map.set(0, programs);
-                map.set(1, rewards);
-                map.set(2, urls)
-                map.set(3, images)
-                return map;
-              }).then((map) => {
-                var programs = map.get(0);
-                var rewards = map.get(1);
-                var urls = map.get(2);
-                var images = map.get(3);
-    
-                    rp({
-                        uri: `https://bugcrowd.com` + urls[index],
-                        transform: function (body) {
-                          return cheerio.load(body);
-                        }
-                      }).then(($) => {
-                          var information = [];
-                        $('.stat').each(function(i, elem) {
-                          information.push($(this).text().trim().replace(/\s/g,' '));
-                        });
-    
-                        if (information[0]) {
-                            information[0] = information[0].replace(/ +(?= )/g,'') + ' to security researchers in total. ';
-                            var numOfVrts = information[0];
-                        }
-                        else{
-                            var numOfVrts = "";
-                        }                       
-                        if (information[1]) {
-                            information[1] = information[1].replace('day  ', 'day.').replace('days  ', 'days.') + '. ';
-                            var validationTime = 'Expect v' + information[1].substring(1, information[1].length);
-                        }
-                        else{
-                            var validationTime = "";
-                        }                    
-                        if (information[2]) {
-                            var payout = "This program has a " + information[2].substring(0);
-                        }
-                        else{
-                            var payout = "No payment history is available";
-                        }
-                        var selectedProgram = programs[index];
-                        if (selectedProgram) {
-                            output = programs[index] + " is offering a bounty of " + rewards[index+1] + ". " + numOfVrts + validationTime + payout + ". Additional details are available at bugcrowd.com" + urls[index] + "." + hearMoreMessage;
-                            var cardTitle = programs[index];
-                            var cardContent = programs[index] + " is offering a bounty of " + rewards[index+1] + ". " + numOfVrts + validationTime + payout + ". Additional details are available at bugcrowd.com" + urls[index] + ".";
-                            const imageObj = {
-                                smallImageUrl: images[index],
-                                largeImageUrl: images[index]
-                            };
-
-                                const builder = new Alexa.templateBuilders.BodyTemplate2Builder();
-                                const template = builder.setTitle(cardTitle)
-                                                    .setToken('getMoreInfoIntentToken')
-                                                    .setBackButtonBehavior('VISIBLE')
-                                                    .setBackgroundImage(makeImage('https://s3.amazonaws.com/bugbrowser/images/Circuit.png'))
-                                                    .setTextContent(makeRichText('<font size="5"' + cardContent + '</font>'))
-                                                    .setImage(makeImage(imageObj.largeImageUrl))
-                                                    .build();
-                                this.response.speak(output).listen(hearMoreMessage).renderTemplate(template);                   
-                                this.emit(':responseReady');
-                        }
-                        else {
-                            this.emit(':tell', noProgramErrorMessage);
-                        }
-                    });
-                
-              });
-        }
-        else if((this.event.request.token).substring(0, 13) == "listItemToken"){
-            var selectedToken = (this.event.request.token).substring(13);
-            console.log ('List Token Detected');
-            this.emit(':ask', "No additonal information is available about subcategory " + selectedToken + "." + HelpMessage);
-        }
-        else if((this.event.request.token).substring(0, 13) == "newsItemToken"){
-            var selectedToken = parseInt((this.event.request.token).substring(13));
-            console.log ('News Token Detected');
-            this.emit(':ask', "See your Alexa app for more information about news headline number " + selectedToken + "." + HelpMessage);
-        }
-        else{
-            console.log ('Unhandled Token Detected');
-            this.emit('Unhandled');
-        }
     },
     'AMAZON.RepeatIntent': function () {
         this.emit(':ask', output, HelpMessage);
@@ -573,27 +466,7 @@ var programHandlers = Alexa.CreateStateHandler(states.MOREDETAILS, {
             var rewards = map.get(1);
             var urls = map.get(2);
             var images = map.get(3);
-            var index;
-
-            if (this.event.request.token){
-                if((this.event.request.token).substring(0, 12) == "programToken"){ //programToken from GUI
-                    index = parseInt((this.event.request.token).substring(12));;
-                    console.log('Token Index: ' + index);
-                    console.log('Entered function for tokens');
-                    console.log(this.event.request.token);
-                }
-                else{
-                    index = parseInt((this.event.request.token).substring(22));; //getMoreInfoIntentToken from GUI
-                    console.log('Token Index: ' + index);
-                    console.log('Entered function for tokens');
-                    console.log(this.event.request.token);
-                }
-            } else if (this.event.request && this.event.request.intent && this.event.request.intent.slots) {
-                index = this.event.request.intent.slots.program.value - 1; //slot value from VUI
-            }
-            else{
-                index = 1; //default
-            }
+            var index = parseInt(this.event.request.intent.slots.program.value) - 1;
 
                 rp({
                     uri: `https://bugcrowd.com` + urls[index],
@@ -635,14 +508,15 @@ var programHandlers = Alexa.CreateStateHandler(states.MOREDETAILS, {
                             smallImageUrl: images[index],
                             largeImageUrl: images[index]
                         };
+                        console.log('Images URL ' + images[index]);
 
-                        if (this.event.request.token) {
+                        if (this.event.context.System.device.supportedInterfaces.Display) {
                             const builder = new Alexa.templateBuilders.BodyTemplate2Builder();
                             const template = builder.setTitle(cardTitle)
                                                 .setToken('getMoreInfoIntentToken')
                                                 .setBackButtonBehavior('VISIBLE')
                                                 .setBackgroundImage(makeImage('https://s3.amazonaws.com/bugbrowser/images/Circuit.png'))
-                                                .setTextContent(makeRichText('<font size="5"' + cardContent + '</font>'))
+                                                .setTextContent(makeRichText('<font size="5">' + cardContent + '</font>'))
                                                 .setImage(makeImage(imageObj.largeImageUrl))
                                                 .build();
                             this.response.speak(output).listen(hearMoreMessage).renderTemplate(template);                   
@@ -658,9 +532,120 @@ var programHandlers = Alexa.CreateStateHandler(states.MOREDETAILS, {
             
           });
     },
-    'Display.ElementSelected': function () {
-        this.handler.state = states.SEARCHMODE;
-        this.emitWithState('Display.ElementSelected');
+    "ElementSelected": function() {
+        console.log (this.event.request.token);
+        var newToken = this.event.request.token;
+        if((this.event.request.token).substring(0, 12) == "programToken" || (this.event.request.token).substring(0, 17) == "eventprogramToken"){
+        var index = parseInt(newToken.replace(/[^0-9]/g, ''), 10); //leave only the digits
+            console.log ('Program Token Detected');
+            console.log('Index set to ' + index);
+            rp({
+                uri: `https://bugcrowd.com/programs/reward`,
+                transform: function (body) {
+                  return cheerio.load(body);
+                }
+              }).then(($) => {
+                var programs = [];
+                var rewards = [];
+                var urls = [];
+                var images = [];
+                $('.bc-panel__title').each(function(i, elem) {
+                    programs.push($(this).text().trim());
+                    urls.push($(this).find('a').attr('href'));
+                });
+                $('.bc-stat__title').each(function(i, elem) {
+                    rewards.push($(this).text().trim());
+                });
+                $('.bc-program-card__header').each(function(i, elem) {
+                    images.push($(this).find('img').attr('src'));
+                });
+                var map = new Map();
+                map.set(0, programs);
+                map.set(1, rewards);
+                map.set(2, urls);
+                map.set(3, images);
+                console.log('Map ready for EventSelected!');
+                return map;
+              }).then((map) => {
+                var programs = map.get(0);
+                var rewards = map.get(1);
+                var urls = map.get(2);
+                var images = map.get(3);
+    
+                    rp({
+                        uri: `https://bugcrowd.com` + urls[index],
+                        transform: function (body) {
+                          return cheerio.load(body);
+                        }
+                      }).then(($) => {
+                          var information = [];
+                        $('.stat').each(function(i, elem) {
+                          information.push($(this).text().trim().replace(/\s/g,' '));
+                        });
+    
+                        if (information[0]) {
+                            information[0] = information[0].replace(/ +(?= )/g,'') + ' to security researchers in total. ';
+                            var numOfVrts = information[0];
+                        }
+                        else{
+                            var numOfVrts = "";
+                        }                       
+                        if (information[1]) {
+                            information[1] = information[1].replace('day  ', 'day.').replace('days  ', 'days.') + '. ';
+                            var validationTime = 'Expect v' + information[1].substring(1, information[1].length);
+                        }
+                        else{
+                            var validationTime = "";
+                        }                    
+                        if (information[2]) {
+                            var payout = "This program has a " + information[2].substring(0);
+                        }
+                        else{
+                            var payout = "No payment history is available";
+                        }
+                        var selectedProgram = programs[index];
+                        if (selectedProgram) {
+                            output = programs[index] + " is offering a bounty of " + rewards[index+1] + ". " + numOfVrts + validationTime + payout + ". Additional details are available at bugcrowd.com" + urls[index] + "." + hearMoreMessage;
+                            var cardTitle = programs[index];
+                            var cardContent = programs[index] + " is offering a bounty of " + rewards[index+1] + ". " + numOfVrts + validationTime + payout + ". Additional details are available at bugcrowd.com" + urls[index] + ".";
+                            const imageObj = {
+                                smallImageUrl: images[index],
+                                largeImageUrl: images[index]
+                            };
+                                console.log('Ready to build new body template 2!');
+                                const builder = new Alexa.templateBuilders.BodyTemplate2Builder();
+                                const template = builder.setTitle(cardTitle)
+                                                    .setToken('getMoreInfoIntentToken')
+                                                    .setBackButtonBehavior('VISIBLE')
+                                                    .setBackgroundImage(makeImage('https://s3.amazonaws.com/bugbrowser/images/Circuit.png'))
+                                                    .setTextContent(makeRichText('<font size="5">' + cardContent + '</font>'))
+                                                    .setImage(makeImage(imageObj.largeImageUrl))
+                                                    .build();
+                                this.response.speak(output).listen(hearMoreMessage).renderTemplate(template);
+                                console.log('Should be rendered!');                 
+                                this.emit(':responseReady');
+                        }
+                        else {
+                            this.emit(':tell', noProgramErrorMessage);
+                        }
+                    });
+                
+              });
+        }
+        else if((this.event.request.token).substring(0, 13) == "listItemToken"){
+            var selectedToken = (this.event.request.token).substring(13);
+            console.log ('List Token Detected');
+            this.emit(':ask', "No additonal information is available about subcategory " + selectedToken + "." + HelpMessage);
+        }
+        else if((this.event.request.token).substring(0, 13) == "newsItemToken"){
+            var selectedToken = parseInt((this.event.request.token).substring(13));
+            console.log ('News Token Detected');
+            this.emit(':ask', "See your Alexa app for more information about news headline number " + selectedToken + "." + HelpMessage);
+        }
+        else{
+            console.log ('Unhandled Token Detected');
+            this.emit('Unhandled');
+        }
     },
     'AMAZON.HelpIntent': function () {
         output = HelpMessage;
@@ -688,6 +673,7 @@ var programHandlers = Alexa.CreateStateHandler(states.MOREDETAILS, {
         // Use this function to clear up and save any data needed between sessions
     },
     'Unhandled': function () {
+        console.log("Third Unhandled event" + this.event.request.token);
         output = HelpMessage;
         this.emit(':ask', output, welcomeReprompt);
     }
