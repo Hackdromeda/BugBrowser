@@ -45,6 +45,10 @@
                         }
                     ],
                     "samples": [
+                        "select {program}",
+                        "tell me more about {program}",
+                        "open {program}",
+                        "show {program}",
                         "tell me more about number {program}",
                         "what is number {program}",
                         "more about number {program}",
@@ -71,6 +75,7 @@
                     "name": "getOverview",
                     "slots": [],
                     "samples": [
+                        "introduce me to bugcrowd",
                         "tell me about bugcrowd",
                         "more information about BugCrowd",
                         "what's it like in BugCrowd",
@@ -86,6 +91,13 @@
                     "name": "getProgramsIntent",
                     "slots": [],
                     "samples": [
+                        "how can I earn money",
+                        "what companies are looking for security researchers",
+                        "how do I earn money",
+                        "what are some bounties available",
+                        "active bounties",
+                        "tell me about bounty programs",
+                        "tell me the top active programs",
                         "who should I hack",
                         "What companies should I hack",
                         "top programs",
@@ -96,12 +108,12 @@
                     "name": "getVRTIntent",
                     "slots": [],
                     "samples": [
-                        "Tell me about the Vulnerability Rating Taxonomy",
+                        "Tell me about the Vulnerability Rating Taxonomy ",
                         "Tell me about the VRT",
-                        "Read an entry from the Vulnerability Rating Taxonomy",
+                        "Read an entry from the Vulnerability Rating Taxonomy ",
                         "Read an entry from the VRT",
-                        "Give me something from the Vulnerability Rating Taxonomy",
-                        "Tell me an entry from Vulnerability Rating Taxonomy"
+                        "Give me something from the Vulnerability Rating Taxonomy ",
+                        "Tell me an entry from Vulnerability Rating Taxonomy "
                     ]
                 },
                 {
@@ -147,6 +159,31 @@
                 {
                     "name": "AMAZON.ScrollUpIntent",
                     "samples": []
+                },
+                {
+                    "name": "ElementSelected",
+                    "slots": [],
+                    "samples": []
+                },
+                {
+                    "name": "getOverviewVideo",
+                    "slots": [],
+                    "samples": [
+                        "BugCrowd introduction video",
+                        "tell me about bugcrowd with a video",
+                        "Introduce me to BugCrowd with a video",
+                        "play BugCrowd video",
+                        " play BugCrowd overview video"
+                    ]
+                },
+                {
+                    "name": "getTeachVideo",
+                    "slots": [],
+                    "samples": [
+                        "how do you find bounties",
+                        "how do you use bugcrowd",
+                        "Teach me how to use bugcrowd"
+                    ]
                 }
             ],
             "types": []
