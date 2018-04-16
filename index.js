@@ -422,9 +422,7 @@ var programHandlers = Alexa.CreateStateHandler(states.MOREDETAILS, {
 
             if (this.event.request.token){
                 var index = parseInt(this.event.request.token.substring(12));
-                console.log('Token Index: ' + index);
             } else if (this.event.request && this.event.request.intent && this.event.request.intent.slots) {
-                console.log('Slot value: ' + this.event.request.intent.slots.program.value)
                 var index = this.event.request.intent.slots.program.value - 1;
             }
 
@@ -475,7 +473,7 @@ var programHandlers = Alexa.CreateStateHandler(states.MOREDETAILS, {
                                                 .setToken('getMoreInfoIntentToken')
                                                 .setBackButtonBehavior('VISIBLE')
                                                 .setBackgroundImage(makeImage('https://s3.amazonaws.com/bugbrowser/images/Circuit.png'))
-                                                .setTextContent(makePlainText(cardContent))
+                                                .setTextContent(makeRichText('<font size="5"' + cardContent + '</font>'))
                                                 .setImage(makeImage(imageObj.largeImageUrl))
                                                 .build();
                             this.response.speak(output).listen(hearMoreMessage).renderTemplate(template);                   
