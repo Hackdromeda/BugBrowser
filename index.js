@@ -81,6 +81,10 @@ var newSessionHandlers = {
         this.handler.state = states.SEARCHMODE;
         this.emitWithState('getOverviewVideo');
     },
+    'getEasterEgg': function () {
+        this.handler.state = states.SEARCHMODE;
+        this.emitWithState('getEasterEgg');
+    },
     'getTeachVideo': function () {
         this.handler.state = states.SEARCHMODE;
         this.emitWithState('getTeachVideo');
@@ -157,7 +161,21 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
             this.response.playVideo(videoSource, metadata);
             this.emit(':responseReady');
         } else {
-            this.emit(':askWithCard', "Playing videos is not supported on this device. " + overview, appName, overview);
+            this.emit(':ask', "Playing videos is not supported on this device. " + overview, appName, overview);
+        }
+    },
+    'getEasterEgg': function () {
+        output = "This Easter Egg is a video that can only be played on the Echo Show or Echo Spot. What else would you like to do?";
+        if (this.event.context.System.device.supportedInterfaces.Display) {
+            const videoSource = 'https://s3.amazonaws.com/bugbrowser/video/Bugcrowd+Intro.mp4';
+            const metadata = {
+                'title': 'BugCrowd',
+                'subtitle': 'Crowdsourced Cybersecurity'
+            };
+            this.response.playVideo(videoSource, metadata);
+            this.emit(':responseReady');
+        } else {
+            this.emit(':ask', output, appName, output);
         }
     },
     'getTeachVideo': function () {
@@ -416,6 +434,10 @@ var programHandlers = Alexa.CreateStateHandler(states.MOREDETAILS, {
     'getOverviewVideo': function () {
         this.handler.state = states.SEARCHMODE;
         this.emitWithState('getOverviewVideo');
+    },
+    'getEasterEgg': function () {
+        this.handler.state = states.SEARCHMODE;
+        this.emitWithState('getEasterEgg');
     },
     'getTeachVideo': function () {
         this.handler.state = states.SEARCHMODE;
