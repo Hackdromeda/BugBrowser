@@ -94,6 +94,13 @@ var newSessionHandlers = {
         this.handler.state = states.SEARCHMODE;
         this.emitWithState('getVRTIntent');
     },
+    'ElementSelected': function () {
+        console.log(this.event);
+        console.log(this.event.request);
+        console.log(this.event.request.token);
+        this.handler.state = states.MOREDETAILS;
+        this.emitWithState('ElementSelected');
+    },
     'AMAZON.YesIntent': function () {
         output = HelpMessage;
         this.emit(':ask', output, HelpMessage);
@@ -114,6 +121,9 @@ var newSessionHandlers = {
         this.emit('AMAZON.StopIntent');
     },
     'Unhandled': function () {
+        console.log(this.event);
+        console.log(this.event.request);
+        console.log(this.event.request.token);
         output = HelpMessage;
         this.emit(':ask', output, welcomeReprompt);
     },
@@ -198,18 +208,22 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
         this.emitWithState('getMoreInfoIntent');
     },
     "ElementSelected": function() {
+        console.log(this.event);
+        console.log(this.event.request);
+        console.log(this.event.request.token);
+        console.log('ElementSelected Token:' + this.event.request.token)
         if((this.event.request.token).substring(0, 12) == "programToken"){
-            var selectedToken = parseInt((this.event.request.token).substring(12));
+            this.event.request.token = this.event.request.token.substring(12);
             this.handler.state = states.MOREDETAILS;
             this.emitWithState('getMoreInfoIntent');
         }
         if((this.event.request.token).substring(0, 13) == "listItemToken"){
-            var selectedToken = (this.event.request.token).substring(13);
-            this.emit(':ask', "No additonal information is available about subcategory " + selectedToken + "." + HelpMessage);
+            this.event.request.token = this.event.request.token.substring(13);
+            this.emit(':ask', "No additonal information is available about subcategory " + this.event.request.token + "." + HelpMessage);
         }
         if((this.event.request.token).substring(0, 13) == "newsItemToken"){
-            var selectedToken = parseInt((this.event.request.token).substring(13));
-            this.emit(':ask', "See your Alexa app for more information about news headline number " + selectedToken + "." + HelpMessage);
+            this.event.request.token = this.event.request.token.substring(13);
+            this.emit(':ask', "See your Alexa app for more information about news headline number " + this.event.request.token + "." + HelpMessage);
         }
     },
     'getVRTIntent': function () {
@@ -373,6 +387,9 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
         this.emit('AMAZON.StopIntent');
     },
     'Unhandled': function () {
+        console.log(this.event);
+        console.log(this.event.request);
+        console.log(this.event.request.token);
         output = HelpMessage;
         this.emit(':ask', output, welcomeReprompt);
     }
@@ -430,7 +447,7 @@ var programHandlers = Alexa.CreateStateHandler(states.MOREDETAILS, {
             var images = map.get(3);
 
             if (this.event.context.System.device.supportedInterfaces.Display && this.event.request.token){
-                var index = Integer.parseInt((this.event.request.token).substring(12));
+                var index = Integer.parseInt(this.event.request.token);
                 console.log('Token Index: ' + index);
             } else if (this.event.request && this.event.request.intent && this.event.request.intent.slots) {
                 console.log('Slot value: ' + this.event.request.intent.slots.program.value)
