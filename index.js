@@ -47,7 +47,6 @@ var newline = "\n";
 
 var output = "";
 
-
 var alexa;
 
 var newSessionHandlers = {
@@ -78,6 +77,14 @@ var newSessionHandlers = {
         this.handler.state = states.SEARCHMODE;
         this.emitWithState('getOverview');
     },
+    'getOverviewVideo': function () {
+        this.handler.state = states.SEARCHMODE;
+        this.emitWithState('getOverviewVideo');
+    },
+    'getTeachVideo': function () {
+        this.handler.state = states.SEARCHMODE;
+        this.emitWithState('getTeachVideo');
+    },
     'getNewsIntent': function () {
         this.handler.state = states.SEARCHMODE;
         this.emitWithState('getNewsIntent');
@@ -94,9 +101,9 @@ var newSessionHandlers = {
         this.handler.state = states.SEARCHMODE;
         this.emitWithState('getVRTIntent');
     },
-    'ElementSelected': function () {
-        this.handler.state = states.MOREDETAILS;
-        this.emitWithState('getMoreInfoIntent');
+    'Display.ElementSelected': function () {
+        this.handler.state = states.SEARCHMODE;
+        this.emitWithState('Display.ElementSelected');
     },
     'AMAZON.YesIntent': function () {
         output = HelpMessage;
@@ -137,6 +144,34 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
             this.emit(':responseReady');
         } else {
             this.emit(':askWithCard', output, appName, overview);
+        }
+    },
+    'getOverviewVideo': function () {
+        output = overview;
+        if (this.event.context.System.device.supportedInterfaces.Display) {
+            const videoSource = 'https://s3.amazonaws.com/bugbrowser/video/Overview.mp4';
+            const metadata = {
+                'title': 'BugCrowd Overview',
+                'subtitle': 'Crowdsourced Cybersecurity'
+            };
+            this.response.playVideo(videoSource, metadata);
+            this.emit(':responseReady');
+        } else {
+            this.emit(':askWithCard', "Playing videos is not supported on this device. " + overview, appName, overview);
+        }
+    },
+    'getTeachVideo': function () {
+        output = "Playing videos is not supported on this device. " ;
+        if (this.event.context.System.device.supportedInterfaces.Display) {
+            const videoSource = 'https://s3.amazonaws.com/bugbrowser/video/Learn+Bugcrowd+in+10+Minutes.mp4';
+            const metadata = {
+                'title': 'How to use BugCrowd',
+                'subtitle': 'Crowdsourced Cybersecurity'
+            };
+            this.response.playVideo(videoSource, metadata);
+            this.emit(':responseReady');
+        } else {
+            this.emit(':ask', output + HelpMessage, appName, output + HelpMessage);
         }
     },
     'getProgramsIntent': function () {
@@ -340,7 +375,7 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                 const listTemplate = listTemplateBuilder.setToken('listToken')
                                         .setTitle(cardTitle)
                                         .setListItems(listItems)
-                                        .setBackgroundImage(makeImage('https://s3.amazonaws.com/bugbrowser/images/Circuit.png'))
+                                        .setBackgroundImage(makeImage('https://s3.amazonaws.com/bugbrowser/images/Encryption.jpg'))
                                         .build();
                 this.response.speak(output).renderTemplate(listTemplate).listen(output);
                 this.emit(':responseReady');
@@ -354,10 +389,98 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
     "Display.ElementSelected": function() {
         console.log (this.event.request.token);
         if((this.event.request.token).substring(0, 12) == "programToken"){
-            var selectedToken = parseInt((this.event.request.token).substring(12));
-            this.handler.state = states.MOREDETAILS;
+            var index = (this.event.request.token).substring(12) - 1;
             console.log ('Program Token Detected');
-            this.emitWithState('getMoreInfoIntent');
+            rp({
+                uri: `https://bugcrowd.com/programs/reward`,
+                transform: function (body) {
+                  return cheerio.load(body);
+                }
+              }).then(($) => {
+                var programs = [];
+                var rewards = [];
+                var urls = [];
+                var images = [];
+                $('.bc-panel__title').each(function(i, elem) {
+                    programs.push($(this).text().trim());
+                    urls.push($(this).find('a').attr('href'));
+                });
+                $('.bc-stat__title').each(function(i, elem) {
+                    rewards.push($(this).text().trim());
+                });
+                $('.bc-program-card__header').each(function(i, elem) {
+                    images.push($(this).find('img').attr('src'));
+                });
+                var map = new Map();
+                map.set(0, programs);
+                map.set(1, rewards);
+                map.set(2, urls)
+                map.set(3, images)
+                return map;
+              }).then((map) => {
+                var programs = map.get(0);
+                var rewards = map.get(1);
+                var urls = map.get(2);
+                var images = map.get(3);
+    
+                    rp({
+                        uri: `https://bugcrowd.com` + urls[index],
+                        transform: function (body) {
+                          return cheerio.load(body);
+                        }
+                      }).then(($) => {
+                          var information = [];
+                        $('.stat').each(function(i, elem) {
+                          information.push($(this).text().trim().replace(/\s/g,' '));
+                        });
+    
+                        if (information[0]) {
+                            information[0] = information[0].replace(/ +(?= )/g,'') + ' to security researchers in total. ';
+                            var numOfVrts = information[0];
+                        }
+                        else{
+                            var numOfVrts = "";
+                        }                       
+                        if (information[1]) {
+                            information[1] = information[1].replace('day  ', 'day.').replace('days  ', 'days.') + '. ';
+                            var validationTime = 'Expect v' + information[1].substring(1, information[1].length);
+                        }
+                        else{
+                            var validationTime = "";
+                        }                    
+                        if (information[2]) {
+                            var payout = "This program has a " + information[2].substring(0);
+                        }
+                        else{
+                            var payout = "No payment history is available";
+                        }
+                        var selectedProgram = programs[index];
+                        if (selectedProgram) {
+                            output = programs[index] + " is offering a bounty of " + rewards[index+1] + ". " + numOfVrts + validationTime + payout + ". Additional details are available at bugcrowd.com" + urls[index] + "." + hearMoreMessage;
+                            var cardTitle = programs[index];
+                            var cardContent = programs[index] + " is offering a bounty of " + rewards[index+1] + ". " + numOfVrts + validationTime + payout + ". Additional details are available at bugcrowd.com" + urls[index] + ".";
+                            const imageObj = {
+                                smallImageUrl: images[index],
+                                largeImageUrl: images[index]
+                            };
+
+                                const builder = new Alexa.templateBuilders.BodyTemplate2Builder();
+                                const template = builder.setTitle(cardTitle)
+                                                    .setToken('getMoreInfoIntentToken')
+                                                    .setBackButtonBehavior('VISIBLE')
+                                                    .setBackgroundImage(makeImage('https://s3.amazonaws.com/bugbrowser/images/Circuit.png'))
+                                                    .setTextContent(makeRichText('<font size="5"' + cardContent + '</font>'))
+                                                    .setImage(makeImage(imageObj.largeImageUrl))
+                                                    .build();
+                                this.response.speak(output).listen(hearMoreMessage).renderTemplate(template);                   
+                                this.emit(':responseReady');
+                        }
+                        else {
+                            this.emit(':tell', noProgramErrorMessage);
+                        }
+                    });
+                
+              });
         }
         else if((this.event.request.token).substring(0, 13) == "listItemToken"){
             var selectedToken = (this.event.request.token).substring(13);
@@ -396,6 +519,14 @@ var programHandlers = Alexa.CreateStateHandler(states.MOREDETAILS, {
     'getOverview': function () {
         this.handler.state = states.SEARCHMODE;
         this.emitWithState('getOverview');
+    },
+    'getOverviewVideo': function () {
+        this.handler.state = states.SEARCHMODE;
+        this.emitWithState('getOverviewVideo');
+    },
+    'getTeachVideo': function () {
+        this.handler.state = states.SEARCHMODE;
+        this.emitWithState('getTeachVideo');
     },
     'getNewsIntent': function () {
         this.handler.state = states.SEARCHMODE;
@@ -442,14 +573,26 @@ var programHandlers = Alexa.CreateStateHandler(states.MOREDETAILS, {
             var rewards = map.get(1);
             var urls = map.get(2);
             var images = map.get(3);
+            var index;
 
             if (this.event.request.token){
-                var index = parseInt(this.event.request.token.substring(12));
-                console.log('Token Index: ' + index);
-                console.log('Entered function for tokens');
-                console.log(this.event.request.token);
+                if((this.event.request.token).substring(0, 12) == "programToken"){ //programToken from GUI
+                    index = parseInt((this.event.request.token).substring(12));;
+                    console.log('Token Index: ' + index);
+                    console.log('Entered function for tokens');
+                    console.log(this.event.request.token);
+                }
+                else{
+                    index = parseInt((this.event.request.token).substring(22));; //getMoreInfoIntentToken from GUI
+                    console.log('Token Index: ' + index);
+                    console.log('Entered function for tokens');
+                    console.log(this.event.request.token);
+                }
             } else if (this.event.request && this.event.request.intent && this.event.request.intent.slots) {
-                var index = this.event.request.intent.slots.program.value - 1;
+                index = this.event.request.intent.slots.program.value - 1; //slot value from VUI
+            }
+            else{
+                index = 1; //default
             }
 
                 rp({
@@ -515,6 +658,10 @@ var programHandlers = Alexa.CreateStateHandler(states.MOREDETAILS, {
             
           });
     },
+    'Display.ElementSelected': function () {
+        this.handler.state = states.SEARCHMODE;
+        this.emitWithState('Display.ElementSelected');
+    },
     'AMAZON.HelpIntent': function () {
         output = HelpMessage;
         this.emit(':ask', output, HelpMessage);
@@ -571,30 +718,6 @@ function supportsDisplay() {
 function isSimulator() {
     var isSimulator = !this.event.context; //simulator doesn't send context
     return isSimulator;
-}
-
-function ElementSelected() {
-    console.log (this.event.request.token);
-    if((this.event.request.token).substring(0, 12) == "programToken"){
-        var selectedToken = parseInt((this.event.request.token).substring(12));
-        this.handler.state = states.MOREDETAILS;
-        console.log ('Program Token Detected');
-        this.emitWithState('getMoreInfoIntent');
-    }
-    else if((this.event.request.token).substring(0, 13) == "listItemToken"){
-        var selectedToken = (this.event.request.token).substring(13);
-        console.log ('List Token Detected');
-        this.emit(':ask', "No additonal information is available about subcategory " + selectedToken + "." + HelpMessage);
-    }
-    else if((this.event.request.token).substring(0, 13) == "newsItemToken"){
-        var selectedToken = parseInt((this.event.request.token).substring(13));
-        console.log ('News Token Detected');
-        this.emit(':ask', "See your Alexa app for more information about news headline number " + selectedToken + "." + HelpMessage);
-    }
-    else{
-        console.log ('Unhandled Token Detected');
-        this.emit('Unhandled');
-    }
 }
   
 function renderTemplate (content) {
