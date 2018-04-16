@@ -351,6 +351,29 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
         });
         
     },
+    "Display.ElementSelected": function() {
+        console.log (this.event.request.token);
+        if((this.event.request.token).substring(0, 12) == "programToken"){
+            var selectedToken = parseInt((this.event.request.token).substring(12));
+            this.handler.state = states.MOREDETAILS;
+            console.log ('Program Token Detected');
+            this.emitWithState('getMoreInfoIntent');
+        }
+        else if((this.event.request.token).substring(0, 13) == "listItemToken"){
+            var selectedToken = (this.event.request.token).substring(13);
+            console.log ('List Token Detected');
+            this.emit(':ask', "No additonal information is available about subcategory " + selectedToken + "." + HelpMessage);
+        }
+        else if((this.event.request.token).substring(0, 13) == "newsItemToken"){
+            var selectedToken = parseInt((this.event.request.token).substring(13));
+            console.log ('News Token Detected');
+            this.emit(':ask', "See your Alexa app for more information about news headline number " + selectedToken + "." + HelpMessage);
+        }
+        else{
+            console.log ('Unhandled Token Detected');
+            this.emit('Unhandled');
+        }
+    },
     'AMAZON.RepeatIntent': function () {
         this.emit(':ask', output, HelpMessage);
     },
@@ -423,6 +446,8 @@ var programHandlers = Alexa.CreateStateHandler(states.MOREDETAILS, {
             if (this.event.request.token){
                 var index = parseInt(this.event.request.token.substring(12));
                 console.log('Token Index: ' + index);
+                console.log('Entered function for tokens');
+                console.log(this.event.request.token);
             } else if (this.event.request && this.event.request.intent && this.event.request.intent.slots) {
                 console.log('Slot value: ' + this.event.request.intent.slots.program.value)
                 var index = this.event.request.intent.slots.program.value - 1;
@@ -547,6 +572,30 @@ function supportsDisplay() {
 function isSimulator() {
     var isSimulator = !this.event.context; //simulator doesn't send context
     return isSimulator;
+}
+
+function ElementSelected() {
+    console.log (this.event.request.token);
+    if((this.event.request.token).substring(0, 12) == "programToken"){
+        var selectedToken = parseInt((this.event.request.token).substring(12));
+        this.handler.state = states.MOREDETAILS;
+        console.log ('Program Token Detected');
+        this.emitWithState('getMoreInfoIntent');
+    }
+    else if((this.event.request.token).substring(0, 13) == "listItemToken"){
+        var selectedToken = (this.event.request.token).substring(13);
+        console.log ('List Token Detected');
+        this.emit(':ask', "No additonal information is available about subcategory " + selectedToken + "." + HelpMessage);
+    }
+    else if((this.event.request.token).substring(0, 13) == "newsItemToken"){
+        var selectedToken = parseInt((this.event.request.token).substring(13));
+        console.log ('News Token Detected');
+        this.emit(':ask', "See your Alexa app for more information about news headline number " + selectedToken + "." + HelpMessage);
+    }
+    else{
+        console.log ('Unhandled Token Detected');
+        this.emit('Unhandled');
+    }
 }
   
 function renderTemplate (content) {
