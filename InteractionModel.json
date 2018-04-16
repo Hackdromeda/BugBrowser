@@ -179,6 +179,17 @@
                         "how do you use bugcrowd",
                         "Teach me how to use bugcrowd"
                     ]
+                },
+                {
+                    "name": "getEasterEgg",
+                    "slots": [],
+                    "samples": [
+                        "hidden feature",
+                        "easter eggs",
+                        "easter egg",
+                        "Show me the surprise video",
+                        "Surprise me"
+                    ]
                 }
             ],
             "types": []
