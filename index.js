@@ -54,8 +54,24 @@ var newSessionHandlers = {
         this.handler.state = states.SEARCHMODE;
         output = welcomeMessage;
         if (this.event.context.System.device.supportedInterfaces.Display) {
+            var hintOptions = ["Tell me hacking news",
+                               "Give me a flash briefing on hacks",
+                               "Tell me some facts about BugCrowd",
+                               "Introduce me to BugCrowd",
+                               "What companies are looking for security researchers?",
+                               "Tell me the top active programs",
+                               "Tell me about the Vulnerability Rating Taxonomy",
+                               "Tell me about the VRT",
+                               "Introduce me to BugCrowd with a video",
+                               "Play BugCrowd overview video",
+                               "How do you find bounties?",
+                               "Surprise me"]
+
+            var hint = hintOptions[Math.floor(Math.random() * (hintOptions.length))];
+
             var content = {
                 "title": "Bug Browser",
+                "hint": hint,
                 "bodyTemplateTitle": "Bug Browser",
                 "speechText" : output,
                 "speechTextReprompt" : welcomeReprompt,
@@ -66,6 +82,7 @@ var newSessionHandlers = {
                 "askOrTell" : ":ask",
                 "sessionAttributes": {}
               };
+
             renderTemplate.call(this, content);
         } else {
             this.handler.state = states.SEARCHMODE;
@@ -750,6 +767,13 @@ function renderTemplate (content) {
                 'version': '1.0',
                 'response': {
                   'directives': [
+                    {
+                        "type": "Hint",
+                        "hint": {
+                            "type": "PlainText",
+                            "text": content.hint
+                        }
+                    },
                     {
                       'type': 'Display.RenderTemplate',
                       'template': {

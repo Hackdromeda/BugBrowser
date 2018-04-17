@@ -108,12 +108,12 @@
                     "name": "getVRTIntent",
                     "slots": [],
                     "samples": [
-                        "Tell me about the Vulnerability Rating Taxonomy ",
+                        "Tell me about the Vulnerability Rating Taxonomy",
                         "Tell me about the VRT",
-                        "Read an entry from the Vulnerability Rating Taxonomy ",
+                        "Read an entry from the Vulnerability Rating Taxonomy",
                         "Read an entry from the VRT",
-                        "Give me something from the Vulnerability Rating Taxonomy ",
-                        "Tell me an entry from Vulnerability Rating Taxonomy "
+                        "Give me something from the Vulnerability Rating Taxonomy",
+                        "Tell me an entry from Vulnerability Rating Taxonomy"
                     ]
                 },
                 {
@@ -168,7 +168,7 @@
                         "tell me about bugcrowd with a video",
                         "Introduce me to BugCrowd with a video",
                         "play BugCrowd video",
-                        " play BugCrowd overview video"
+                        "play BugCrowd overview video"
                     ]
                 },
                 {
