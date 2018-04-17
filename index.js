@@ -7,8 +7,7 @@ const request = require('request');
 const rp = require('request-promise');
 
 var states = {
-    SEARCHMODE: '_SEARCHMODE',
-    MOREDETAILS: '_MOREDETAILS',
+    SEARCHMODE: '_SEARCHMODE'
 };
 
 var appName = "Bug Browser";
@@ -117,7 +116,7 @@ var newSessionHandlers = {
         this.emitWithState('getHackerOneIntent');
     },
     'getMoreInfoIntent': function () {
-        this.handler.state = states.MOREDETAILS;
+        this.handler.state = states.SEARCHMODE;
         this.emitWithState('getMoreInfoIntent');
     },
     'getVRTIntent': function () {
@@ -125,7 +124,7 @@ var newSessionHandlers = {
         this.emitWithState('getVRTIntent');
     },
     'ElementSelected': function () {
-        this.handler.state = states.MOREDETAILS;
+        this.handler.state = states.SEARCHMODE;
         this.emitWithState('ElementSelected');
     },
     'AMAZON.YesIntent': function () {
@@ -246,7 +245,6 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                         read += "Number " + (counter + 1) + ": " + programs[counter] + "\n\n";
                     }
                     read += moreInfoProgram;
-                    this.handler.state = states.MOREDETAILS;
                 if (this.event.context.System.device.supportedInterfaces.Display) {
                     const listItemBuilder = new Alexa.templateBuilders.ListItemBuilder();
                     const listTemplateBuilder = new Alexa.templateBuilders.ListTemplate2Builder();
@@ -294,12 +292,11 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                   
                   read = "Here are the top active programs from HackerOne.";
                   output += "HackerOne Programs: \n\n";
-                  for (var counter = 0; counter < hackerOnePrograms.length; counter++) {
+                  for (var counter = 0; counter < (hackerOnePrograms.length <= 25 ? hackerOnePrograms.length: 25); counter++) {
                       output += "Number " + (counter + 1) + ": " + hackerOnePrograms[counter].name + "\n\n";
                       read += "Number " + (counter + 1) + ": " + hackerOnePrograms[counter].name + "\n\n";
                   }
                   read += moreInfoProgram;
-                  this.handler.state = states.MOREDETAILS;
               if (this.event.context.System.device.supportedInterfaces.Display) {
                   const listItemBuilder = new Alexa.templateBuilders.ListItemBuilder();
                   const listTemplateBuilder = new Alexa.templateBuilders.ListTemplate2Builder();
@@ -322,214 +319,6 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
               this.emit(':tell', retrieveError);
           }
       });
-    },
-    'getMoreInfoIntent': function () {
-        this.handler.state = states.MOREDETAILS;
-        this.emitWithState('getMoreInfoIntent');
-    },
-    'getVRTIntent': function () {
-        rp({
-            uri: `https://raw.githubusercontent.com/bugcrowd/vulnerability-rating-taxonomy/master/vulnerability-rating-taxonomy.json`,
-            transform: function (body) {
-              return JSON.parse(body);
-            }
-          })
-          .then((data) => {
-            var vrts = [];
-            data.content.forEach(function(element) {
-                if (element.children) {
-                    element.children.forEach(function(child) {
-                        if (child.children) {
-                            vrts.push(element);
-                        }
-                    })
-                }
-            });
-
-            var randomSelection = Math.floor(Math.random () * (vrts.length));
-            var innerRandomSelection = Math.floor(Math.random () * (vrts[randomSelection].children.length));
-            var selectedVrt = vrts[randomSelection];
-            return selectedVrt;
-            })
-            .then((selectedVrt) => {
-                var cardTitle = "Vulnerability Rating Taxonomy (VRT)";
-                var output = "";
-                var read = "";
-                var retrieveError = "I was unable to retrieve any vulnerability information.";
-                if (selectedVrt) {
-                    
-                    read = "The VRT outlines Bugcrowd’s baseline priority ratings for vulnerabilities. ";
-
-                    output += (selectedVrt.name + ":" + "\n" + "\n");
-                    read += ("One of the categories on the VRT is " + selectedVrt.name + " which has these subcategories: ");
-                    selectedVrt.children.forEach(function(element) {
-                        if (element.priority) {
-                            output += ("\n" + "Subcategory: " + element.name + "\n" + " Priority: " + element.priority + "\n" + "\n");
-                            read += (element.name + " has a priority of " + element.priority + ". ");
-                        } else {
-                            output += ("\n" + "Subcategory: " + element.name + "\n" + " Priority: unspecified" + "\n" + "\n");
-                            read += (element.name + " has no specified priority. ");
-                        }
-                    });
-                    const vrtObj = {
-                        smallImageUrl: 'https://s3.amazonaws.com/bugbrowser/images/VRT-Logo.png',
-                        largeImageUrl: 'https://assets.bugcrowdusercontent.com/packs/images/tracker/logo/vrt-logo-ba20b1de556f194607f690788f072798.svg'
-                    };
-                    if (this.event.context.System.device.supportedInterfaces.Display) {
-                        const listItemBuilder = new Alexa.templateBuilders.ListItemBuilder();
-                        const listTemplateBuilder = new Alexa.templateBuilders.ListTemplate1Builder();
-                        selectedVrt.children.forEach(function(element) {
-                            if (element.priority) {
-                                listItemBuilder.addItem(null, 'listItemToken' + element.name, makeRichText("<font size='5'>" + element.name + "</font>"), makePlainText("Priority: " + element.priority));
-                            } else {
-                                listItemBuilder.addItem(null, 'listItemToken' + element.name, makeRichText("<font size='5'>" +element.name + "</font>"), makePlainText("Priority: varies"));
-                            }
-                        });
-                        const listItems = listItemBuilder.build();
-                        const listTemplate = listTemplateBuilder.setToken('listToken')
-                                                .setTitle(selectedVrt.name)
-                                                .setListItems(listItems)
-                                                .setBackgroundImage(makeImage('https://s3.amazonaws.com/bugbrowser/images/Circuit.png'))
-                                                .build();
-                        this.response.speak(read).renderTemplate(listTemplate).listen(read);
-                        this.emit(':responseReady');
-                    } else {
-                        this.emit(':askWithCard', read, read, cardTitle, output, vrtObj); 
-                    }
-                }                           
-                else {
-                    this.emit(':tell', retrieveError);
-                }
-            });
-    },
-    'ElementSelected': function () {
-        this.handler.state = states.MOREDETAILS;
-        this.emitWithState('ElementSelected');
-    },
-    'AMAZON.YesIntent': function () {
-        output = HelpMessage;
-        this.emit(':ask', output, HelpMessage);
-    },
-    'AMAZON.NoIntent': function () {
-        output = HelpMessage;
-        this.emit(':ask', HelpMessage, HelpMessage);
-    },
-    'AMAZON.StopIntent': function () {
-        this.emit(':tell', goodbyeMessage);
-    },
-    'AMAZON.HelpIntent': function () {
-        output = HelpMessage;
-        this.emit(':ask', output, HelpMessage);
-    },
-    'getNewsIntent': function () {
-        rp({
-            uri: 'http://api.nytimes.com/svc/search/v2/articlesearch.json?q=hack&sort=newest&api-key=' + newsKey,
-            transform: function (body) {
-              return JSON.parse(body);
-            }
-          })
-          .then((responseData) => {
-            var articles = [];
-            var cardContent = "Data provided by The New York Times" + "\n" + "\n";
-            // Check if we have correct data, If not create an error speech out to try again.
-            if (responseData == null) {
-                output = "There was a problem with getting data please try again";
-            }
-            else {
-                output = newsIntroMessage;
-                // If we have data.
-                for (var i = 0; i < responseData.response.docs.length; i++) {
-
-                    if (i < numberOfResults) {
-                        // Get the name and description JSON structure.
-                        var headline = responseData.response.docs[i].headline.main;
-                        var index = i + 1;
-                        articles[i] = {
-                            name: headline
-                        };
-
-                        output += "Headline " + index + ": " + headline + "; ";
-
-                        cardContent += "Headline " + index + ".\n";
-                        cardContent += headline + ".\n\n";
-                    }
-                }
-
-                output += " See your Alexa app for more information.";
-            }
-
-            var cardTitle = appName + " News";
-            if (this.event.context.System.device.supportedInterfaces.Display) {
-                const listItemBuilder = new Alexa.templateBuilders.ListItemBuilder();
-                const listTemplateBuilder = new Alexa.templateBuilders.ListTemplate1Builder();
-                for (i = 0; i < articles.length; i++) {
-                    listItemBuilder.addItem(null, 'newsItemToken' + i, makeRichText("<font size='1'>" + articles[i].name + "</font>"));
-                }
-                const listItems = listItemBuilder.build();
-                const listTemplate = listTemplateBuilder.setToken('listToken')
-                                        .setTitle(cardTitle)
-                                        .setListItems(listItems)
-                                        .setBackgroundImage(makeImage('https://s3.amazonaws.com/bugbrowser/images/Encryption.jpg'))
-                                        .build();
-                this.response.speak(output).renderTemplate(listTemplate).listen(output);
-                this.emit(':responseReady');
-            }
-            else{
-                alexa.emit(':tellWithCard', output, cardTitle, cardContent);
-            }
-        });
-        
-    },
-    'AMAZON.RepeatIntent': function () {
-        this.emit(':ask', output, HelpMessage);
-    },
-    'AMAZON.CancelIntent': function () {
-        // Use this function to clear up and save any data needed between sessions
-        this.emit(":tell", goodbyeMessage);
-    },
-    'SessionEndedRequest': function () {
-        // Use this function to clear up and save any data needed between sessions
-        this.emit('AMAZON.StopIntent');
-    },
-    'Unhandled': function () {
-        console.log("Second Unhandled event" + this.event);
-        output = HelpMessage;
-        this.emit(':ask', output, welcomeReprompt);
-    }
-});
-
-var programHandlers = Alexa.CreateStateHandler(states.MOREDETAILS, {
-    'getOverview': function () {
-        this.handler.state = states.SEARCHMODE;
-        this.emitWithState('getOverview');
-    },
-    'getOverviewVideo': function () {
-        this.handler.state = states.SEARCHMODE;
-        this.emitWithState('getOverviewVideo');
-    },
-    'getEasterEgg': function () {
-        this.handler.state = states.SEARCHMODE;
-        this.emitWithState('getEasterEgg');
-    },
-    'getTeachVideo': function () {
-        this.handler.state = states.SEARCHMODE;
-        this.emitWithState('getTeachVideo');
-    },
-    'getNewsIntent': function () {
-        this.handler.state = states.SEARCHMODE;
-        this.emitWithState('getNewsIntent');
-    },
-    'getProgramsIntent': function () {
-        this.handler.state = states.SEARCHMODE;
-        this.emitWithState('getProgramsIntent');
-    },
-    'getHackerOneIntent': function() {
-        this.handler.state = states.SEARCHMODE;
-        this.emitWithState('getHackerOneIntent');
-    },
-    'getVRTIntent': function () {
-        this.handler.state = states.SEARCHMODE;
-        this.emitWithState('getVRTIntent');
     },
     'getMoreInfoIntent': function () {
 
@@ -629,6 +418,81 @@ var programHandlers = Alexa.CreateStateHandler(states.MOREDETAILS, {
                 });
             
           });
+    },
+    'getVRTIntent': function () {
+        rp({
+            uri: `https://raw.githubusercontent.com/bugcrowd/vulnerability-rating-taxonomy/master/vulnerability-rating-taxonomy.json`,
+            transform: function (body) {
+              return JSON.parse(body);
+            }
+          })
+          .then((data) => {
+            var vrts = [];
+            data.content.forEach(function(element) {
+                if (element.children) {
+                    element.children.forEach(function(child) {
+                        if (child.children) {
+                            vrts.push(element);
+                        }
+                    })
+                }
+            });
+
+            var randomSelection = Math.floor(Math.random () * (vrts.length));
+            var innerRandomSelection = Math.floor(Math.random () * (vrts[randomSelection].children.length));
+            var selectedVrt = vrts[randomSelection];
+            return selectedVrt;
+            })
+            .then((selectedVrt) => {
+                var cardTitle = "Vulnerability Rating Taxonomy (VRT)";
+                var output = "";
+                var read = "";
+                var retrieveError = "I was unable to retrieve any vulnerability information.";
+                if (selectedVrt) {
+                    
+                    read = "The VRT outlines Bugcrowd’s baseline priority ratings for vulnerabilities. ";
+
+                    output += (selectedVrt.name + ":" + "\n" + "\n");
+                    read += ("One of the categories on the VRT is " + selectedVrt.name + " which has these subcategories: ");
+                    selectedVrt.children.forEach(function(element) {
+                        if (element.priority) {
+                            output += ("\n" + "Subcategory: " + element.name + "\n" + " Priority: " + element.priority + "\n" + "\n");
+                            read += (element.name + " has a priority of " + element.priority + ". ");
+                        } else {
+                            output += ("\n" + "Subcategory: " + element.name + "\n" + " Priority: unspecified" + "\n" + "\n");
+                            read += (element.name + " has no specified priority. ");
+                        }
+                    });
+                    const vrtObj = {
+                        smallImageUrl: 'https://s3.amazonaws.com/bugbrowser/images/VRT-Logo.png',
+                        largeImageUrl: 'https://assets.bugcrowdusercontent.com/packs/images/tracker/logo/vrt-logo-ba20b1de556f194607f690788f072798.svg'
+                    };
+                    if (this.event.context.System.device.supportedInterfaces.Display) {
+                        const listItemBuilder = new Alexa.templateBuilders.ListItemBuilder();
+                        const listTemplateBuilder = new Alexa.templateBuilders.ListTemplate1Builder();
+                        selectedVrt.children.forEach(function(element) {
+                            if (element.priority) {
+                                listItemBuilder.addItem(null, 'listItemToken' + element.name, makeRichText("<font size='5'>" + element.name + "</font>"), makePlainText("Priority: " + element.priority));
+                            } else {
+                                listItemBuilder.addItem(null, 'listItemToken' + element.name, makeRichText("<font size='5'>" +element.name + "</font>"), makePlainText("Priority: varies"));
+                            }
+                        });
+                        const listItems = listItemBuilder.build();
+                        const listTemplate = listTemplateBuilder.setToken('listToken')
+                                                .setTitle(selectedVrt.name)
+                                                .setListItems(listItems)
+                                                .setBackgroundImage(makeImage('https://s3.amazonaws.com/bugbrowser/images/Circuit.png'))
+                                                .build();
+                        this.response.speak(read).renderTemplate(listTemplate).listen(read);
+                        this.emit(':responseReady');
+                    } else {
+                        this.emit(':askWithCard', read, read, cardTitle, output, vrtObj); 
+                    }
+                }                           
+                else {
+                    this.emit(':tell', retrieveError);
+                }
+            });
     },
     "ElementSelected": function() {
         console.log (this.event.request.token);
@@ -745,20 +609,79 @@ var programHandlers = Alexa.CreateStateHandler(states.MOREDETAILS, {
             this.emit('Unhandled');
         }
     },
+    'AMAZON.YesIntent': function () {
+        output = HelpMessage;
+        this.emit(':ask', output, HelpMessage);
+    },
+    'AMAZON.NoIntent': function () {
+        output = HelpMessage;
+        this.emit(':ask', HelpMessage, HelpMessage);
+    },
+    'AMAZON.StopIntent': function () {
+        this.emit(':tell', goodbyeMessage);
+    },
     'AMAZON.HelpIntent': function () {
         output = HelpMessage;
         this.emit(':ask', output, HelpMessage);
     },
-    'AMAZON.YesIntent': function () {
-        output = getMoreInfoMessage;
-        alexa.emit(':ask', output, getMoreInfoRepromtMessage);
-    },
-    'AMAZON.NoIntent': function () {
-        output = goodbyeMessage;
-        alexa.emit(':tell', output);
-    },
-    'AMAZON.StopIntent': function () {
-        this.emit(':tell', goodbyeMessage);
+    'getNewsIntent': function () {
+        rp({
+            uri: 'http://api.nytimes.com/svc/search/v2/articlesearch.json?q=hack&sort=newest&api-key=' + newsKey,
+            transform: function (body) {
+              return JSON.parse(body);
+            }
+          })
+          .then((responseData) => {
+            var articles = [];
+            var cardContent = "Data provided by The New York Times" + "\n" + "\n";
+            // Check if we have correct data, If not create an error speech out to try again.
+            if (responseData == null) {
+                output = "There was a problem with getting data please try again";
+            }
+            else {
+                output = newsIntroMessage;
+                // If we have data.
+                for (var i = 0; i < responseData.response.docs.length; i++) {
+
+                    if (i < numberOfResults) {
+                        // Get the name and description JSON structure.
+                        var headline = responseData.response.docs[i].headline.main;
+                        var index = i + 1;
+                        articles[i] = {
+                            name: headline
+                        };
+
+                        output += "Headline " + index + ": " + headline + "; ";
+
+                        cardContent += "Headline " + index + ".\n";
+                        cardContent += headline + ".\n\n";
+                    }
+                }
+
+                output += " See your Alexa app for more information.";
+            }
+
+            var cardTitle = appName + " News";
+            if (this.event.context.System.device.supportedInterfaces.Display) {
+                const listItemBuilder = new Alexa.templateBuilders.ListItemBuilder();
+                const listTemplateBuilder = new Alexa.templateBuilders.ListTemplate1Builder();
+                for (i = 0; i < articles.length; i++) {
+                    listItemBuilder.addItem(null, 'newsItemToken' + i, makeRichText("<font size='1'>" + articles[i].name + "</font>"));
+                }
+                const listItems = listItemBuilder.build();
+                const listTemplate = listTemplateBuilder.setToken('listToken')
+                                        .setTitle(cardTitle)
+                                        .setListItems(listItems)
+                                        .setBackgroundImage(makeImage('https://s3.amazonaws.com/bugbrowser/images/Encryption.jpg'))
+                                        .build();
+                this.response.speak(output).renderTemplate(listTemplate).listen(output);
+                this.emit(':responseReady');
+            }
+            else{
+                alexa.emit(':tellWithCard', output, cardTitle, cardContent);
+            }
+        });
+        
     },
     'AMAZON.RepeatIntent': function () {
         this.emit(':ask', output, HelpMessage);
@@ -769,9 +692,10 @@ var programHandlers = Alexa.CreateStateHandler(states.MOREDETAILS, {
     },
     'SessionEndedRequest': function () {
         // Use this function to clear up and save any data needed between sessions
+        this.emit('AMAZON.StopIntent');
     },
     'Unhandled': function () {
-        console.log("Third Unhandled event" + this.event.request.token);
+        console.log("Second Unhandled event" + this.event);
         output = HelpMessage;
         this.emit(':ask', output, welcomeReprompt);
     }
@@ -779,7 +703,7 @@ var programHandlers = Alexa.CreateStateHandler(states.MOREDETAILS, {
 
 exports.handler = function (event, context, callback) {
     alexa = Alexa.handler(event, context);
-    alexa.registerHandlers(newSessionHandlers, startSearchHandlers, programHandlers);
+    alexa.registerHandlers(newSessionHandlers, startSearchHandlers);
     alexa.execute();
 };
 
