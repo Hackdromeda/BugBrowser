@@ -125,6 +125,10 @@ var newSessionHandlers = {
         this.handler.state = states.SEARCHMODE;
         this.emitWithState('getMoreInfoIntent');
     },
+    'getMoreInfoHackerOneIntent': function() {
+        this.handler.state = states.SEARCHMODE;
+        this.emitWithState('getMoreHackerOneInfoIntent');
+    },
     'getVRTIntent': function () {
         this.handler.state = states.SEARCHMODE;
         this.emitWithState('getVRTIntent');
@@ -429,6 +433,78 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                 });
             
           });
+    },
+    'getMoreInfoHackerOneIntent': function() {
+        rp({
+            uri: `https://hackerone.com/programs/search.json?query=type%3Ahackerone`,
+            transform: function (body) {
+              return JSON.parse(body);
+            }
+          }).then((data) => {
+            var hackerOnePrograms = [];
+
+            for (var i = 0; i < data.results.length; i++) {
+                hackerOnePrograms.push(data.results[i]);
+            }
+
+          return hackerOnePrograms;
+
+        }).then((hackerOnePrograms) => {
+            var index = parseInt(this.event.request.intent.slots.program.value) - 1;
+
+            rp({
+                uri: `https://hackerone.com` + hackerOnePrograms[index].url,
+                transform: function (body) {
+                  return cheerio.load(body);
+                }
+              }).then(($) => {
+                  var images = [];
+                  var responseTimes = [];
+
+                $('.profile-header__picture').each(function(i, elem) {
+                  images.push($(this).find('img').attr('src'));
+                });
+
+                $('.profile-stats-amount').each(function(i, elem) {
+                    responseTimes.push($(this).text().trim().replace(/\s/g,' '));
+                  });
+                    if (responseTimes[0]) {
+                        var validationTime = 'Expect ' + responseTimes[0] + '.';
+                    }
+                
+                    var payout = "";
+                var selectedProgram = hackerOnePrograms[index].name;
+                if (selectedProgram) {
+                    if (hackerOnePrograms[index].meta.minimum_bounty) {
+                        
+                    }
+                    var cardTitle = hackerOnePrograms[index].name;
+                    var cardContent = hackerOnePrograms[index].stripped_policy.replace(/\n/g,' ');
+                    const imageObj = {
+                        smallImageUrl: hackerOnePrograms[index].profile_picture,
+                        largeImageUrl: hackerOnePrograms[index].profile_picture
+                    };
+
+                    if (this.event.context.System.device.supportedInterfaces.Display) {
+                        const builder = new Alexa.templateBuilders.BodyTemplate2Builder();
+                        const template = builder.setTitle(cardTitle)
+                                            .setToken('getMoreInfoIntentToken')
+                                            .setBackButtonBehavior('VISIBLE')
+                                            .setBackgroundImage(makeImage('https://s3.amazonaws.com/bugbrowser/images/Circuit.png'))
+                                            .setTextContent(makeRichText('<font size="5">' + cardContent + '</font>'))
+                                            .setImage(makeImage(images[0] ? images[0]: imageObj.largeImageUrl))
+                                            .build();
+                        this.response.speak(hackerOnePrograms[index].stripped_policy.replace(/\n/g,' ')).listen(hearMoreMessage).cardRenderer(cardTitle, cardContent, images[0]).renderTemplate(template);                   
+                        this.emit(':responseReady');
+                    } else {
+                        this.emit(':askWithCard', hackerOnePrograms[index].stripped_policy.replace(/\n/g,' '), hearMoreMessage, cardTitle, cardContent, images[0]);
+                    }
+                }
+                else {
+                    this.emit(':tell', noProgramErrorMessage);
+                }
+            });
+      });
     },
     'getVRTIntent': function () {
         rp({
