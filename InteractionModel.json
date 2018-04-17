@@ -105,6 +105,15 @@
                     ]
                 },
                 {
+                    "name": "getHackerOneIntent",
+                    "slots": [],
+                    "samples": [
+                        "tell me about HackerOne programs",
+                        "HackerOne programs",
+                        "active HackerOne programs"
+                    ]
+                },
+                {
                     "name": "getVRTIntent",
                     "slots": [],
                     "samples": [

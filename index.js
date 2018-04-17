@@ -41,9 +41,7 @@ var getMoreInfoMessage = "OK, " + getMoreInfoRepromtMessage;
 
 var goodbyeMessage = "OK, Bug Browser shutting down.";
 
-var newsIntroMessage = "These are the " + numberOfResults + " most recent security vulnerability headlines, you can read more on your Alexa app. ";
-
-var newline = "\n";
+var newsIntroMessage = "These are the " + numberOfResults + " most recent security vulnerability headlines, you can read more on your Alexa app.";
 
 var output = "";
 
@@ -113,6 +111,10 @@ var newSessionHandlers = {
     'getProgramsIntent': function () {
         this.handler.state = states.SEARCHMODE;
         this.emitWithState('getProgramsIntent');
+    },
+    'getHackerOneIntent': function() {
+        this.handler.state = states.SEARCHMODE;
+        this.emitWithState('getHackerOneIntent');
     },
     'getMoreInfoIntent': function () {
         this.handler.state = states.MOREDETAILS;
@@ -238,10 +240,10 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                 if (programs.length > 0) {
                     
                     read = "Here are the top active programs at BugCrowd. ";
-                    output += "BugCrowd Programs: " + newline + newline;
+                    output += "BugCrowd Programs: \n\n";
                     for (var counter = 0; counter < programs.length; counter++) {
-                        output += "Number " + (counter + 1) + ": " + programs[counter] + newline + newline;
-                        read += "Number " + (counter + 1) + ": " + programs[counter] + newline + newline;
+                        output += "Number " + (counter + 1) + ": " + programs[counter] + "\n\n";
+                        read += "Number " + (counter + 1) + ": " + programs[counter] + "\n\n";
                     }
                     read += moreInfoProgram;
                     this.handler.state = states.MOREDETAILS;
@@ -253,9 +255,9 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                     }
                     const listItems = listItemBuilder.build();
                     const listTemplate = listTemplateBuilder.setToken('listToken')
-    										.setTitle('Programs')
+    										.setTitle('BugCrowd Programs')
                                             .setListItems(listItems)
-                                            .setBackgroundImage(makeImage('https://s3.amazonaws.com/bugbrowser/images/Circuit.png'))
+                                            .setBackgroundImage(makeImage('https://s3.amazonaws.com/bugbrowser/images/Search.jpg'))
                                             .build();
                     this.response.speak(output).renderTemplate(listTemplate).listen(output);
                     this.emit(':responseReady');
@@ -267,6 +269,59 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                 this.emit(':tell', retrieveError);
             }
         });
+    },
+    'getHackerOneIntent': function() {
+        rp({
+            uri: `https://hackerone.com/programs/search.json?query=type%3Ahackerone`,
+            transform: function (body) {
+              return JSON.parse(body);
+            }
+          }).then((data) => {
+            var hackerOnePrograms = [];
+
+            for (var i = 0; i < data.results.length; i++) {
+                hackerOnePrograms.push(data.results[i]);
+            }
+
+          return hackerOnePrograms;
+
+        }).then((hackerOnePrograms) => {
+              var cardTitle = "Top HackerOne Programs";
+              var output = "";
+              var read = "";
+              var retrieveError = "I was unable to retrieve any active programs.";
+              if (hackerOnePrograms.length > 0) {
+                  
+                  read = "Here are the top active programs from HackerOne.";
+                  output += "HackerOne Programs: \n\n";
+                  for (var counter = 0; counter < hackerOnePrograms.length; counter++) {
+                      output += "Number " + (counter + 1) + ": " + hackerOnePrograms[counter].name + "\n\n";
+                      read += "Number " + (counter + 1) + ": " + hackerOnePrograms[counter].name + "\n\n";
+                  }
+                  read += moreInfoProgram;
+                  this.handler.state = states.MOREDETAILS;
+              if (this.event.context.System.device.supportedInterfaces.Display) {
+                  const listItemBuilder = new Alexa.templateBuilders.ListItemBuilder();
+                  const listTemplateBuilder = new Alexa.templateBuilders.ListTemplate2Builder();
+                  for (var i = 0; i < (hackerOnePrograms.length <= 25 ? hackerOnePrograms.length: 25); i++) {
+                      listItemBuilder.addItem(makeImage(hackerOnePrograms[i].profile_picture, 400, 400), 'hackerOneProgramToken' + i, makePlainText(hackerOnePrograms[i].name))
+                  }
+                  const listItems = listItemBuilder.build();
+                  const listTemplate = listTemplateBuilder.setToken('hackerOneListToken')
+                                          .setTitle('HackerOne Programs')
+                                          .setListItems(listItems)
+                                          .setBackgroundImage(makeImage('https://s3.amazonaws.com/bugbrowser/images/CircuitLock.jpg'))
+                                          .build();
+                  this.response.speak(output).renderTemplate(listTemplate).listen(output);
+                  this.emit(':responseReady');
+              } else {
+                  this.emit(':askWithCard', read, read, cardTitle, output);
+              }
+
+          } else {
+              this.emit(':tell', retrieveError);
+          }
+      });
     },
     'getMoreInfoIntent': function () {
         this.handler.state = states.MOREDETAILS;
@@ -305,14 +360,14 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                     
                     read = "The VRT outlines Bugcrowd’s baseline priority ratings for vulnerabilities. ";
 
-                    output += (selectedVrt.name + ":" + newline + newline);
+                    output += (selectedVrt.name + ":" + "\n" + "\n");
                     read += ("One of the categories on the VRT is " + selectedVrt.name + " which has these subcategories: ");
                     selectedVrt.children.forEach(function(element) {
                         if (element.priority) {
-                            output += (newline + "Subcategory: " + element.name + newline + " Priority: " + element.priority + newline + newline);
+                            output += ("\n" + "Subcategory: " + element.name + "\n" + " Priority: " + element.priority + "\n" + "\n");
                             read += (element.name + " has a priority of " + element.priority + ". ");
                         } else {
-                            output += (newline + "Subcategory: " + element.name + newline + " Priority: unspecified" + newline + newline);
+                            output += ("\n" + "Subcategory: " + element.name + "\n" + " Priority: unspecified" + "\n" + "\n");
                             read += (element.name + " has no specified priority. ");
                         }
                     });
@@ -375,7 +430,7 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
           })
           .then((responseData) => {
             var articles = [];
-            var cardContent = "Data provided by The New York Times" + newline + newline;
+            var cardContent = "Data provided by The New York Times" + "\n" + "\n";
             // Check if we have correct data, If not create an error speech out to try again.
             if (responseData == null) {
                 output = "There was a problem with getting data please try again";
@@ -467,6 +522,10 @@ var programHandlers = Alexa.CreateStateHandler(states.MOREDETAILS, {
     'getProgramsIntent': function () {
         this.handler.state = states.SEARCHMODE;
         this.emitWithState('getProgramsIntent');
+    },
+    'getHackerOneIntent': function() {
+        this.handler.state = states.SEARCHMODE;
+        this.emitWithState('getHackerOneIntent');
     },
     'getVRTIntent': function () {
         this.handler.state = states.SEARCHMODE;
