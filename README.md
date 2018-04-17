@@ -1,5 +1,8 @@
-# BugBrowser
+# Bug Browser #
 This Alexa skill will provide a flash briefing on recent hacks and security vulnerabilities around the world, information about BugCrowd, the BugCrowd VRT, and active BugCrowd programs.
+
+# Enable the Skill:
+[Amazon US Skill] (https://www.amazon.com/dp/B07BPVH1S5/)
 
 # Features:
 * Learn about BugCrowd and HackerOne
@@ -10,6 +13,10 @@ This Alexa skill will provide a flash briefing on recent hacks and security vuln
   * Try, *Alexa ask Bug Browser, how do you find bounties?*
   * Try, *Alexa ask Bug Browser, what companies are looking for security researchers?*
   
+ * Get additional details for bounties from BugCrowd and/or HackerOne
+  * Try, *Alexa ask Bug Browser to tell me more about program number five*
+  * Try, *Alexa ask Bug Browser to tell me more about BugCrowd bounty number five*
+  
 * Learn about hacking news
   * Try, *Alexa ask Bug Browser, give me a flash briefing on hacks?*
   
@@ -18,6 +25,15 @@ This Alexa skill will provide a flash briefing on recent hacks and security vuln
   
 * Learn about BugCrowd through videos (Echo Spot and Echo Show only)
   * Try, *Alexa ask Bug Browser to introduce me to BugCrowd with a video*
+  
+# Coming Soon:
+* Get programs beyond 25 with "NEXT" to get next 25 (Size limit for DisplayInterface).
+* Change SpeakAs for dash from "dash" to "to" or "between... and" *ex. $2 - $10* (Speak as a range if supported)
+* Asking for program details by name so user can ask for details about the program without asking for the latest list of programs.
+* Video Queue (Awaiting SDK Support)
+* Confirm Choices *ex. Did you say you want more details about program number 5?*
+* Highlight text and automatically switch cards for Display Interface (Awaiting SDK Support)
+* Font color customized (Awaiting SDK Support)
 
 # Built With
 * Node.js
