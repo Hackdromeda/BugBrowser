@@ -3,16 +3,25 @@ This Alexa skill will provide a flash briefing on recent hacks and security vuln
 
 # Features:
 * Learn about BugCrowd and HackerOne
+
   Try, *Alexa ask Bug Browser to tell me some facts about BugCrowd.*
   Try, *Alexa ask Bug Browser to introduce me to BugCrowd.*
+  
 * Get bounties from BugCrowd and/or HackerOne
+
   Try, *Alexa ask Bug Browser, how do you find bounties?*
   Try, *Alexa ask Bug Browser, what companies are looking for security researchers?*
+  
 * Learn about hacking news
+
   Try, *Alexa ask Bug Browser, give me a flash briefing on hacks?*
+  
 * Learn about the BugCrowd Vulnerability Rating Taxonomy (VRT)
+
   Try, *Alexa ask Bug Browser to tell me about the VRT*
+  
 * Learn about BugCrowd through videos (Echo Spot and Echo Show only)
+
   Try, *Alexa ask Bug Browser to introduce me to BugCrowd with a video*
 
 # Built With
