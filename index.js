@@ -16,27 +16,33 @@ var newsKey = "54c1f13414d24544a837a4bdccbf5d21";
 
 var numberOfResults = 4;
 
-var welcomeMessage = "Welcome to " + appName + ". You can ask me for a flash briefing on recent hacks and security vulnerabilities around the world, information about BugCrowd, the VRT, and active BugCrowd programs. What will it be?";
+var welcomeMessage = "Welcome to " + appName + ". You can ask me for a flash briefing on recent hacks and security vulnerabilities around the world, information about bug bounty platforms, the VRT, active HackerOne bounties, and active BugCrowd bounties. What will it be?";
 
-var welcomeReprompt = "You can ask me for a flash briefing on recent hacks and security vulnerabilities around the world, information about BugCrowd, active BugCrowd programs, or ask for help. What will it be?";
+var welcomeReprompt = "You can ask me for a flash briefing on recent hacks and security vulnerabilities around the world, information about bug bounty platforms, active HackerOne bounties, active BugCrowd programs, or ask for help. What will it be?";
 
-var overview = "BugCrowd connects organizations to a global crowd of trusted security researchers. BugCrowd programs allow the developers to discover and resolve bugs before the general public is aware of them, preventing incidents of widespread abuse. What else would you like to know?";
+var overview = "Bug bounty platforms such as BugCrowd and HackerOne connect organizations to a global crowd of trusted security researchers. Bug Bounty programs allow the developers to discover and resolve bugs before the general public is aware of them, preventing incidents of widespread abuse.";
 
-var HelpMessage = "Here are some things you can say: Give me a flash briefing on hacks. Tell me about BugCrowd. Tell me about the VRT. Tell me some active BugCrowd programs. What would you like to do?";
+var HelpMessage = "Here are some things you can say: Give me a flash briefing on hacks. Tell me what Bug Bounty Platforms are. Tell me about the VRT. Tell me some active BugCrowd programs. Tell me some active HackerOne bounties. What would you like to do?";
 
-var moreInformation = "See your Alexa app for more information."
+var moreInformation = "See your Alexa app for more information.";
 
-var tryAgainMessage = "Please try again."
+var tryAgainMessage = "Please try again.";
 
 var moreInfoProgram = " You can tell me a program number for more information. For example open number one. What program would you like more information on?";
 
-var getMoreInfoRepromtMessage = "what vulnerability would you like to hear more about?";
+var getMoreInfoRepromptMessage = "what vulnerability would you like to hear more about?";
 
-var hearMoreMessage = " Would you like to hear about another top program in BugCrowd? You can tell me a program number for more information. For example open number two.";
+var hearMoreMessage = " Would you like to hear about another active bounty? You can tell me a program number for more information. For example open number two.";
 
 var noProgramErrorMessage = "There is no program with this number.";
 
-var getMoreInfoMessage = "OK, " + getMoreInfoRepromtMessage;
+var generalReprompt = " What else would you like to know?";
+
+var getMoreInfoMessage = "OK, " + getMoreInfoRepromptMessage;
+
+var videoError = "Playing videos is not supported on this device. ";
+
+var getMoreInfoRepromptMessage = " If you want to hear another category, you can ask me about the VRT again. What would you like to do?";
 
 var goodbyeMessage = "OK, Bug Browser shutting down.";
 
@@ -155,17 +161,23 @@ var newSessionHandlers = {
 
 var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
     'getOverview': function () {
-        output = overview;
+        var cardTitle = "What are Bug Bounties and Bug Bounty Platforms?";
+        const imageObj = {
+            smallImageUrl:'https://s3.amazonaws.com/bugbrowser/images/BugBountyPlatforms.png',
+            largeImageUrl: 'https://s3.amazonaws.com/bugbrowser/images/BugBountyPlatforms.png'
+        };
+        output = overview + " What else would you like to know?";
         if (this.event.context.System.device.supportedInterfaces.Display) {
+            output = overview + " If you would like to learn more about bug bounty platforms you can ask me to play the BugCrowd overview video or ask me to teach you how to use BugCrowd. What would you like me to do?"
             const builder = new Alexa.templateBuilders.BodyTemplate1Builder();
-            const template = builder.setTitle('What is BugCrowd?')
+            const template = builder.setTitle(cardTitle)
                                     .setBackgroundImage(makeImage('https://s3.amazonaws.com/bugbrowser/images/BugCrowdBR.png'))
                                     .setTextContent(makePlainText(output))
                                     .build();
-            this.response.speak(output).renderTemplate(template).listen(output);
+            this.response.speak(output).renderTemplate(template).cardRenderer(cardTitle, overview, imageObj).listen(HelpMessage);
             this.emit(':responseReady');
         } else {
-            this.emit(':askWithCard', output, appName, overview);
+            this.emit(':askWithCard', output, output, cardTitle, overview, imageObj);
         }
     },
     'getOverviewVideo': function () {
@@ -179,7 +191,7 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
             this.response.playVideo(videoSource, metadata);
             this.emit(':responseReady');
         } else {
-            this.emit(':ask', "Playing videos is not supported on this device. " + overview, appName, overview);
+            this.emit(':ask', videoError + overview + generalReprompt, appName, overview);
         }
     },
     'getEasterEgg': function () {
@@ -197,7 +209,6 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
         }
     },
     'getTeachVideo': function () {
-        output = "Playing videos is not supported on this device. " ;
         if (this.event.context.System.device.supportedInterfaces.Display) {
             const videoSource = 'https://s3.amazonaws.com/bugbrowser/video/Learn+Bugcrowd+in+10+Minutes.mp4';
             const metadata = {
@@ -207,7 +218,7 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
             this.response.playVideo(videoSource, metadata);
             this.emit(':responseReady');
         } else {
-            this.emit(':ask', output + HelpMessage, appName, output + HelpMessage);
+            this.emit(':ask', videoError + HelpMessage, appName, output + HelpMessage);
         }
     },
     'getProgramsIntent': function () {
@@ -232,7 +243,7 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
           }).then((map) => {
                 var programs = map.get(0);
                 var images = map.get(1);
-                var cardTitle = "Top BugCrowd Programs";
+                var cardTitle = "BugCrowd Programs";
                 var output = "";
                 var read = "";
                 var retrieveError = "I was unable to retrieve any active programs.";
@@ -253,11 +264,11 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                     }
                     const listItems = listItemBuilder.build();
                     const listTemplate = listTemplateBuilder.setToken('listToken')
-    										.setTitle('BugCrowd Programs')
+    										.setTitle(cardTitle)
                                             .setListItems(listItems)
                                             .setBackgroundImage(makeImage('https://s3.amazonaws.com/bugbrowser/images/Search.jpg'))
                                             .build();
-                    this.response.speak(output).renderTemplate(listTemplate).listen(output);
+                    this.response.speak(output).renderTemplate(listTemplate).cardRenderer(cardTitle, output, null).listen(moreInfoProgram);
                     this.emit(':responseReady');
                 } else {
                     this.emit(':askWithCard', read, read, cardTitle, output);
@@ -284,7 +295,7 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
           return hackerOnePrograms;
 
         }).then((hackerOnePrograms) => {
-              var cardTitle = "Top HackerOne Programs";
+              var cardTitle = "HackerOne Programs";
               var output = "";
               var read = "";
               var retrieveError = "I was unable to retrieve any active programs.";
@@ -305,11 +316,11 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                   }
                   const listItems = listItemBuilder.build();
                   const listTemplate = listTemplateBuilder.setToken('hackerOneListToken')
-                                          .setTitle('HackerOne Programs')
+                                          .setTitle(cardTitle)
                                           .setListItems(listItems)
                                           .setBackgroundImage(makeImage('https://s3.amazonaws.com/bugbrowser/images/CircuitLock.jpg'))
                                           .build();
-                  this.response.speak(output).renderTemplate(listTemplate).listen(output);
+                  this.response.speak(output).renderTemplate(listTemplate).cardRenderer(cardTitle, output, null).listen(moreInfoProgram);
                   this.emit(':responseReady');
               } else {
                   this.emit(':askWithCard', read, read, cardTitle, output);
@@ -406,7 +417,7 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                                                 .setTextContent(makeRichText('<font size="5">' + cardContent + '</font>'))
                                                 .setImage(makeImage(imageObj.largeImageUrl))
                                                 .build();
-                            this.response.speak(output).listen(hearMoreMessage).renderTemplate(template);                   
+                            this.response.speak(output).listen(hearMoreMessage).cardRenderer(cardTitle, cardContent, imageObj).renderTemplate(template);                   
                             this.emit(':responseReady');
                         } else {
                             this.emit(':askWithCard', output, hearMoreMessage, cardTitle, cardContent, imageObj);
@@ -450,7 +461,7 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                 var retrieveError = "I was unable to retrieve any vulnerability information.";
                 if (selectedVrt) {
                     
-                    read = "The VRT outlines Bugcrowd’s baseline priority ratings for vulnerabilities. ";
+                    read = "The VRT, or Vulnerability Rating Taxonomy, outlines Bugcrowd’s baseline priority ratings for vulnerabilities. Most companies reward bugs classified between Priority 1 (P1) and Priority 4 (P4). Priority 5 (P5) is the lowest designation and is given to non-exploitable weaknesses. ";
 
                     output += (selectedVrt.name + ":" + "\n" + "\n");
                     read += ("One of the categories on the VRT is " + selectedVrt.name + " which has these subcategories: ");
@@ -463,6 +474,7 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                             read += (element.name + " has no specified priority. ");
                         }
                     });
+                    read += getMoreInfoRepromptMessage;
                     const vrtObj = {
                         smallImageUrl: 'https://s3.amazonaws.com/bugbrowser/images/VRT-Logo.png',
                         largeImageUrl: 'https://assets.bugcrowdusercontent.com/packs/images/tracker/logo/vrt-logo-ba20b1de556f194607f690788f072798.svg'
@@ -483,10 +495,10 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                                                 .setListItems(listItems)
                                                 .setBackgroundImage(makeImage('https://s3.amazonaws.com/bugbrowser/images/Circuit.png'))
                                                 .build();
-                        this.response.speak(read).renderTemplate(listTemplate).listen(read);
+                        this.response.speak(read).cardRenderer(cardTitle, output, vrtObj).renderTemplate(listTemplate).listen(HelpMessage);
                         this.emit(':responseReady');
                     } else {
-                        this.emit(':askWithCard', read, read, cardTitle, output, vrtObj); 
+                        this.emit(':askWithCard', read, HelpMessage, cardTitle, output, vrtObj); 
                     }
                 }                           
                 else {
@@ -583,7 +595,7 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                                                     .setTextContent(makeRichText('<font size="5">' + cardContent + '</font>'))
                                                     .setImage(makeImage(imageObj.largeImageUrl))
                                                     .build();
-                                this.response.speak(output).listen(hearMoreMessage).renderTemplate(template);
+                                this.response.speak(output).listen(hearMoreMessage).cardRenderer(cardTitle, cardContent, imageObj).renderTemplate(template);
                                 console.log('Should be rendered!');                 
                                 this.emit(':responseReady');
                         }
@@ -674,11 +686,11 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                                         .setListItems(listItems)
                                         .setBackgroundImage(makeImage('https://s3.amazonaws.com/bugbrowser/images/Encryption.jpg'))
                                         .build();
-                this.response.speak(output).renderTemplate(listTemplate).listen(output);
+                this.response.speak(output + generalReprompt).cardRenderer(cardTitle, cardContent, null).renderTemplate(listTemplate).listen(output + generalReprompt);
                 this.emit(':responseReady');
             }
             else{
-                alexa.emit(':tellWithCard', output, cardTitle, cardContent);
+                this.emit(':askWithCard', output + generalReprompt, HelpMessage, cardTitle, cardContent);
             }
         });
         

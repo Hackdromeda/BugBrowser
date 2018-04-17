@@ -45,6 +45,14 @@
                         }
                     ],
                     "samples": [
+                        "open bug crowd {program}",
+                        "select bug crowd {program}",
+                        "tell me more about bug crowd program number {program}",
+                        "open bugcrowd {program}",
+                        "select bugcrowd {program}",
+                        "tell me more about bugcrowd program number {program}",
+                        "show bugcrowd {program}",
+                        "show bug crowd {program}",
                         "select {program}",
                         "tell me more about {program}",
                         "open {program}",
@@ -60,7 +68,7 @@
                     "name": "getNewsIntent",
                     "slots": [],
                     "samples": [
-                        "Give me a flash briefing on hacks",
+                        "give me a flash briefing on hacks",
                         "tell me hacking news",
                         "what is the latest news",
                         "flawed software news",
@@ -75,6 +83,11 @@
                     "name": "getOverview",
                     "slots": [],
                     "samples": [
+                        "Tell me what Bug Bounty Platforms are",
+                        "What are bug bounties and bug bounty platforms",
+                        "what is a bug bounty platform",
+                        "introduce me to hackerone",
+                        "tell me about hackerone",
                         "introduce me to bugcrowd",
                         "tell me about bugcrowd",
                         "more information about BugCrowd",
@@ -84,7 +97,33 @@
                         "facts about BugCrowd",
                         "overview of BugCrowd",
                         "BugCrowd facts",
-                        "BugCrowd overview"
+                        "BugCrowd overview",
+                        "introduce me to bug crowd",
+                        "tell me about bug crowd",
+                        "more information about bug crowd",
+                        "what's it like in bug crowd",
+                        "tell me more about bug crowd",
+                        "tell me some facts about bug crowd",
+                        "facts about bug crowd",
+                        "overview of bug crowd",
+                        "bug crowd facts",
+                        "bug crowd overview",
+                        "more information about hackerone",
+                        "what's it like in hackerone",
+                        "tell me more about hackerone",
+                        "tell me some facts about hackerone",
+                        "facts about hackerone",
+                        "overview of hackerone",
+                        "hackerone facts",
+                        "hackerone overview",
+                        "more information about hacker one",
+                        "what's it like in hacker one",
+                        "tell me more about hacker one",
+                        "tell me some facts about hacker one",
+                        "facts about hacker one",
+                        "overview of hacker one",
+                        "hacker one facts",
+                        "hacker one overview"
                     ]
                 },
                 {
@@ -108,6 +147,11 @@
                     "name": "getHackerOneIntent",
                     "slots": [],
                     "samples": [
+                        "active Hacker one programs",
+                        "Hacker one programs",
+                        "Hacker One bounties",
+                        "tell me about Hacker One programs",
+                        "give me Hacker One programs",
                         "tell me about HackerOne programs",
                         "HackerOne programs",
                         "active HackerOne programs"
@@ -122,6 +166,8 @@
                         "Read an entry from the Vulnerability Rating Taxonomy",
                         "Read an entry from the VRT",
                         "Give me something from the Vulnerability Rating Taxonomy",
+                        "What is the VRT",
+                        "What is the Vulnerability Rating Taxonomy",
                         "Tell me an entry from Vulnerability Rating Taxonomy"
                     ]
                 },
@@ -177,7 +223,12 @@
                         "tell me about bugcrowd with a video",
                         "Introduce me to BugCrowd with a video",
                         "play BugCrowd video",
-                        "play BugCrowd overview video"
+                        "play BugCrowd overview video",
+                        "bug crowd introduction video",
+                        "tell me about bug crowd with a video",
+                        "Introduce me to bug crowd with a video",
+                        "play bug crowd video",
+                        "play bug crowd overview video"
                     ]
                 },
                 {
@@ -196,8 +247,27 @@
                         "hidden feature",
                         "easter eggs",
                         "easter egg",
-                        "Show me the surprise video",
-                        "Surprise me"
+                        "show me the surprise video",
+                        "surprise me"
+                    ]
+                },
+                {
+                    "name": "getMoreInfoHackerOneIntent",
+                    "slots": [
+                        {
+                            "name": "program",
+                            "type": "AMAZON.NUMBER"
+                        }
+                    ],
+                    "samples": [
+                        "open hacker one {program}",
+                        "open hackerone {program}",
+                        "show hackerone {program}",
+                        "select hacker one {program}",
+                        "select hackerone {program}",
+                        "tell me more about hacker one program number {program}",
+                        "hacker one bounty number {program}",
+                        "show hacker one {program}"
                     ]
                 }
             ],
