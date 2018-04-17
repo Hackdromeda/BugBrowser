@@ -2,7 +2,7 @@
 This Alexa skill will provide a flash briefing on recent hacks and security vulnerabilities around the world, information about BugCrowd, the BugCrowd VRT, and active BugCrowd programs.
 
 # Enable the Skill:
-[Amazon US Skill] (https://www.amazon.com/dp/B07BPVH1S5/)
+[Amazon US Skill](https://www.amazon.com/dp/B07BPVH1S5/)
 
 # Features:
 * Learn about BugCrowd and HackerOne
