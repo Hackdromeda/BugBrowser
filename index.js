@@ -285,7 +285,7 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
     },
     'getHackerOneIntent': function() {
         rp({
-            uri: `https://hackerone.com/programs/search.json?query=type%3Ahackerone`,
+            uri: `https://hackerone.com/programs/search.json?query=type%3Ahackerone&limit=26`,
             transform: function (body) {
               return JSON.parse(body);
             }
@@ -389,7 +389,7 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                         var numOfVrts = "";
                     }                       
                     if (information[1]) {
-                        information[1] = information[1].replace('day  ', 'day.').replace('days  ', 'days.') + '. ';
+                        information[1] = information[1].replace('day  ', 'day. ').replace('days  ', 'days. ').replace('hour   ', 'hour. ').replace('hours   ', 'hours. ').replace('week   ', 'week. ').replace('weeks   ', 'weeks. ').replace('month   ', 'month. ').replace('months   ', 'months. ') + '. ';
                         var validationTime = 'Expect v' + information[1].substring(1, information[1].length);
                     }
                     else{
@@ -418,7 +418,7 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                                                 .setToken('getMoreInfoIntentToken')
                                                 .setBackButtonBehavior('VISIBLE')
                                                 .setBackgroundImage(makeImage('https://s3.amazonaws.com/bugbrowser/images/Circuit.png'))
-                                                .setTextContent(makeRichText('<font size="5">' + cardContent + '</font>'))
+                                                .setTextContent(makeRichText('<font size="1">' + cardContent + '</font>'))
                                                 .setImage(makeImage(imageObj.largeImageUrl))
                                                 .build();
                             this.response.speak(output).listen(hearMoreMessage).cardRenderer(cardTitle, cardContent, imageObj).renderTemplate(template);                   
@@ -465,15 +465,41 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                 return xtralarge;
                 }).then((xtralarge) => {
                 var images = xtralarge;
-                var selectedProgram = hackerOnePrograms[index].name;
-                if (selectedProgram) {
+                var selectedProgram = sanitizeInput(hackerOnePrograms[index].name);
+                if (selectedProgram && hackerOnePrograms[index].url) {
                     if (hackerOnePrograms[index].meta.minimum_bounty && hackerOnePrograms[index].meta.default_currency == 'usd') {
                         var bounty = 'This program has a minimum bounty of $' + hackerOnePrograms[index].meta.minimum_bounty + '.';
                     } else {
                         var bounty = '';
                     }
-                    var cardTitle = hackerOnePrograms[index].name;
-                    var cardContent = hackerOnePrograms[index].about.replace(/\n/g,' ');
+                    bounty = sanitizeInput(bounty);
+                    var cardTitle = sanitizeInput(hackerOnePrograms[index].name);
+                    var cardContent = sanitizeInput(hackerOnePrograms[index].stripped_policy.replace(/\n/g,' '));
+                    
+                    var periodIndex = cardContent.substring(0, (cardContent.length >= 1600) ? 1600: cardContent.length).lastIndexOf('.');
+                    var exclamationIndex = cardContent.substring(0, (cardContent.length >= 1600) ? 1600: cardContent.length).lastIndexOf('!');
+                    var questionIndex = cardContent.substring(0, (cardContent.length >= 1600) ? 1600: cardContent.length).lastIndexOf('?');
+
+                    if (periodIndex != -1) {
+                        var splitIndex = periodIndex;
+                    } else if (exclamationIndex != - 1) {
+                        var splitIndex = exclamationIndex;
+                    } else if (questionIndex != - 1) {
+                        var splitIndex = questionIndex;
+                    } else {
+                        periodIndex = (cardContent.length <= 1600) ? cardContent.length: 1600;
+                    }
+
+                    if (exclamationIndex != -1 && exclamationIndex < splitIndex) {
+                        splitIndex = exclamationIndex;
+                    }
+
+                    if (questionIndex != -1 && questionIndex < splitIndex) {
+                        splitIndex = questionIndex;
+                    }
+
+                    cardContent = cardContent.substring(0, splitIndex) + " That's not all! You can find more at " + "hackerone.com" + hackerOnePrograms[index].url + ".";
+
                     const imageObj = {
                         smallImageUrl: hackerOnePrograms[index].profile_picture,
                         largeImageUrl: hackerOnePrograms[index].profile_picture
@@ -485,13 +511,13 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                                             .setToken('getMoreInfoIntentToken')
                                             .setBackButtonBehavior('VISIBLE')
                                             .setBackgroundImage(makeImage('https://s3.amazonaws.com/bugbrowser/images/Circuit.png'))
-                                            .setTextContent(makeRichText('<font size="5">' + bounty + cardContent + '</font>'))
+                                            .setTextContent(makeRichText('<font size="1">' + bounty + ' ' + (hackerOnePrograms[index].about ? hackerOnePrograms[index].about: cardContent) + '</font>'))
                                             .setImage(makeImage(images[0] ? images[0]: imageObj.largeImageUrl))
                                             .build();
-                        this.response.speak(bounty + hackerOnePrograms[index].about.replace(/\n/g,' ')).listen(hearMoreMessage).cardRenderer(cardTitle, cardContent, images[0]).renderTemplate(template);                   
+                        this.response.speak(bounty + sanitizeInput(hackerOnePrograms[index].about.replace(/\n/g,' ')) + " That's not all! You can find more at " + "hackerone.com" + hackerOnePrograms[index].url + ".").listen(hearMoreMessage).cardRenderer(cardTitle, cardContent, images[0]).renderTemplate(template);                   
                         this.emit(':responseReady');
                     } else {
-                        this.emit(':askWithCard', bounty + hackerOnePrograms[index].about.replace(/\n/g,' '), hearMoreMessage, cardTitle, cardContent, images[0]);
+                        this.emit(':askWithCard', bounty + sanitizeInput(hackerOnePrograms[index].about.replace(/\n/g,' ')) + " That's not all! You can find more at " + "hackerone.com" + hackerOnePrograms[index].url + ".", hearMoreMessage, cardTitle, cardContent, images[0]);
                     }
                 }
                 else {
@@ -649,7 +675,7 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                         }
                         var selectedProgram = programs[index];
                         if (selectedProgram) {
-                            output = programs[index] + " is offering a bounty of " + rewards[index+1] + ". " + numOfVrts + validationTime + payout + ". Additional details are available at bugcrowd.com" + urls[index] + "." + hearMoreMessage;
+                            output = programs[index] + " is offering a bounty of " + rewards[index+1].replace(/–/g, 'and') + ". " + numOfVrts + validationTime + payout + ". Additional details are available at bugcrowd.com" + urls[index] + "." + hearMoreMessage;
                             output = programs[index] + " is offering a bounty between " + rewards[index+1].replace(/–/g, 'and') + ". " + numOfVrts + validationTime + payout + ". Additional details are available at bugcrowd.com" + urls[index] + "." + hearMoreMessage;
                             var cardTitle = programs[index];
                             var cardContent = programs[index] + " is offering a bounty between " + rewards[index+1].replace(/–/g, 'and') + ". " + numOfVrts + validationTime + payout + ". Additional details are available at bugcrowd.com" + urls[index] + ".";
@@ -809,6 +835,13 @@ function supportsDisplay() {
 function isSimulator() {
     var isSimulator = !this.event.context; //simulator doesn't send context
     return isSimulator;
+}
+
+function sanitizeInput(s) {
+    s = s.replace(/&/g, 'and');
+    s = s.replace(/\*/g, '\n\n*');
+    s = s.replace(/[~#^()_|<>\\/]/gi, '');
+    return s;
 }
   
 function renderTemplate (content) {
