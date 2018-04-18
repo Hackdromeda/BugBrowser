@@ -403,9 +403,9 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                     }
                     var selectedProgram = programs[index];
                     if (selectedProgram) {
-                        output = programs[index] + " is offering a bounty of " + rewards[index+1] + ". " + numOfVrts + validationTime + payout + ". Additional details are available at bugcrowd.com" + urls[index] + "." + hearMoreMessage;
+                        output = programs[index] + " is offering a bounty between " + rewards[index+1].replace(/–/g, 'and') + ". " + numOfVrts + validationTime + payout + ". Additional details are available at bugcrowd.com" + urls[index] + "." + hearMoreMessage;
                         var cardTitle = programs[index];
-                        var cardContent = programs[index] + " is offering a bounty of " + rewards[index+1] + ". " + numOfVrts + validationTime + payout + ". Additional details are available at bugcrowd.com" + urls[index] + ".";
+                        var cardContent = programs[index] + " is offering a bounty between " + rewards[index+1].replace(/–/g, 'and') + ". " + numOfVrts + validationTime + payout + ". Additional details are available at bugcrowd.com" + urls[index] + ".";
                         const imageObj = {
                             smallImageUrl: images[index],
                             largeImageUrl: images[index]
@@ -475,11 +475,13 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                     var payout = "";
                 var selectedProgram = hackerOnePrograms[index].name;
                 if (selectedProgram) {
-                    if (hackerOnePrograms[index].meta.minimum_bounty) {
-                        
+                    if (hackerOnePrograms[index].meta.minimum_bounty && hackerOnePrograms[index].meta.default_currency == 'usd') {
+                        var bounty = 'This program has a minimum bounty of $' + hackerOnePrograms[index].meta.minimum_bounty + '.';
+                    } else {
+                        var bounty = '';
                     }
                     var cardTitle = hackerOnePrograms[index].name;
-                    var cardContent = hackerOnePrograms[index].stripped_policy.replace(/\n/g,' ');
+                    var cardContent = hackerOnePrograms[index].about.replace(/\n/g,' ');
                     const imageObj = {
                         smallImageUrl: hackerOnePrograms[index].profile_picture,
                         largeImageUrl: hackerOnePrograms[index].profile_picture
@@ -491,13 +493,13 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                                             .setToken('getMoreInfoIntentToken')
                                             .setBackButtonBehavior('VISIBLE')
                                             .setBackgroundImage(makeImage('https://s3.amazonaws.com/bugbrowser/images/Circuit.png'))
-                                            .setTextContent(makeRichText('<font size="5">' + cardContent + '</font>'))
+                                            .setTextContent(makeRichText('<font size="5">' + bounty + cardContent + '</font>'))
                                             .setImage(makeImage(images[0] ? images[0]: imageObj.largeImageUrl))
                                             .build();
-                        this.response.speak(hackerOnePrograms[index].stripped_policy.replace(/\n/g,' ')).listen(hearMoreMessage).cardRenderer(cardTitle, cardContent, images[0]).renderTemplate(template);                   
+                        this.response.speak(bounty + hackerOnePrograms[index].about.replace(/\n/g,' ')).listen(hearMoreMessage).cardRenderer(cardTitle, cardContent, images[0]).renderTemplate(template);                   
                         this.emit(':responseReady');
                     } else {
-                        this.emit(':askWithCard', hackerOnePrograms[index].stripped_policy.replace(/\n/g,' '), hearMoreMessage, cardTitle, cardContent, images[0]);
+                        this.emit(':askWithCard', bounty + hackerOnePrograms[index].about.replace(/\n/g,' '), hearMoreMessage, cardTitle, cardContent, images[0]);
                     }
                 }
                 else {
