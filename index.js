@@ -127,7 +127,7 @@ var newSessionHandlers = {
     },
     'getMoreInfoHackerOneIntent': function() {
         this.handler.state = states.SEARCHMODE;
-        this.emitWithState('getMoreHackerOneInfoIntent');
+        this.emitWithState('getMoreInfoHackerOneIntent');
     },
     'getVRTIntent': function () {
         this.handler.state = states.SEARCHMODE;
@@ -452,27 +452,19 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
         }).then((hackerOnePrograms) => {
             var index = parseInt(this.event.request.intent.slots.program.value) - 1;
 
-            rp({
-                uri: `https://hackerone.com` + hackerOnePrograms[index].url,
-                transform: function (body) {
-                  return cheerio.load(body);
+        rp({
+            uri: `https://hackerone.com` + hackerOnePrograms[index].url,
+            transform: function (body) {
+                return cheerio.load(body);
                 }
-              }).then(($) => {
-                  var images = [];
-                  var responseTimes = [];
-
-                $('.profile-header__picture').each(function(i, elem) {
-                  images.push($(this).find('img').attr('src'));
+                }).then(($) => {
+                var xtralarge = [];
+                $('meta[property="og:image"]').each(function(i, elem) {
+                    xtralarge.push($(this).attr('content'));
                 });
-
-                $('.profile-stats-amount').each(function(i, elem) {
-                    responseTimes.push($(this).text().trim().replace(/\s/g,' '));
-                  });
-                    if (responseTimes[0]) {
-                        var validationTime = 'Expect ' + responseTimes[0] + '.';
-                    }
-                
-                    var payout = "";
+                return xtralarge;
+                }).then((xtralarge) => {
+                var images = xtralarge;
                 var selectedProgram = hackerOnePrograms[index].name;
                 if (selectedProgram) {
                     if (hackerOnePrograms[index].meta.minimum_bounty && hackerOnePrograms[index].meta.default_currency == 'usd') {
@@ -658,8 +650,9 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                         var selectedProgram = programs[index];
                         if (selectedProgram) {
                             output = programs[index] + " is offering a bounty of " + rewards[index+1] + ". " + numOfVrts + validationTime + payout + ". Additional details are available at bugcrowd.com" + urls[index] + "." + hearMoreMessage;
+                            output = programs[index] + " is offering a bounty between " + rewards[index+1].replace(/–/g, 'and') + ". " + numOfVrts + validationTime + payout + ". Additional details are available at bugcrowd.com" + urls[index] + "." + hearMoreMessage;
                             var cardTitle = programs[index];
-                            var cardContent = programs[index] + " is offering a bounty of " + rewards[index+1] + ". " + numOfVrts + validationTime + payout + ". Additional details are available at bugcrowd.com" + urls[index] + ".";
+                            var cardContent = programs[index] + " is offering a bounty between " + rewards[index+1].replace(/–/g, 'and') + ". " + numOfVrts + validationTime + payout + ". Additional details are available at bugcrowd.com" + urls[index] + ".";
                             const imageObj = {
                                 smallImageUrl: images[index],
                                 largeImageUrl: images[index]
