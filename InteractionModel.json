@@ -260,6 +260,13 @@
                         }
                     ],
                     "samples": [
+                        "select hacker one program {program}",
+                        "select hacker one bounty {program}",
+                        "show hacker one bounty {program}",
+                        "open hacker one program {program}",
+                        "open hackerone program {program}",
+                        "show hackerone bounty {program}",
+                        "show hackerone program {program}",
                         "open hacker one {program}",
                         "open hackerone {program}",
                         "show hackerone {program}",
