@@ -14,7 +14,7 @@ var appName = "Bug Browser";
 
 var newsKey = "54c1f13414d24544a837a4bdccbf5d21";
 
-var numberOfResults = 4;
+var numberOfResults = 5;
 
 var welcomeMessage = "Welcome to " + appName + ". You can ask me for a flash briefing on recent hacks and security vulnerabilities around the world, information about bug bounty platforms, the VRT, active HackerOne bounties, and active BugCrowd bounties. What will it be?";
 
@@ -250,7 +250,7 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                 var cardTitle = "BugCrowd Programs";
                 var output = "";
                 var read = "";
-                var retrieveError = "I was unable to retrieve any active programs.";
+                var retrieveError = "I was unable to retrieve any active programs. Please try again later.";
                 if (programs.length > 0) {
                     
                     read = "Here are the top active programs at BugCrowd. ";
@@ -302,7 +302,7 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
               var cardTitle = "HackerOne Programs";
               var output = "";
               var read = "";
-              var retrieveError = "I was unable to retrieve any active programs.";
+              var retrieveError = "I was unable to retrieve any active programs. Please try again later.";
               if (hackerOnePrograms.length > 0) {
                   
                   read = "Here are the top active programs from HackerOne.";
@@ -369,7 +369,7 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
             var urls = map.get(2);
             var images = map.get(3);
             var index = parseInt(this.event.request.intent.slots.program.value) - 1;
-
+            if (urls[index] != null) {
                 rp({
                     uri: `https://bugcrowd.com` + urls[index],
                     transform: function (body) {
@@ -402,7 +402,7 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                         var payout = "No payment history is available";
                     }
                     var selectedProgram = programs[index];
-                    if (selectedProgram) {
+                    if (selectedProgram != null && urls[index] != null) {
                         output = programs[index] + " is offering a bounty between " + rewards[index+1].replace(/–/g, 'and') + ". " + numOfVrts + validationTime + payout + ". Additional details are available at bugcrowd.com" + urls[index] + "." + hearMoreMessage;
                         var cardTitle = programs[index];
                         var cardContent = programs[index] + " is offering a bounty between " + rewards[index+1].replace(/–/g, 'and') + ". " + numOfVrts + validationTime + payout + ". Additional details are available at bugcrowd.com" + urls[index] + ".";
@@ -421,16 +421,20 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                                                 .setTextContent(makeRichText('<font size="1">' + cardContent + '</font>'))
                                                 .setImage(makeImage(imageObj.largeImageUrl))
                                                 .build();
-                            this.response.speak(output).listen(hearMoreMessage).cardRenderer(cardTitle, cardContent, imageObj).renderTemplate(template);                   
+                            this.response.speak(output).listen(hearMoreMessage.substring(1)).cardRenderer(cardTitle, cardContent, imageObj).renderTemplate(template);                   
                             this.emit(':responseReady');
                         } else {
-                            this.emit(':askWithCard', output, hearMoreMessage, cardTitle, cardContent, imageObj);
+                            this.emit(':askWithCard', output, hearMoreMessage.substring(1), cardTitle, cardContent, imageObj);
                         }
                     }
                     else {
-                        this.emit(':tell', noProgramErrorMessage);
+                        this.emit(':ask', noProgramErrorMessage + moreInfoProgram, noProgramErrorMessage + moreInfoProgram);
                     }
                 });
+            }
+            else {
+                this.emit(':ask', noProgramErrorMessage + moreInfoProgram, noProgramErrorMessage + moreInfoProgram);
+            }
             
           });
     },
@@ -451,11 +455,11 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
 
         }).then((hackerOnePrograms) => {
             var index = parseInt(this.event.request.intent.slots.program.value) - 1;
-
-        rp({
-            uri: `https://hackerone.com` + hackerOnePrograms[index].url,
-            transform: function (body) {
-                return cheerio.load(body);
+            if (hackerOnePrograms[index].url != null) {
+                rp({
+                    uri: `https://hackerone.com` + hackerOnePrograms[index].url,
+                    transform: function (body) {
+                        return cheerio.load(body);
                 }
                 }).then(($) => {
                 var xtralarge = [];
@@ -466,7 +470,7 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                 }).then((xtralarge) => {
                 var images = xtralarge;
                 var selectedProgram = sanitizeInput(hackerOnePrograms[index].name);
-                if (selectedProgram && hackerOnePrograms[index].url) {
+                if (selectedProgram != null && hackerOnePrograms[index].url != null) {
                     if (hackerOnePrograms[index].meta.minimum_bounty && hackerOnePrograms[index].meta.default_currency == 'usd') {
                         var bounty = 'This program has a minimum bounty of $' + hackerOnePrograms[index].meta.minimum_bounty + '.';
                     } else {
@@ -499,6 +503,13 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                     }
 
                     cardContent = cardContent.substring(0, splitIndex) + " That's not all! You can find more at " + "hackerone.com" + hackerOnePrograms[index].url + ".";
+                    if(hackerOnePrograms[index].about == null || hackerOnePrograms[index].about == ""){
+                        output = cardContent;
+                    }
+                    else{
+                        output = bounty + sanitizeInput(hackerOnePrograms[index].about.replace(/\n/g,' ')) + " That's not all! You can find more at " + "hackerone.com" + hackerOnePrograms[index].url + "."
+                    }
+                    var speak = output + " See your Alexa app for the specific program requirements for " + cardTitle + "." + hearMoreMessage; // speak includes question.
 
                     const imageObj = {
                         smallImageUrl: hackerOnePrograms[index].profile_picture,
@@ -514,16 +525,20 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                                             .setTextContent(makeRichText('<font size="1">' + bounty + ' ' + (hackerOnePrograms[index].about ? hackerOnePrograms[index].about: cardContent) + '</font>'))
                                             .setImage(makeImage(images[0] ? images[0]: imageObj.largeImageUrl))
                                             .build();
-                        this.response.speak(bounty + sanitizeInput(hackerOnePrograms[index].about.replace(/\n/g,' ')) + " That's not all! You can find more at " + "hackerone.com" + hackerOnePrograms[index].url + ".").listen(hearMoreMessage).cardRenderer(cardTitle, cardContent, images[0]).renderTemplate(template);                   
+                        this.response.speak(speak).listen(hearMoreMessage.substring(1)).cardRenderer(cardTitle, cardContent, images[0] ? images[0]: imageObj.largeImageUrl).renderTemplate(template);                   
                         this.emit(':responseReady');
                     } else {
-                        this.emit(':askWithCard', bounty + sanitizeInput(hackerOnePrograms[index].about.replace(/\n/g,' ')) + " That's not all! You can find more at " + "hackerone.com" + hackerOnePrograms[index].url + ".", hearMoreMessage, cardTitle, cardContent, images[0]);
+                        this.emit(':askWithCard', speak, hearMoreMessage.substring(1), cardTitle, cardContent, images[0] ? images[0]: imageObj.largeImageUrl);
                     }
                 }
                 else {
-                    this.emit(':tell', noProgramErrorMessage);
+                    this.emit(':ask', noProgramErrorMessage + moreInfoProgram, noProgramErrorMessage + moreInfoProgram);
                 }
             });
+            }
+            else {
+                this.emit(':ask', noProgramErrorMessage + moreInfoProgram, noProgramErrorMessage + moreInfoProgram);
+            }
       });
     },
     'getVRTIntent': function () {
@@ -554,7 +569,7 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                 var cardTitle = "Vulnerability Rating Taxonomy (VRT)";
                 var output = "";
                 var read = "";
-                var retrieveError = "I was unable to retrieve any vulnerability information.";
+                var retrieveError = "I was unable to retrieve any vulnerability information. Please try again later.";
                 if (selectedVrt) {
                     
                     read = "The VRT, or Vulnerability Rating Taxonomy, outlines Bugcrowd’s baseline priority ratings for vulnerabilities. Most companies reward bugs classified between Priority 1 (P1) and Priority 4 (P4). Priority 5 (P5) is the lowest designation and is given to non-exploitable weaknesses. ";
@@ -674,7 +689,7 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                             var payout = "No payment history is available";
                         }
                         var selectedProgram = programs[index];
-                        if (selectedProgram) {
+                        if (selectedProgram != null && urls[index] != null) {
                             output = programs[index] + " is offering a bounty of " + rewards[index+1].replace(/–/g, 'and') + ". " + numOfVrts + validationTime + payout + ". Additional details are available at bugcrowd.com" + urls[index] + "." + hearMoreMessage;
                             output = programs[index] + " is offering a bounty between " + rewards[index+1].replace(/–/g, 'and') + ". " + numOfVrts + validationTime + payout + ". Additional details are available at bugcrowd.com" + urls[index] + "." + hearMoreMessage;
                             var cardTitle = programs[index];
@@ -692,12 +707,12 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                                                     .setTextContent(makeRichText('<font size="5">' + cardContent + '</font>'))
                                                     .setImage(makeImage(imageObj.largeImageUrl))
                                                     .build();
-                                this.response.speak(output).listen(hearMoreMessage).cardRenderer(cardTitle, cardContent, imageObj).renderTemplate(template);
+                                this.response.speak(output).listen(hearMoreMessage.substring(1)).cardRenderer(cardTitle, cardContent, imageObj).renderTemplate(template);
                                 console.log('Should be rendered!');                 
                                 this.emit(':responseReady');
                         }
                         else {
-                            this.emit(':tell', noProgramErrorMessage);
+                            this.emit(':ask', noProgramErrorMessage + moreInfoProgram, noProgramErrorMessage + moreInfoProgram);
                         }
                     });
                 
