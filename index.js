@@ -504,10 +504,10 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
 
                     cardContent = cardContent.substring(0, splitIndex) + " That's not all! You can find more at " + "hackerone.com" + hackerOnePrograms[index].url + ".";
                     if(hackerOnePrograms[index].about == null || hackerOnePrograms[index].about == ""){
-                        output = cardContent;
+                        output = bounty + cardContent;
                     }
                     else{
-                        output = bounty + sanitizeInput(hackerOnePrograms[index].about.replace(/\n/g,' ')) + " That's not all! You can find more at " + "hackerone.com" + hackerOnePrograms[index].url + "."
+                        output = bounty + " " + sanitizeInput(hackerOnePrograms[index].about.replace(/\n/g,' ')) + " That's not all! You can find more at " + "hackerone.com" + hackerOnePrograms[index].url + "."
                     }
                     var speak = output + " See your Alexa app for the specific program requirements for " + cardTitle + "." + hearMoreMessage; // speak includes question.
 
@@ -856,6 +856,9 @@ function sanitizeInput(s) {
     s = s.replace(/&/g, 'and');
     s = s.replace(/\*/g, '\n\n*');
     s = s.replace(/[~#^()_|<>\\/]/gi, '');
+    s = s.replace(' - ', 'to');
+    s = s.replace(/-/g, '');
+
     return s;
 }
   
