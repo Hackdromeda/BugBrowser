@@ -37,7 +37,7 @@
                     ]
                 },
                 {
-                    "name": "getMoreInfoIntent",
+                    "name": "getMoreInfoBugCrowdIntent",
                     "slots": [
                         {
                             "name": "program",
@@ -53,6 +53,68 @@
                         "tell me more about bugcrowd program number {program}",
                         "show bugcrowd {program}",
                         "show bug crowd {program}",
+                        "select bug crowd {program}",
+                        "tell me more about bug crowd {program}",
+                        "tell me more about bug crowd number {program}",
+                        "what is bug crowd number {program}",
+                        "more about bug crowd number {program}",
+                        "bug crowd number {program}",
+                        "bug crowd {program}",
+                        "tell me more about bugcrowd {program}",
+                        "tell me more about bugcrowd number {program}",
+                        "what is bugcrowd number {program}",
+                        "more about bugcrowd number {program}",
+                        "bugcrowd number {program}",
+                        "bugcrowd {program}"
+                    ]
+                },
+                {
+                    "name": "getMoreInfoHackerOneIntent",
+                    "slots": [
+                        {
+                            "name": "program",
+                            "type": "AMAZON.NUMBER"
+                        }
+                    ],
+                    "samples": [
+                        "select hacker one program {program}",
+                        "select hacker one bounty {program}",
+                        "show hacker one bounty {program}",
+                        "open hacker one program {program}",
+                        "open hackerone program {program}",
+                        "show hackerone bounty {program}",
+                        "show hackerone program {program}",
+                        "open hacker one {program}",
+                        "open hackerone {program}",
+                        "show hackerone {program}",
+                        "select hacker one {program}",
+                        "select hackerone {program}",
+                        "tell me more about hacker one program number {program}",
+                        "hacker one bounty number {program}",
+                        "show hacker one {program}",
+                        "tell me more about hacker one {program}",
+                        "tell me more about hacker one number {program}",
+                        "what is hacker one number {program}",
+                        "more about hacker one number {program}",
+                        "hacker one number {program}",
+                        "hacker one {program}",
+                        "tell me more about hackerone {program}",
+                        "tell me more about hackerone number {program}",
+                        "what is hackerone number {program}",
+                        "more about hackerone number {program}",
+                        "hackerone number {program}",
+                        "hackerone {program}"
+                    ]
+                },
+                {
+                    "name": "getMoreInfo",
+                    "slots": [
+                        {
+                            "name": "program",
+                            "type": "AMAZON.NUMBER"
+                        }
+                    ],
+                    "samples": [
                         "select {program}",
                         "tell me more about {program}",
                         "open {program}",
@@ -130,6 +192,22 @@
                     "name": "getProgramsIntent",
                     "slots": [],
                     "samples": [
+                        "how can I earn money",
+                        "what companies are looking for security researchers",
+                        "how do I earn money",
+                        "what are some bounties available",
+                        "active bounties",
+                        "tell me the top active programs",
+                        "who should I hack",
+                        "What companies should I hack",
+                        "top programs",
+                        "Tell me about top programs"
+                    ]
+                },
+                {
+                    "name": "getBugCrowdIntent",
+                    "slots": [],
+                    "samples": [
                         "open bug crowd bounties",
                         "open bugcrowd bounties",
                         "show bugcrowd bounties",
@@ -143,16 +221,10 @@
                         "Tell me Bug Crowd programs",
                         "What are the BugCrowd programs",
                         "Tell me BugCrowd programs",
-                        "how can I earn money",
-                        "what companies are looking for security researchers",
-                        "how do I earn money",
-                        "what are some bounties available",
-                        "active bounties",
-                        "tell me the top active programs",
-                        "who should I hack",
-                        "What companies should I hack",
-                        "top programs",
-                        "Tell me about top programs"
+                        "what are some bounties available from BugCrowd",
+                        "tell me the top active bugcrowd programs",
+                        "What bugcrowd companies should I hack",
+                        "Tell me about top bug crowd programs"
                     ]
                 },
                 {
@@ -265,32 +337,6 @@
                         "easter egg",
                         "show me the surprise video",
                         "surprise me"
-                    ]
-                },
-                {
-                    "name": "getMoreInfoHackerOneIntent",
-                    "slots": [
-                        {
-                            "name": "program",
-                            "type": "AMAZON.NUMBER"
-                        }
-                    ],
-                    "samples": [
-                        "select hacker one program {program}",
-                        "select hacker one bounty {program}",
-                        "show hacker one bounty {program}",
-                        "open hacker one program {program}",
-                        "open hackerone program {program}",
-                        "show hackerone bounty {program}",
-                        "show hackerone program {program}",
-                        "open hacker one {program}",
-                        "open hackerone {program}",
-                        "show hackerone {program}",
-                        "select hacker one {program}",
-                        "select hackerone {program}",
-                        "tell me more about hacker one program number {program}",
-                        "hacker one bounty number {program}",
-                        "show hacker one {program}"
                     ]
                 }
             ],

@@ -48,6 +48,10 @@ var goodbyeMessage = "OK, Bug Browser shutting down.";
 
 var newsIntroMessage = "These are the " + numberOfResults + " most recent security vulnerability headlines, you can read more on your Alexa app.";
 
+var bugCrowdPage = 1;
+
+var hackerOneMax = 25;
+
 var output = "";
 
 var alexa;
@@ -55,7 +59,9 @@ var alexa;
 var newSessionHandlers = {
     'LaunchRequest': function () {
         this.handler.state = states.SEARCHMODE;
+        this.attributes.lastAction = "LaunchRequest";
         output = welcomeMessage;
+        this.attributes.lastSpeech = welcomeMessage;
         if (this.event.context.System.device.supportedInterfaces.Display) {
             var hintOptions = ["Tell me hacking news",
                                "Give me a flash briefing on hacks",
@@ -113,21 +119,29 @@ var newSessionHandlers = {
         this.handler.state = states.SEARCHMODE;
         this.emitWithState('getNewsIntent');
     },
-    'getProgramsIntent': function () {
+    'getBugCrowdIntent': function () {
         this.handler.state = states.SEARCHMODE;
-        this.emitWithState('getProgramsIntent');
+        this.emitWithState('getBugCrowdIntent');
     },
     'getHackerOneIntent': function() {
         this.handler.state = states.SEARCHMODE;
         this.emitWithState('getHackerOneIntent');
     },
-    'getMoreInfoIntent': function () {
+    'getProgramsIntent': function () {
         this.handler.state = states.SEARCHMODE;
-        this.emitWithState('getMoreInfoIntent');
+        this.emitWithState('getProgramsIntent');
+    },
+    'getMoreInfoBugCrowdIntent': function () {
+        this.handler.state = states.SEARCHMODE;
+        this.emitWithState('getMoreInfoBugCrowdIntent');
     },
     'getMoreInfoHackerOneIntent': function() {
         this.handler.state = states.SEARCHMODE;
         this.emitWithState('getMoreInfoHackerOneIntent');
+    },
+    'getMoreInfo': function () {
+        this.handler.state = states.SEARCHMODE;
+        this.emitWithState('getMoreInfo');
     },
     'getVRTIntent': function () {
         this.handler.state = states.SEARCHMODE;
@@ -166,11 +180,13 @@ var newSessionHandlers = {
 var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
     'getOverview': function () {
         var cardTitle = "What are Bug Bounties and Bug Bounty Platforms?";
+        this.attributes.lastAction = "getOverview";
         const imageObj = {
             smallImageUrl:'https://s3.amazonaws.com/bugbrowser/images/BugBountyPlatforms.png',
             largeImageUrl: 'https://s3.amazonaws.com/bugbrowser/images/BugBountyPlatforms.png'
         };
         output = overview + " What else would you like to know?";
+        this.attributes.lastSpeech = output;
         if (this.event.context.System.device.supportedInterfaces.Display) {
             output = overview + " If you would like to learn more about bug bounty platforms you can ask me to play the BugCrowd overview video or ask me to teach you how to use BugCrowd. What would you like me to do?"
             const builder = new Alexa.templateBuilders.BodyTemplate1Builder();
@@ -186,6 +202,7 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
     },
     'getOverviewVideo': function () {
         output = overview;
+        this.attributes.lastAction = "getOverviewVideo";
         if (this.event.context.System.device.supportedInterfaces.Display) {
             const videoSource = 'https://s3.amazonaws.com/bugbrowser/video/Overview.mp4';
             const metadata = {
@@ -200,6 +217,7 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
     },
     'getEasterEgg': function () {
         output = "This Easter Egg is a video that can only be played on the Echo Show or Echo Spot. What else would you like to do?";
+        this.attributes.lastAction = "getEasterEgg";
         if (this.event.context.System.device.supportedInterfaces.Display) {
             const videoSource = 'https://s3.amazonaws.com/bugbrowser/video/Bugcrowd+Intro.mp4';
             const metadata = {
@@ -213,6 +231,7 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
         }
     },
     'getTeachVideo': function () {
+        this.attributes.lastAction = "getTeachVideo";
         if (this.event.context.System.device.supportedInterfaces.Display) {
             const videoSource = 'https://s3.amazonaws.com/bugbrowser/video/Learn+Bugcrowd+in+10+Minutes.mp4';
             const metadata = {
@@ -225,9 +244,10 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
             this.emit(':ask', videoError + HelpMessage, appName, output + HelpMessage);
         }
     },
-    'getProgramsIntent': function () {
+    'getBugCrowdIntent': function () {
+        this.attributes.lastAction = "getBugCrowdIntent";
             rp({
-              uri: `https://bugcrowd.com/programs/reward`,
+              uri: `https://bugcrowd.com/programs/reward?page=` + bugCrowdPage,
               transform: function (body) {
                 return cheerio.load(body);
               }
@@ -256,10 +276,11 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                     read = "Here are the top active programs at BugCrowd. ";
                     output += "BugCrowd Programs: \n\n";
                     for (var counter = 0; counter < programs.length; counter++) {
-                        output += "Number " + (counter + 1) + ": " + programs[counter] + "\n\n";
+                        output += (counter + 1) + ". " + programs[counter] + "\n\n";
                         read += "Number " + (counter + 1) + ": " + programs[counter] + "\n\n";
                     }
                     read += moreInfoProgram;
+                    this.attributes.lastSpeech = read;
                 if (this.event.context.System.device.supportedInterfaces.Display) {
                     const listItemBuilder = new Alexa.templateBuilders.ListItemBuilder();
                     const listTemplateBuilder = new Alexa.templateBuilders.ListTemplate2Builder();
@@ -272,7 +293,7 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                                             .setListItems(listItems)
                                             .setBackgroundImage(makeImage('https://s3.amazonaws.com/bugbrowser/images/Search.jpg'))
                                             .build();
-                    this.response.speak(output).renderTemplate(listTemplate).cardRenderer(cardTitle, output, null).listen(moreInfoProgram);
+                    this.response.speak(read).renderTemplate(listTemplate).cardRenderer(cardTitle, output, null).listen(moreInfoProgram);
                     this.emit(':responseReady');
                 } else {
                     this.emit(':askWithCard', read, read, cardTitle, output);
@@ -284,8 +305,9 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
         });
     },
     'getHackerOneIntent': function() {
+        this.attributes.lastAction = "getHackerOneIntent";
         rp({
-            uri: `https://hackerone.com/programs/search.json?query=type%3Ahackerone&limit=26`,
+            uri: `http://bugbrowser.s3-accelerate.amazonaws.com/data/response.json`,
             transform: function (body) {
               return JSON.parse(body);
             }
@@ -307,15 +329,16 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                   
                   read = "Here are the top active programs from HackerOne.";
                   output += "HackerOne Programs: \n\n";
-                  for (var counter = 0; counter < (hackerOnePrograms.length <= 25 ? hackerOnePrograms.length: 25); counter++) {
-                      output += "Number " + (counter + 1) + ": " + hackerOnePrograms[counter].name + "\n\n";
+                  for (var counter = hackerOneMax - 25; counter < (hackerOnePrograms.length <= hackerOneMax ? hackerOnePrograms.length: hackerOneMax); counter++) {
+                      output += (counter + 1) + ". " + hackerOnePrograms[counter].name + "\n\n";
                       read += "Number " + (counter + 1) + ": " + hackerOnePrograms[counter].name + "\n\n";
                   }
                   read += moreInfoProgram;
+                  this.attributes.lastSpeech = read;
               if (this.event.context.System.device.supportedInterfaces.Display) {
                   const listItemBuilder = new Alexa.templateBuilders.ListItemBuilder();
                   const listTemplateBuilder = new Alexa.templateBuilders.ListTemplate2Builder();
-                  for (var i = 0; i < (hackerOnePrograms.length <= 25 ? hackerOnePrograms.length: 25); i++) {
+                  for (var i = hackerOneMax - 25; i < (hackerOnePrograms.length <= hackerOneMax ? hackerOnePrograms.length: hackerOneMax); i++) {
                       listItemBuilder.addItem(makeImage(hackerOnePrograms[i].profile_picture, 400, 400), 'hackerOneProgramToken' + i, makePlainText(hackerOnePrograms[i].name))
                   }
                   const listItems = listItemBuilder.build();
@@ -324,7 +347,7 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                                           .setListItems(listItems)
                                           .setBackgroundImage(makeImage('https://s3.amazonaws.com/bugbrowser/images/CircuitLock.jpg'))
                                           .build();
-                  this.response.speak(output).renderTemplate(listTemplate).cardRenderer(cardTitle, output, null).listen(moreInfoProgram);
+                  this.response.speak(read).renderTemplate(listTemplate).cardRenderer(cardTitle, output, null).listen(moreInfoProgram);
                   this.emit(':responseReady');
               } else {
                   this.emit(':askWithCard', read, read, cardTitle, output);
@@ -335,10 +358,10 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
           }
       });
     },
-    'getMoreInfoIntent': function () {
-
+    'getMoreInfoBugCrowdIntent': function () {
+        this.attributes.lastAction = "getMoreInfoBugCrowdIntent";
         rp({
-            uri: `https://bugcrowd.com/programs/reward`,
+            uri: `https://bugcrowd.com/programs/reward?page=` + bugCrowdPage,
             transform: function (body) {
               return cheerio.load(body);
             }
@@ -415,7 +438,7 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                         if (this.event.context.System.device.supportedInterfaces.Display) {
                             const builder = new Alexa.templateBuilders.BodyTemplate2Builder();
                             const template = builder.setTitle(cardTitle)
-                                                .setToken('getMoreInfoIntentToken')
+                                                .setToken('getMoreInfoBugCrowdIntentToken')
                                                 .setBackButtonBehavior('VISIBLE')
                                                 .setBackgroundImage(makeImage('https://s3.amazonaws.com/bugbrowser/images/Circuit.png'))
                                                 .setTextContent(makeRichText('<font size="1">' + cardContent + '</font>'))
@@ -439,8 +462,9 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
           });
     },
     'getMoreInfoHackerOneIntent': function() {
+        this.attributes.lastAction = "getMoreInfoHackerOneIntent";
         rp({
-            uri: `https://hackerone.com/programs/search.json?query=type%3Ahackerone`,
+            uri: `http://bugbrowser.s3-accelerate.amazonaws.com/data/response.json`,
             transform: function (body) {
               return JSON.parse(body);
             }
@@ -454,7 +478,7 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
           return hackerOnePrograms;
 
         }).then((hackerOnePrograms) => {
-            var index = parseInt(this.event.request.intent.slots.program.value) - 1;
+            var index = parseInt(this.event.request.intent.slots.program.value) - 1 + hackerOneMax - 25;
             if (hackerOnePrograms[index].url != null) {
                 rp({
                     uri: `https://hackerone.com` + hackerOnePrograms[index].url,
@@ -510,6 +534,7 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                         output = bounty + " " + sanitizeInput(hackerOnePrograms[index].about.replace(/\n/g,' ')) + " That's not all! You can find more at " + "hackerone.com" + hackerOnePrograms[index].url + "."
                     }
                     var speak = output + " See your Alexa app for the specific program requirements for " + cardTitle + "." + hearMoreMessage; // speak includes question.
+                    this.attributes.lastSpeech = speak;
 
                     const imageObj = {
                         smallImageUrl: hackerOnePrograms[index].profile_picture,
@@ -519,7 +544,7 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                     if (this.event.context.System.device.supportedInterfaces.Display) {
                         const builder = new Alexa.templateBuilders.BodyTemplate2Builder();
                         const template = builder.setTitle(cardTitle)
-                                            .setToken('getMoreInfoIntentToken')
+                                            .setToken('getMoreInfoBugCrowdIntentToken')
                                             .setBackButtonBehavior('VISIBLE')
                                             .setBackgroundImage(makeImage('https://s3.amazonaws.com/bugbrowser/images/Circuit.png'))
                                             .setTextContent(makeRichText('<font size="1">' + bounty + ' ' + (hackerOnePrograms[index].about ? hackerOnePrograms[index].about: cardContent) + '</font>'))
@@ -532,16 +557,35 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                     }
                 }
                 else {
+                    this.attributes.lastSpeech = noProgramErrorMessage + moreInfoProgram;
                     this.emit(':ask', noProgramErrorMessage + moreInfoProgram, noProgramErrorMessage + moreInfoProgram);
                 }
             });
             }
             else {
+                this.attributes.lastSpeech = noProgramErrorMessage + moreInfoProgram;
                 this.emit(':ask', noProgramErrorMessage + moreInfoProgram, noProgramErrorMessage + moreInfoProgram);
             }
       });
     },
+    'getProgramsIntent': function () {
+        output = "Would you like to hear about the active BugCrowd programs? If so, please say tell me active BugCrowd bounties. If you would like to hear about active HackerOne bounties, please say tell me active HackerOne bounties. What would you like me to do?";
+        this.emit(':ask', output, HelpMessage);
+    },
+    'getMoreInfo': function () {
+        if(this.attributes.lastAction == "getBugCrowdIntent"){
+            this.emit('getMoreInfoBugCrowdIntent');
+        }
+        else if(this.attributes.lastAction == "getHackerOneIntent"){
+            this.emit('getMoreInfoHackerOneIntent');
+        }
+        else{
+            output = HelpMessage;
+            this.emit(':ask', output, HelpMessage);
+        }
+    },
     'getVRTIntent': function () {
+        this.attributes.lastAction = "getVRTIntent";
         rp({
             uri: `https://raw.githubusercontent.com/bugcrowd/vulnerability-rating-taxonomy/master/vulnerability-rating-taxonomy.json`,
             transform: function (body) {
@@ -586,6 +630,7 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                         }
                     });
                     read += getMoreInfoRepromptMessage;
+                    this.attributes.lastSpeech = read;
                     const vrtObj = {
                         smallImageUrl: 'https://s3.amazonaws.com/bugbrowser/images/VRT-Logo.png',
                         largeImageUrl: 'https://assets.bugcrowdusercontent.com/packs/images/tracker/logo/vrt-logo-ba20b1de556f194607f690788f072798.svg'
@@ -613,11 +658,13 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                     }
                 }                           
                 else {
+                    this.attributes.lastSpeech = retrieveError;
                     this.emit(':tell', retrieveError);
                 }
             });
     },
     "ElementSelected": function() {
+        this.attributes.lastAction = "ElementSelected";
         console.log (this.event.request.token);
         var newToken = this.event.request.token;
         if((this.event.request.token).substring(0, 12) == "programToken" || (this.event.request.token).substring(0, 17) == "eventprogramToken"){
@@ -625,7 +672,7 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
             console.log ('Program Token Detected');
             console.log('Index set to ' + index);
             rp({
-                uri: `https://bugcrowd.com/programs/reward`,
+                uri: `https://bugcrowd.com/programs/reward?page=` + bugCrowdPage,
                 transform: function (body) {
                   return cheerio.load(body);
                 }
@@ -690,7 +737,6 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                         }
                         var selectedProgram = programs[index];
                         if (selectedProgram != null && urls[index] != null) {
-                            output = programs[index] + " is offering a bounty of " + rewards[index+1].replace(/–/g, 'and') + ". " + numOfVrts + validationTime + payout + ". Additional details are available at bugcrowd.com" + urls[index] + "." + hearMoreMessage;
                             output = programs[index] + " is offering a bounty between " + rewards[index+1].replace(/–/g, 'and') + ". " + numOfVrts + validationTime + payout + ". Additional details are available at bugcrowd.com" + urls[index] + "." + hearMoreMessage;
                             var cardTitle = programs[index];
                             var cardContent = programs[index] + " is offering a bounty between " + rewards[index+1].replace(/–/g, 'and') + ". " + numOfVrts + validationTime + payout + ". Additional details are available at bugcrowd.com" + urls[index] + ".";
@@ -701,7 +747,7 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                                 console.log('Ready to build new body template 2!');
                                 const builder = new Alexa.templateBuilders.BodyTemplate2Builder();
                                 const template = builder.setTitle(cardTitle)
-                                                    .setToken('getMoreInfoIntentToken')
+                                                    .setToken('getMoreInfoBugCrowdIntentToken')
                                                     .setBackButtonBehavior('VISIBLE')
                                                     .setBackgroundImage(makeImage('https://s3.amazonaws.com/bugbrowser/images/Circuit.png'))
                                                     .setTextContent(makeRichText('<font size="5">' + cardContent + '</font>'))
@@ -712,6 +758,7 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                                 this.emit(':responseReady');
                         }
                         else {
+                            this.attributes.lastSpeech = noProgramErrorMessage + moreInfoProgram;
                             this.emit(':ask', noProgramErrorMessage + moreInfoProgram, noProgramErrorMessage + moreInfoProgram);
                         }
                     });
@@ -731,6 +778,43 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
         else{
             console.log ('Unhandled Token Detected');
             this.emit('Unhandled');
+        }
+    },
+    'AMAZON.RepeatIntent': function () { 
+        if(this.attributes.lastAction == "getOverviewVideo"){
+            this.emit('getOverviewVideo');
+        }
+        else if(this.attributes.lastAction == "getEasterEgg"){
+            this.emit('getEasterEgg');
+        }
+        else if(this.attributes.lastAction == "getTeachVideo"){
+            this.emit('getTeachVideo');
+        }
+        else if(this.attributes.lastSpeech != null){
+            this.emit('ask', this.attributes.lastSpeech, HelpMessage); 
+        }
+        else{
+            this.emit('ask', "There is not text from the previous intent available." + HelpMessage, HelpMessage)
+        }
+    } ,
+    'AMAZON.NextIntent': function () {
+        if(this.attributes.lastAction == "getBugCrowdIntent"){
+            bugCrowdPage++;
+            if(bugCrowdPage = 4){
+                bugCrowdPage = 1;
+            }
+            this.emit('getBugCrowdIntent');
+        }
+        if(this.attributes.lastAction == "getHackerOneIntent"){
+            hackerOneMax += 25;
+            if(hackerOneMax > 100){
+                hackerOneMax = 25;
+            }
+            this.emit('getHackerOneIntent');
+        }
+        else{
+            output = HelpMessage;
+            this.emit(':ask', output, HelpMessage);
         }
     },
     'AMAZON.YesIntent': function () {
@@ -806,9 +890,6 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
             }
         });
         
-    },
-    'AMAZON.RepeatIntent': function () {
-        this.emit(':ask', output, HelpMessage);
     },
     'AMAZON.CancelIntent': function () {
         // Use this function to clear up and save any data needed between sessions
