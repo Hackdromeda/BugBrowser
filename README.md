@@ -16,7 +16,7 @@ This Alexa skill will provide a flash briefing on recent hacks and security vuln
 * Get more bounties beyond the first set of cards provided
   * Try, *Alexa next page*
   
- * Get additional details for bounties from BugCrowd and/or HackerOne
+* Get additional details for bounties from BugCrowd and/or HackerOne
   * Try, *Alexa ask Bug Browser to tell me more about program number five*
   * Try, *Alexa ask Bug Browser to tell me more about BugCrowd bounty number five*
   
