@@ -1043,9 +1043,11 @@ function isSimulator() {
 }
 
 function sanitizeInput(s) {
+    s = s.replace('http://', '');
+    s = s.replace('https://', '');
     s = s.replace(/&/g, 'and');
     s = s.replace(/\*/g, '\n\n *');
-    s = s.replace(/[~#^()_|<>\\/]/gi, '');
+    s = s.replace(/[~#^()_|<>\\]/gi, '');
     s = s.replace(' - ', 'to');
     s = s.replace(/-/g, '');
 
