@@ -538,7 +538,7 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
 
                     const imageObj = {
                         smallImageUrl: hackerOnePrograms[index].profile_picture,
-                        largeImageUrl: hackerOnePrograms[index].profile_picture
+                        largeImageUrl: images[0] ? images[0]: hackerOnePrograms[index].profile_picture
                     };
 
                     if (this.event.context.System.device.supportedInterfaces.Display) {
@@ -548,12 +548,12 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                                             .setBackButtonBehavior('VISIBLE')
                                             .setBackgroundImage(makeImage('https://s3.amazonaws.com/bugbrowser/images/Circuit.png'))
                                             .setTextContent(makeRichText('<font size="1">' + bounty + ' ' + (hackerOnePrograms[index].about ? sanitizeInput(hackerOnePrograms[index].about.replace(/\n/g,' ')): cardContent) + '</font>'))
-                                            .setImage(makeImage(images[0] ? images[0]: imageObj.largeImageUrl))
+                                            .setImage(makeImage(images[0] ? images[0]: imageObj.smallImageUrl))
                                             .build();
-                        this.response.speak(speak).listen(hearMoreMessage.substring(1)).cardRenderer(cardTitle, cardContent, images[0] ? images[0]: imageObj.largeImageUrl).renderTemplate(template);                   
+                        this.response.speak(speak).listen(hearMoreMessage.substring(1)).cardRenderer(cardTitle, cardContent, imageObj).renderTemplate(template);                   
                         this.emit(':responseReady');
                     } else {
-                        this.emit(':askWithCard', speak, hearMoreMessage.substring(1), cardTitle, cardContent, images[0] ? images[0]: imageObj.largeImageUrl);
+                        this.emit(':askWithCard', speak, hearMoreMessage.substring(1), cardTitle, cardContent, imageObj);
                     }
                 }
                 else {
@@ -809,9 +809,9 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                         var cardTitle = sanitizeInput(hackerOnePrograms[index].name);
                         var cardContent = sanitizeInput(hackerOnePrograms[index].stripped_policy.replace(/\n/g,' '));
                         
-                        var periodIndex = cardContent.substring(0, (cardContent.length >= 1600) ? 1600: cardContent.length).lastIndexOf('.');
-                        var exclamationIndex = cardContent.substring(0, (cardContent.length >= 1600) ? 1600: cardContent.length).lastIndexOf('!');
-                        var questionIndex = cardContent.substring(0, (cardContent.length >= 1600) ? 1600: cardContent.length).lastIndexOf('?');
+                        var periodIndex = cardContent.substring(0, (cardContent.length >= 1600) ? 1600: cardContent.length).lastIndexOf('.') + 1;
+                        var exclamationIndex = cardContent.substring(0, (cardContent.length >= 1600) ? 1600: cardContent.length).lastIndexOf('!') + 1;
+                        var questionIndex = cardContent.substring(0, (cardContent.length >= 1600) ? 1600: cardContent.length).lastIndexOf('?') + 1;
     
                         if (periodIndex != -1) {
                             var splitIndex = periodIndex;
@@ -843,7 +843,7 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
     
                         const imageObj = {
                             smallImageUrl: hackerOnePrograms[index].profile_picture,
-                            largeImageUrl: hackerOnePrograms[index].profile_picture
+                            largeImageUrl: images[0] ? images[0]: hackerOnePrograms[index].profile_picture
                         };
     
                         if (this.event.context.System.device.supportedInterfaces.Display) {
@@ -853,12 +853,12 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                                                 .setBackButtonBehavior('VISIBLE')
                                                 .setBackgroundImage(makeImage('https://s3.amazonaws.com/bugbrowser/images/Circuit.png'))
                                                 .setTextContent(makeRichText('<font size="1">' + bounty + ' ' + (hackerOnePrograms[index].about ? sanitizeInput(hackerOnePrograms[index].about.replace(/\n/g,' ')): cardContent) + '</font>'))
-                                                .setImage(makeImage(images[0] ? images[0]: imageObj.largeImageUrl))
+                                                .setImage(makeImage(images[0] ? images[0]: imageObj.smallImageUrl))
                                                 .build();
-                            this.response.speak(speak).listen(hearMoreMessage.substring(1)).cardRenderer(cardTitle, cardContent, images[0] ? images[0]: imageObj.largeImageUrl).renderTemplate(template);                   
+                            this.response.speak(speak).listen(hearMoreMessage.substring(1)).cardRenderer(cardTitle, cardContent, imageObj).renderTemplate(template);                   
                             this.emit(':responseReady');
                         } else {
-                            this.emit(':askWithCard', speak, hearMoreMessage.substring(1), cardTitle, cardContent, images[0] ? images[0]: imageObj.largeImageUrl);
+                            this.emit(':askWithCard', speak, hearMoreMessage.substring(1), cardTitle, cardContent, imageObj);
                         }
                     }
                     else {
