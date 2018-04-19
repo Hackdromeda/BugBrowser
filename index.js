@@ -28,11 +28,11 @@ var moreInformation = "See your Alexa app for more information.";
 
 var tryAgainMessage = "Please try again.";
 
-var moreInfoProgram = " You can tell me a program number for more information. For example open number one. What program would you like more information on?";
+var moreInfoProgram = " You can tell me a program number for more information. For example, open number one. What program would you like more information on?";
 
 var getMoreInfoRepromptMessage = "what vulnerability would you like to hear more about?";
 
-var hearMoreMessage = " Would you like to hear about another active bounty? You can tell me a program number for more information. For example open number two.";
+var hearMoreMessage = " Would you like to hear about another active bounty? You can tell me a program number for more information. For example, open number two.";
 
 var noProgramErrorMessage = "There is no program with this number.";
 
@@ -273,7 +273,7 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                 var retrieveError = "I was unable to retrieve any active programs. Please try again later.";
                 if (programs.length > 0) {
                     
-                    read = "Here are the top active programs at BugCrowd. ";
+                    read = "Here are the active programs at BugCrowd: ";
                     output += "BugCrowd Programs: \n\n";
                     for (var counter = 0; counter < programs.length; counter++) {
                         output += (counter + 1) + ". " + programs[counter] + "\n\n";
@@ -327,7 +327,7 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
               var retrieveError = "I was unable to retrieve any active programs. Please try again later.";
               if (hackerOnePrograms.length > 0) {
                   
-                  read = "Here are the top active programs from HackerOne.";
+                  read = "Here are the active programs from HackerOne: ";
                   output += "HackerOne Programs: \n\n";
                   for (var counter = hackerOneMax - 25; counter < (hackerOnePrograms.length <= hackerOneMax ? hackerOnePrograms.length: hackerOneMax); counter++) {
                       output += (counter + 1) + ". " + hackerOnePrograms[counter].name + "\n\n";
@@ -547,7 +547,7 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                                             .setToken('getMoreInfoHackerOneIntentToken')
                                             .setBackButtonBehavior('VISIBLE')
                                             .setBackgroundImage(makeImage('https://s3.amazonaws.com/bugbrowser/images/Circuit.png'))
-                                            .setTextContent(makeRichText('<font size="1">' + bounty + ' ' + (hackerOnePrograms[index].about ? hackerOnePrograms[index].about: cardContent) + '</font>'))
+                                            .setTextContent(makeRichText('<font size="1">' + bounty + ' ' + (hackerOnePrograms[index].about ? sanitizeInput(hackerOnePrograms[index].about.replace(/\n/g,' ')): cardContent) + '</font>'))
                                             .setImage(makeImage(images[0] ? images[0]: imageObj.largeImageUrl))
                                             .build();
                         this.response.speak(speak).listen(hearMoreMessage.substring(1)).cardRenderer(cardTitle, cardContent, images[0] ? images[0]: imageObj.largeImageUrl).renderTemplate(template);                   
@@ -573,10 +573,10 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
         this.emit(':ask', output, HelpMessage);
     },
     'getMoreInfo': function () {
-        if(this.attributes.lastAction == "getBugCrowdIntent"){
+        if(this.attributes.lastAction == "getBugCrowdIntent" || this.attributes.lastAction == "getMoreInfoBugCrowdIntent"){
             this.emit('getMoreInfoBugCrowdIntent');
         }
-        else if(this.attributes.lastAction == "getHackerOneIntent"){
+        else if(this.attributes.lastAction == "getHackerOneIntent" || this.attributes.lastAction == "getMoreInfoHackerOneIntent"){
             this.emit('getMoreInfoHackerOneIntent');
         }
         else{
@@ -668,7 +668,8 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
         console.log (this.event.request.token);
         var newToken = this.event.request.token;
         if((this.event.request.token).substring(0, 12) == "programToken" || (this.event.request.token).substring(0, 17) == "eventprogramToken"){
-        var index = parseInt(newToken.replace(/[^0-9]/g, ''), 10); //leave only the digits
+            this.attributes.lastAction = "getMoreInfoBugCrowdIntent";
+            var index = parseInt(newToken.replace(/[^0-9]/g, ''), 10); //leave only the digits
             console.log ('Program Token Detected');
             console.log('Index set to ' + index);
             rp({
@@ -766,6 +767,7 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
               });
         }
         else if((this.event.request.token).substring(0, 21) == "hackerOneProgramToken" || (this.event.request.token).substring(0, 26) == "eventhackerOneProgramToken"){
+            this.attributes.lastAction = "getMoreInfoHackerOneIntent";
             var index = parseInt(newToken.replace(/[^0-9]/g, ''), 10) + hackerOneMax - 25; //leave only the digits
             rp({
                 uri: `http://bugbrowser.s3-accelerate.amazonaws.com/data/response.json`,
@@ -850,7 +852,7 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                                                 .setToken('getMoreInfoHackerOneIntentToken')
                                                 .setBackButtonBehavior('VISIBLE')
                                                 .setBackgroundImage(makeImage('https://s3.amazonaws.com/bugbrowser/images/Circuit.png'))
-                                                .setTextContent(makeRichText('<font size="1">' + bounty + ' ' + (hackerOnePrograms[index].about ? hackerOnePrograms[index].about: cardContent) + '</font>'))
+                                                .setTextContent(makeRichText('<font size="1">' + bounty + ' ' + (hackerOnePrograms[index].about ? sanitizeInput(hackerOnePrograms[index].about.replace(/\n/g,' ')): cardContent) + '</font>'))
                                                 .setImage(makeImage(images[0] ? images[0]: imageObj.largeImageUrl))
                                                 .build();
                             this.response.speak(speak).listen(hearMoreMessage.substring(1)).cardRenderer(cardTitle, cardContent, images[0] ? images[0]: imageObj.largeImageUrl).renderTemplate(template);                   
@@ -900,7 +902,8 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
             this.emit('ask', this.attributes.lastSpeech, HelpMessage); 
         }
         else{
-            this.emit('ask', "There is not text from the previous intent available." + HelpMessage, HelpMessage)
+            console.log ("Repeat speech unavailable.")
+            this.emit('ask', HelpMessage, HelpMessage)
         }
     } ,
     'AMAZON.NextIntent': function () {
@@ -1041,7 +1044,7 @@ function isSimulator() {
 
 function sanitizeInput(s) {
     s = s.replace(/&/g, 'and');
-    s = s.replace(/\*/g, '\n\n*');
+    s = s.replace(/\*/g, '\n\n *');
     s = s.replace(/[~#^()_|<>\\/]/gi, '');
     s = s.replace(' - ', 'to');
     s = s.replace(/-/g, '');
