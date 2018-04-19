@@ -330,8 +330,8 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                   read = "Here are the active programs from HackerOne: ";
                   output += "HackerOne Programs: \n\n";
                   for (var counter = hackerOneMax - 25; counter < (hackerOnePrograms.length <= hackerOneMax ? hackerOnePrograms.length: hackerOneMax); counter++) {
-                      output += (counter + 1) + ". " + hackerOnePrograms[counter].name + "\n\n";
-                      read += "Number " + (counter + 1) + ": " + hackerOnePrograms[counter].name + "\n\n";
+                      output += (counter + 1 - hackerOneMax + 25) + ". " + hackerOnePrograms[counter].name + "\n\n";
+                      read += "Number " + (counter + 1 - hackerOneMax + 25) + ": " + hackerOnePrograms[counter].name + "\n\n";
                   }
                   read += moreInfoProgram;
                   this.attributes.lastSpeech = read;
