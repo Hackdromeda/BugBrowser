@@ -503,17 +503,18 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                     bounty = sanitizeInput(bounty);
                     var cardTitle = sanitizeInput(hackerOnePrograms[index].name);
                     var cardContent = sanitizeInput(hackerOnePrograms[index].stripped_policy.replace(/\n/g,' '));
-                    
+                    console.log(cardContent); //test sanitized
                     var periodIndex = cardContent.substring(0, (cardContent.length >= 1600) ? 1600: cardContent.length).lastIndexOf('.') + 1;
                     var exclamationIndex = cardContent.substring(0, (cardContent.length >= 1600) ? 1600: cardContent.length).lastIndexOf('!') + 1;
                     var questionIndex = cardContent.substring(0, (cardContent.length >= 1600) ? 1600: cardContent.length).lastIndexOf('?') + 1;
+                    var splitIndex;
 
                     if (periodIndex != -1) {
-                        var splitIndex = periodIndex;
+                        splitIndex = periodIndex;
                     } else if (exclamationIndex != - 1) {
-                        var splitIndex = exclamationIndex;
+                        splitIndex = exclamationIndex;
                     } else if (questionIndex != - 1) {
-                        var splitIndex = questionIndex;
+                        splitIndex = questionIndex;
                     } else {
                         periodIndex = (cardContent.length <= 1600) ? cardContent.length: 1600;
                     }
@@ -812,15 +813,16 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                         var periodIndex = cardContent.substring(0, (cardContent.length >= 1600) ? 1600: cardContent.length).lastIndexOf('.') + 1;
                         var exclamationIndex = cardContent.substring(0, (cardContent.length >= 1600) ? 1600: cardContent.length).lastIndexOf('!') + 1;
                         var questionIndex = cardContent.substring(0, (cardContent.length >= 1600) ? 1600: cardContent.length).lastIndexOf('?') + 1;
-    
+                        var splitIndex;
+
                         if (periodIndex != -1) {
-                            var splitIndex = periodIndex;
+                            splitIndex = periodIndex;
                         } else if (exclamationIndex != - 1) {
-                            var splitIndex = exclamationIndex;
+                            splitIndex = exclamationIndex;
                         } else if (questionIndex != - 1) {
-                            var splitIndex = questionIndex;
+                            splitIndex = questionIndex;
                         } else {
-                            periodIndex = (cardContent.length <= 1600) ? cardContent.length: 1600;
+                            splitIndex = (cardContent.length <= 1600) ? cardContent.length: 1600;
                         }
     
                         if (exclamationIndex != -1 && exclamationIndex < splitIndex) {
