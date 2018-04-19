@@ -544,7 +544,7 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                     if (this.event.context.System.device.supportedInterfaces.Display) {
                         const builder = new Alexa.templateBuilders.BodyTemplate2Builder();
                         const template = builder.setTitle(cardTitle)
-                                            .setToken('getMoreInfoBugCrowdIntentToken')
+                                            .setToken('getMoreInfoHackerOneIntentToken')
                                             .setBackButtonBehavior('VISIBLE')
                                             .setBackgroundImage(makeImage('https://s3.amazonaws.com/bugbrowser/images/Circuit.png'))
                                             .setTextContent(makeRichText('<font size="1">' + bounty + ' ' + (hackerOnePrograms[index].about ? hackerOnePrograms[index].about: cardContent) + '</font>'))
@@ -765,6 +765,112 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                 
               });
         }
+        else if((this.event.request.token).substring(0, 21) == "hackerOneProgramToken" || (this.event.request.token).substring(0, 26) == "eventhackerOneProgramToken"){
+            var index = parseInt(newToken.replace(/[^0-9]/g, ''), 10) + hackerOneMax - 25; //leave only the digits
+            rp({
+                uri: `http://bugbrowser.s3-accelerate.amazonaws.com/data/response.json`,
+                transform: function (body) {
+                  return JSON.parse(body);
+                }
+              }).then((data) => {
+                var hackerOnePrograms = [];
+    
+                for (var i = 0; i < data.results.length; i++) {
+                    hackerOnePrograms.push(data.results[i]);
+                }
+    
+              return hackerOnePrograms;
+    
+            }).then((hackerOnePrograms) => {
+                if (hackerOnePrograms[index].url != null) {
+                    rp({
+                        uri: `https://hackerone.com` + hackerOnePrograms[index].url,
+                        transform: function (body) {
+                            return cheerio.load(body);
+                    }
+                    }).then(($) => {
+                    var xtralarge = [];
+                    $('meta[property="og:image"]').each(function(i, elem) {
+                        xtralarge.push($(this).attr('content'));
+                    });
+                    return xtralarge;
+                    }).then((xtralarge) => {
+                    var images = xtralarge;
+                    var selectedProgram = sanitizeInput(hackerOnePrograms[index].name);
+                    if (selectedProgram != null && hackerOnePrograms[index].url != null) {
+                        if (hackerOnePrograms[index].meta.minimum_bounty && hackerOnePrograms[index].meta.default_currency == 'usd') {
+                            var bounty = 'This program has a minimum bounty of $' + hackerOnePrograms[index].meta.minimum_bounty + '.';
+                        } else {
+                            var bounty = '';
+                        }
+                        bounty = sanitizeInput(bounty);
+                        var cardTitle = sanitizeInput(hackerOnePrograms[index].name);
+                        var cardContent = sanitizeInput(hackerOnePrograms[index].stripped_policy.replace(/\n/g,' '));
+                        
+                        var periodIndex = cardContent.substring(0, (cardContent.length >= 1600) ? 1600: cardContent.length).lastIndexOf('.');
+                        var exclamationIndex = cardContent.substring(0, (cardContent.length >= 1600) ? 1600: cardContent.length).lastIndexOf('!');
+                        var questionIndex = cardContent.substring(0, (cardContent.length >= 1600) ? 1600: cardContent.length).lastIndexOf('?');
+    
+                        if (periodIndex != -1) {
+                            var splitIndex = periodIndex;
+                        } else if (exclamationIndex != - 1) {
+                            var splitIndex = exclamationIndex;
+                        } else if (questionIndex != - 1) {
+                            var splitIndex = questionIndex;
+                        } else {
+                            periodIndex = (cardContent.length <= 1600) ? cardContent.length: 1600;
+                        }
+    
+                        if (exclamationIndex != -1 && exclamationIndex < splitIndex) {
+                            splitIndex = exclamationIndex;
+                        }
+    
+                        if (questionIndex != -1 && questionIndex < splitIndex) {
+                            splitIndex = questionIndex;
+                        }
+    
+                        cardContent = cardContent.substring(0, splitIndex) + " That's not all! You can find more at " + "hackerone.com" + hackerOnePrograms[index].url + ".";
+                        if(hackerOnePrograms[index].about == null || hackerOnePrograms[index].about == ""){
+                            output = bounty + cardContent;
+                        }
+                        else{
+                            output = bounty + " " + sanitizeInput(hackerOnePrograms[index].about.replace(/\n/g,' ')) + " That's not all! You can find more at " + "hackerone.com" + hackerOnePrograms[index].url + "."
+                        }
+                        var speak = output + " See your Alexa app for the specific program requirements for " + cardTitle + "." + hearMoreMessage; // speak includes question.
+                        this.attributes.lastSpeech = speak;
+    
+                        const imageObj = {
+                            smallImageUrl: hackerOnePrograms[index].profile_picture,
+                            largeImageUrl: hackerOnePrograms[index].profile_picture
+                        };
+    
+                        if (this.event.context.System.device.supportedInterfaces.Display) {
+                            const builder = new Alexa.templateBuilders.BodyTemplate2Builder();
+                            const template = builder.setTitle(cardTitle)
+                                                .setToken('getMoreInfoHackerOneIntentToken')
+                                                .setBackButtonBehavior('VISIBLE')
+                                                .setBackgroundImage(makeImage('https://s3.amazonaws.com/bugbrowser/images/Circuit.png'))
+                                                .setTextContent(makeRichText('<font size="1">' + bounty + ' ' + (hackerOnePrograms[index].about ? hackerOnePrograms[index].about: cardContent) + '</font>'))
+                                                .setImage(makeImage(images[0] ? images[0]: imageObj.largeImageUrl))
+                                                .build();
+                            this.response.speak(speak).listen(hearMoreMessage.substring(1)).cardRenderer(cardTitle, cardContent, images[0] ? images[0]: imageObj.largeImageUrl).renderTemplate(template);                   
+                            this.emit(':responseReady');
+                        } else {
+                            this.emit(':askWithCard', speak, hearMoreMessage.substring(1), cardTitle, cardContent, images[0] ? images[0]: imageObj.largeImageUrl);
+                        }
+                    }
+                    else {
+                        this.attributes.lastSpeech = noProgramErrorMessage + moreInfoProgram;
+                        this.emit(':ask', noProgramErrorMessage + moreInfoProgram, noProgramErrorMessage + moreInfoProgram);
+                    }
+                });
+                }
+                else {
+                    this.attributes.lastSpeech = noProgramErrorMessage + moreInfoProgram;
+                    this.emit(':ask', noProgramErrorMessage + moreInfoProgram, noProgramErrorMessage + moreInfoProgram);
+                }
+          });
+        }
         else if((this.event.request.token).substring(0, 13) == "listItemToken"){
             var selectedToken = (this.event.request.token).substring(13);
             console.log ('List Token Detected');
@@ -800,12 +906,12 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
     'AMAZON.NextIntent': function () {
         if(this.attributes.lastAction == "getBugCrowdIntent"){
             bugCrowdPage++;
-            if(bugCrowdPage = 4){
+            if(bugCrowdPage == 4){
                 bugCrowdPage = 1;
             }
             this.emit('getBugCrowdIntent');
         }
-        if(this.attributes.lastAction == "getHackerOneIntent"){
+        else if(this.attributes.lastAction == "getHackerOneIntent"){
             hackerOneMax += 25;
             if(hackerOneMax > 100){
                 hackerOneMax = 25;
