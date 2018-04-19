@@ -580,7 +580,7 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
             this.emit('getMoreInfoHackerOneIntent');
         }
         else{
-            output = HelpMessage;
+            output = "Would you like to hear more about HackerOne programs or BugCrowd programs? If BugCrowd programs, say tell me more about BugCrowd program number five for example. If HackerOne programs, say tell me more about HackerOne program number three for example. What would you like me to do?";
             this.emit(':ask', output, HelpMessage);
         }
     },
