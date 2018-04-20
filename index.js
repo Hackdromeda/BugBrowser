@@ -516,13 +516,7 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
           return hackerOnePrograms;
 
         }).then((hackerOnePrograms) => {
-            var index;
-            if(this.event.request.intent.slots.program.value && this.event.request.intent.slots.program.value != null){
-                index = parseInt(this.event.request.intent.slots.program.value) - 1 + hackerOneMax - 25;
-            }
-            else{
-                index = Math.floor(Math.random() * 25) + 1 + hackerOneMax - 25;
-            }
+            var index = parseInt(this.event.request.intent.slots.program.value) - 1 + hackerOneMax - 25;
             if (hackerOnePrograms[index].url != null) {
                 rp({
                     uri: `https://hackerone.com` + hackerOnePrograms[index].url,
@@ -547,31 +541,29 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                     bounty = sanitizeInput(bounty);
                     var cardTitle = sanitizeInput(hackerOnePrograms[index].name);
                     var cardContent = sanitizeInput(hackerOnePrograms[index].stripped_policy.replace(/\n/g,' '));
-                    console.log(cardContent);
-                    var periodIndex = cardContent.substring(0, (cardContent.length >= 1600) ? 1600: cardContent.length).lastIndexOf('. ') + 1;
+                    var periodIndex = cardContent.substring(0, (cardContent.length >= 1600) ? 1600: cardContent.length).lastIndexOf('. ');
                     var exclamationIndex = cardContent.substring(0, (cardContent.length >= 1600) ? 1600: cardContent.length).lastIndexOf('!') + 1;
                     var questionIndex = cardContent.substring(0, (cardContent.length >= 1600) ? 1600: cardContent.length).lastIndexOf('?') + 1;
-                    var splitIndex;
+                    var splitIndex = 0;
 
                     if (periodIndex != -1) {
                         splitIndex = periodIndex;
+                        console.log('Split Index set to periodIndex:' + splitIndex);
                     } else if (exclamationIndex != - 1) {
                         splitIndex = exclamationIndex;
+                        console.log('Split Index set to exclamationIndex:' + splitIndex);
                     } else if (questionIndex != - 1) {
                         splitIndex = questionIndex;
+                        console.log('Split Index set to questionIndex:' + splitIndex);
                     } else {
-                        periodIndex = (cardContent.length <= 1600) ? cardContent.length: 1600;
+                        splitIndex = ((cardContent.substring(0, splitIndex + 1) <= 1600) ? (splitIndex): (cardContent.substring(0, 1600).lastIndexOf('.') + 1));
+                        console.log('Split Index set equal to or below 1600:' + splitIndex);
                     }
 
-                    if (exclamationIndex != -1 && exclamationIndex < splitIndex) {
-                        splitIndex = exclamationIndex;
-                    }
-
-                    if (questionIndex != -1 && questionIndex < splitIndex) {
-                        splitIndex = questionIndex;
-                    }
-
+                    console.log('Final Split Index: ' + splitIndex);
+                    console.log('cardContent before substring');
                     cardContent = cardContent.substring(0, splitIndex + 1) + " That's not all! You can find more at " + "hackerone.com" + hackerOnePrograms[index].url + ".";
+                    console.log('Final cardContent: ' + cardContent);
                     if(hackerOnePrograms[index].about == null || hackerOnePrograms[index].about == ""){
                         output = bounty + cardContent;
                     }
