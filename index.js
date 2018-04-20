@@ -48,6 +48,10 @@ var goodbyeMessage = "OK, Bug Browser shutting down.";
 
 var newsIntroMessage = "These are the " + numberOfResults + " most recent security vulnerability headlines, you can read more on your Alexa app.";
 
+var newsSources = "hacker-news,wired,the-verge,techcrunch";
+
+var newsQuery = ["security hacks", "security vulnerability", "bug bounty", "security researcher", "cybersecurity"]
+
 var bugCrowdPage = 1;
 
 var bugCrowdTotal = 3;
@@ -91,7 +95,7 @@ var newSessionHandlers = {
                 "templateToken": "launchRequestTemplate",
                 "bodyTemplateContent": "Welcome to Bug Browser", 
                 "cardContent": null,
-                "backgroundImage": 'http://bugbrowser.s3-accelerate.amazonaws.com/video/BugCrowdIntro-10FPS-600px-13MB.gif',
+                "backgroundImage": 'https://s3.amazonaws.com/bugbrowser/images/Circuit.png',
                 "askOrTell" : ":ask",
                 "sessionAttributes": {}
               };
@@ -290,7 +294,7 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                 var retrieveError = "I was unable to retrieve any active programs. Please try again later.";
                 if (programs.length > 0) {
                     
-                    read = "Here are the active programs at BugCrowd: ";
+                    read = "Here are the active programs at BugCrowd from page " + bugCrowdPage + " of " + bugCrowdTotal + ":";
                     output += "BugCrowd Programs: \n\n";
                     for (var counter = 0; counter < programs.length; counter++) {
                         output += (counter + 1) + ". " + programs[counter] + "\n\n";
