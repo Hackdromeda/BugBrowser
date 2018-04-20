@@ -535,8 +535,8 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                     bounty = sanitizeInput(bounty);
                     var cardTitle = sanitizeInput(hackerOnePrograms[index].name);
                     var cardContent = sanitizeInput(hackerOnePrograms[index].stripped_policy.replace(/\n/g,' '));
-                    console.log(cardContent); //test sanitized
-                    var periodIndex = cardContent.substring(0, (cardContent.length >= 1600) ? 1600: cardContent.length).lastIndexOf('.') + 1;
+                    console.log(cardContent);
+                    var periodIndex = cardContent.substring(0, (cardContent.length >= 1600) ? 1600: cardContent.length).lastIndexOf('. ') + 1;
                     var exclamationIndex = cardContent.substring(0, (cardContent.length >= 1600) ? 1600: cardContent.length).lastIndexOf('!') + 1;
                     var questionIndex = cardContent.substring(0, (cardContent.length >= 1600) ? 1600: cardContent.length).lastIndexOf('?') + 1;
                     var splitIndex;
@@ -559,7 +559,7 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                         splitIndex = questionIndex;
                     }
 
-                    cardContent = cardContent.substring(0, splitIndex) + " That's not all! You can find more at " + "hackerone.com" + hackerOnePrograms[index].url + ".";
+                    cardContent = cardContent.substring(0, splitIndex + 1) + " That's not all! You can find more at " + "hackerone.com" + hackerOnePrograms[index].url + ".";
                     if(hackerOnePrograms[index].about == null || hackerOnePrograms[index].about == ""){
                         output = bounty + cardContent;
                     }
