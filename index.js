@@ -50,7 +50,11 @@ var newsIntroMessage = "These are the " + numberOfResults + " most recent securi
 
 var bugCrowdPage = 1;
 
+var bugCrowdTotal = 3;
+
 var hackerOneMax = 25;
+
+var hackerOneTotal = 100;
 
 var output = "";
 
@@ -254,6 +258,10 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
             }).then(($) => {
               var programs = [];
               var images = [];
+              var bugCrowdPagination = [];
+              $('.bc-pagination__item').each(function(i, elem) {
+                  bugCrowdPagination.push($(this).find('a').attr('href'));
+              });
               $('.bc-panel__title').each(function(i, elem) {
                 programs.push($(this).text().trim());
               });
@@ -263,10 +271,19 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
             var map = new Map();
             map.set(0, programs);
             map.set(1, images)
+            map.set(2, bugCrowdPagination)
             return map;
           }).then((map) => {
                 var programs = map.get(0);
                 var images = map.get(1);
+                var bugCrowdPagination = map.get(2);
+                var bugCrowdTempMax = bugCrowdPagination[bugCrowdPagination.length - 1];
+                if(bugCrowdTempMax != null){
+                    bugCrowdTempMax = parseInt(bugCrowdTempMax.replace(/[^0-9]/g, ''), 10);
+                }
+                if(bugCrowdTempMax != null && bugCrowdTempMax > 2){
+                    bugCrowdTotal = bugCrowdTempMax;
+                }
                 var cardTitle = "BugCrowd Programs";
                 var output = "";
                 var read = "";
@@ -313,6 +330,7 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
             }
           }).then((data) => {
             var hackerOnePrograms = [];
+            hackerOneTotal = parseInt(data.total); // Subtract 1 for index limit
 
             for (var i = 0; i < data.results.length; i++) {
                 hackerOnePrograms.push(data.results[i]);
@@ -370,6 +388,10 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
             var rewards = [];
             var urls = [];
             var images = [];
+            var bugCrowdPagination = [];
+            $('.bc-pagination__item').each(function(i, elem) {
+                bugCrowdPagination.push($(this).find('a').attr('href'));
+            });
             $('.bc-panel__title').each(function(i, elem) {
                 programs.push($(this).text().trim());
                 urls.push($(this).find('a').attr('href'));
@@ -385,12 +407,21 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
             map.set(1, rewards);
             map.set(2, urls)
             map.set(3, images)
+            map.set(4, bugCrowdPagination)
             return map;
           }).then((map) => {
             var programs = map.get(0);
             var rewards = map.get(1);
             var urls = map.get(2);
             var images = map.get(3);
+            var bugCrowdPagination = map.get(4);
+            var bugCrowdTempMax = bugCrowdPagination[bugCrowdPagination.length - 1];
+            if(bugCrowdTempMax != null){
+                bugCrowdTempMax = parseInt(bugCrowdTempMax.replace(/[^0-9]/g, ''), 10);
+            }
+            if(bugCrowdTempMax != null && bugCrowdTempMax > 2){
+                bugCrowdTotal = bugCrowdTempMax;
+            }
             var index = parseInt(this.event.request.intent.slots.program.value) - 1;
             if (urls[index] != null) {
                 rp({
@@ -470,6 +501,7 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
             }
           }).then((data) => {
             var hackerOnePrograms = [];
+            hackerOneTotal = parseInt(data.total); // Subtract 1 for index limit
 
             for (var i = 0; i < data.results.length; i++) {
                 hackerOnePrograms.push(data.results[i]);
@@ -683,6 +715,10 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                 var rewards = [];
                 var urls = [];
                 var images = [];
+                var bugCrowdPagination = [];
+                $('.bc-pagination__item').each(function(i, elem) {
+                    bugCrowdPagination.push($(this).find('a').attr('href'));
+                });
                 $('.bc-panel__title').each(function(i, elem) {
                     programs.push($(this).text().trim());
                     urls.push($(this).find('a').attr('href'));
@@ -698,6 +734,7 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                 map.set(1, rewards);
                 map.set(2, urls);
                 map.set(3, images);
+                map.set(4, bugCrowdPagination)
                 console.log('Map ready for EventSelected!');
                 return map;
               }).then((map) => {
@@ -705,7 +742,14 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                 var rewards = map.get(1);
                 var urls = map.get(2);
                 var images = map.get(3);
-    
+                var bugCrowdPagination = map.get(4);
+                var bugCrowdTempMax = bugCrowdPagination[bugCrowdPagination.length - 1];
+                if(bugCrowdTempMax != null){
+                    bugCrowdTempMax = parseInt(bugCrowdTempMax.replace(/[^0-9]/g, ''), 10);
+                }
+                if(bugCrowdTempMax != null && bugCrowdTempMax > 2){
+                    bugCrowdTotal = bugCrowdTempMax;
+                }
                     rp({
                         uri: `https://bugcrowd.com` + urls[index],
                         transform: function (body) {
@@ -777,6 +821,7 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                 }
               }).then((data) => {
                 var hackerOnePrograms = [];
+                hackerOneTotal = parseInt(data.total); // Subtract 1 for index limit
     
                 for (var i = 0; i < data.results.length; i++) {
                     hackerOnePrograms.push(data.results[i]);
@@ -911,14 +956,14 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
     'AMAZON.NextIntent': function () {
         if(this.attributes.lastAction == "getBugCrowdIntent"){
             bugCrowdPage++;
-            if(bugCrowdPage == 4){
+            if(bugCrowdPage == bugCrowdTotal + 1){
                 bugCrowdPage = 1;
             }
             this.emit('getBugCrowdIntent');
         }
         else if(this.attributes.lastAction == "getHackerOneIntent"){
             hackerOneMax += 25;
-            if(hackerOneMax > 100){
+            if(hackerOneMax > hackerOneTotal){
                 hackerOneMax = 25;
             }
             this.emit('getHackerOneIntent');
