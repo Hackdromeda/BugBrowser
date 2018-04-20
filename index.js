@@ -410,6 +410,7 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
             map.set(4, bugCrowdPagination)
             return map;
           }).then((map) => {
+            var index;
             var programs = map.get(0);
             var rewards = map.get(1);
             var urls = map.get(2);
@@ -422,7 +423,12 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
             if(bugCrowdTempMax != null && bugCrowdTempMax > 2){
                 bugCrowdTotal = bugCrowdTempMax;
             }
-            var index = parseInt(this.event.request.intent.slots.program.value) - 1;
+            if(this.event.request.intent.slots.program.value && this.event.request.intent.slots.program.value != null){
+                index = parseInt(this.event.request.intent.slots.program.value) - 1;
+            }
+            else{
+                index = Math.floor(Math.random() * 24) + 1;
+            }
             if (urls[index] != null) {
                 rp({
                     uri: `https://bugcrowd.com` + urls[index],
@@ -510,7 +516,13 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
           return hackerOnePrograms;
 
         }).then((hackerOnePrograms) => {
-            var index = parseInt(this.event.request.intent.slots.program.value) - 1 + hackerOneMax - 25;
+            var index;
+            if(this.event.request.intent.slots.program.value && this.event.request.intent.slots.program.value != null){
+                index = parseInt(this.event.request.intent.slots.program.value) - 1 + hackerOneMax - 25;
+            }
+            else{
+                index = Math.floor(Math.random() * 25) + 1 + hackerOneMax - 25;
+            }
             if (hackerOnePrograms[index].url != null) {
                 rp({
                     uri: `https://hackerone.com` + hackerOnePrograms[index].url,
@@ -973,13 +985,63 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
             this.emit(':ask', output, HelpMessage);
         }
     },
+    'AMAZON.PreviousIntent': function () {
+        if(this.attributes.lastAction == "getBugCrowdIntent"){
+            bugCrowdPage--;
+            if(bugCrowdTotal - bugCrowdPage == 0){
+                bugCrowdPage = bugCrowdTotal;
+            }
+            this.emit('getBugCrowdIntent');
+        }
+        else if(this.attributes.lastAction == "getHackerOneIntent"){
+            var limit = 25 * Math.round(hackerOneTotal / 25);
+            if(limit > hackerOneTotal){
+                limit -= 25;
+            }
+            hackerOneMax -= 25;
+            if(hackerOneMax <= 0){
+                hackerOneMax = limit;
+            }
+            this.emit('getHackerOneIntent');
+        }
+        else{
+            output = HelpMessage;
+            this.emit(':ask', output, HelpMessage);
+        }
+    },
     'AMAZON.YesIntent': function () {
-        output = HelpMessage;
-        this.emit(':ask', output, HelpMessage);
+        if(this.attributes.lastAction == "getBugCrowdIntent"){
+            bugCrowdPage++;
+            if(bugCrowdPage == bugCrowdTotal + 1){
+                bugCrowdPage = 1;
+            }
+            this.emit('getBugCrowdIntent');
+        }
+        else if(this.attributes.lastAction == "getHackerOneIntent"){
+            hackerOneMax += 25;
+            if(hackerOneMax > hackerOneTotal){
+                hackerOneMax = 25;
+            }
+            this.emit('getHackerOneIntent');
+        }
+        else if(this.attributes.lastAction == "getMoreInfoHackerOneIntent"){
+            this.attributes.randomValue = true;
+            this.emit('getHackerOneIntent');
+        }
+        else if(this.attributes.lastAction == "getMoreInfoBugCrowdIntent"){
+            this.attributes.randomValue = true;
+            if(bugCrowdPage == bugCrowdTotal){ // requires all pages to be filled up so no +1
+                bugCrowdPage = 1;
+            }
+            this.emit('getMoreInfoBugCrowdIntent');
+        }
+        else{
+            output = HelpMessage;
+            this.emit(':ask', output, HelpMessage);
+        }
     },
     'AMAZON.NoIntent': function () {
-        output = HelpMessage;
-        this.emit(':ask', HelpMessage, HelpMessage);
+        this.emit('AMAZON.CancelIntent');
     },
     'AMAZON.StopIntent': function () {
         this.emit(':tell', goodbyeMessage);
