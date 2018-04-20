@@ -423,12 +423,13 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
             if(bugCrowdTempMax != null && bugCrowdTempMax > 2){
                 bugCrowdTotal = bugCrowdTempMax;
             }
-            if(this.event.request.intent.slots.program.value && this.event.request.intent.slots.program.value != null){
+            if(this.event && this.event.request && this.event.request.intent && this.event.request.intent.slots && this.event.request.intent.slots.program.value && this.event.request.intent.slots.program.value != null){
                 index = parseInt(this.event.request.intent.slots.program.value) - 1;
             }
             else{
-                index = Math.floor(Math.random() * 24) + 1;
+                index = Math.floor(Math.random() * 24);
             }
+            console.log('Index set to: ' + index + ' at page ' + bugCrowdPage + ' of ' + bugCrowdTotal);
             if (urls[index] != null) {
                 rp({
                     uri: `https://bugcrowd.com` + urls[index],
@@ -516,7 +517,13 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
           return hackerOnePrograms;
 
         }).then((hackerOnePrograms) => {
-            var index = parseInt(this.event.request.intent.slots.program.value) - 1 + hackerOneMax - 25;
+            var index;
+            if(this.event && this.event.request && this.event.request.intent && this.event.request.intent.slots && this.event.request.intent.slots.program.value && this.event.request.intent.slots.program.value != null){
+                index = parseInt(this.event.request.intent.slots.program.value) - 1 + hackerOneMax - 25;
+            }
+            else{
+                index = Math.floor(Math.random() * 25) + hackerOneMax - 25;
+            }
             if (hackerOnePrograms[index].url != null) {
                 rp({
                     uri: `https://hackerone.com` + hackerOnePrograms[index].url,
@@ -858,32 +865,30 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                         bounty = sanitizeInput(bounty);
                         var cardTitle = sanitizeInput(hackerOnePrograms[index].name);
                         var cardContent = sanitizeInput(hackerOnePrograms[index].stripped_policy.replace(/\n/g,' '));
-                        
-                        var periodIndex = cardContent.substring(0, (cardContent.length >= 1600) ? 1600: cardContent.length).lastIndexOf('.') + 1;
+                        var periodIndex = cardContent.substring(0, (cardContent.length >= 1600) ? 1600: cardContent.length).lastIndexOf('. ');
                         var exclamationIndex = cardContent.substring(0, (cardContent.length >= 1600) ? 1600: cardContent.length).lastIndexOf('!') + 1;
                         var questionIndex = cardContent.substring(0, (cardContent.length >= 1600) ? 1600: cardContent.length).lastIndexOf('?') + 1;
-                        var splitIndex;
+                        var splitIndex = 0;
 
                         if (periodIndex != -1) {
                             splitIndex = periodIndex;
+                            console.log('Split Index set to periodIndex:' + splitIndex);
                         } else if (exclamationIndex != - 1) {
                             splitIndex = exclamationIndex;
+                            console.log('Split Index set to exclamationIndex:' + splitIndex);
                         } else if (questionIndex != - 1) {
                             splitIndex = questionIndex;
+                            console.log('Split Index set to questionIndex:' + splitIndex);
                         } else {
-                            splitIndex = (cardContent.length <= 1600) ? cardContent.length: 1600;
+                            splitIndex = ((cardContent.substring(0, splitIndex + 1) <= 1600) ? (splitIndex): (cardContent.substring(0, 1600).lastIndexOf('.') + 1));
+                            console.log('Split Index set equal to or below 1600:' + splitIndex);
                         }
-    
-                        if (exclamationIndex != -1 && exclamationIndex < splitIndex) {
-                            splitIndex = exclamationIndex;
-                        }
-    
-                        if (questionIndex != -1 && questionIndex < splitIndex) {
-                            splitIndex = questionIndex;
-                        }
-    
-                        cardContent = cardContent.substring(0, splitIndex) + " That's not all! You can find more at " + "hackerone.com" + hackerOnePrograms[index].url + ".";
-                        if(hackerOnePrograms[index].about == null || hackerOnePrograms[index].about == ""){
+
+                        console.log('Final Split Index: ' + splitIndex);
+                        console.log('cardContent before substring');
+                        cardContent = cardContent.substring(0, splitIndex + 1) + " That's not all! You can find more at " + "hackerone.com" + hackerOnePrograms[index].url + ".";
+                        console.log('Final cardContent: ' + cardContent);
+                    if(hackerOnePrograms[index].about == null || hackerOnePrograms[index].about == ""){
                             output = bounty + cardContent;
                         }
                         else{
@@ -980,7 +985,7 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
     'AMAZON.PreviousIntent': function () {
         if(this.attributes.lastAction == "getBugCrowdIntent"){
             bugCrowdPage--;
-            if(bugCrowdTotal - bugCrowdPage == 0){
+            if(bugCrowdPage == 0){
                 bugCrowdPage = bugCrowdTotal;
             }
             this.emit('getBugCrowdIntent');
@@ -1139,7 +1144,7 @@ function supportsDisplay() {
 }
 
 function isSimulator() {
-    var isSimulator = !this.event.context; //simulator doesn't send context
+    var isSimulator = !this.event.context; //Simulator does not send context
     return isSimulator;
 }
 
@@ -1148,17 +1153,17 @@ function sanitizeInput(s) {
     s = s.replace('https://', '');
     s = s.replace(/&/g, 'and');
     s = s.replace(/\*/g, '\n\n *');
-    s = s.replace(/[~#^()_|<>\\]/gi, '');
-    s = s.replace(' - ', 'to');
-    s = s.replace(/-/g, '');
+    s = s.replace(/[~#^_|<>\\]/gi, '');
+    s = s.replace(' - ', ' to ');
+    s = s.replace(/-+/g,'-'); //Removes consecutive dashes
+    s = s.replace(/ +(?= )/g,''); //Removes double spacing
 
     return s;
 }
   
 function renderTemplate (content) {
     //https://developer.amazon.com/public/solutions/alexa/alexa-skills-kit/docs/display-interface-reference#display-template-reference
-  
-  
+
      switch(content.templateToken) {
          case "launchRequestTemplate":
             // for reference, here's an example of the content object you'd
