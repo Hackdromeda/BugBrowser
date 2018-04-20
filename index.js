@@ -91,7 +91,7 @@ var newSessionHandlers = {
                 "templateToken": "launchRequestTemplate",
                 "bodyTemplateContent": "Welcome to Bug Browser", 
                 "cardContent": null,
-                "backgroundImage": 'https://s3.amazonaws.com/bugbrowser/images/Circuit.png',
+                "backgroundImage": 'http://bugbrowser.s3-accelerate.amazonaws.com/video/BugCrowdIntro-10FPS-600px-13MB.gif',
                 "askOrTell" : ":ask",
                 "sessionAttributes": {}
               };
@@ -423,11 +423,11 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
             if(bugCrowdTempMax != null && bugCrowdTempMax > 2){
                 bugCrowdTotal = bugCrowdTempMax;
             }
-            if(this.event && this.event.request && this.event.request.intent && this.event.request.intent.slots && this.event.request.intent.slots.program.value && this.event.request.intent.slots.program.value != null){
+            if(this.event && this.event.request && this.event.request.intent && this.event.request.intent.slots && this.event.request.intent.slots.program.value && this.event.request.intent.slots.program.value != null && this.event.request.intent.slots.program.value != "?"){
                 index = parseInt(this.event.request.intent.slots.program.value) - 1;
             }
             else{
-                index = Math.floor(Math.random() * 24);
+                index = Math.floor(Math.random() * programs.length);
             }
             console.log('Index set to: ' + index + ' at page ' + bugCrowdPage + ' of ' + bugCrowdTotal);
             if (urls[index] != null) {
@@ -518,7 +518,7 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
 
         }).then((hackerOnePrograms) => {
             var index;
-            if(this.event && this.event.request && this.event.request.intent && this.event.request.intent.slots && this.event.request.intent.slots.program.value && this.event.request.intent.slots.program.value != null){
+            if(this.event && this.event.request && this.event.request.intent && this.event.request.intent.slots && this.event.request.intent.slots.program.value && this.event.request.intent.slots.program.value != null && this.event.request.intent.slots.program.value != "?"){
                 index = parseInt(this.event.request.intent.slots.program.value) - 1 + hackerOneMax - 25;
             }
             else{
@@ -1027,7 +1027,7 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
         }
         else if(this.attributes.lastAction == "getMoreInfoBugCrowdIntent"){
             this.attributes.randomValue = true;
-            if(bugCrowdPage == bugCrowdTotal){ // requires all pages to be filled up so no +1
+            if(bugCrowdPage == bugCrowdTotal + 1){ // requires all pages to be filled up so no +1
                 bugCrowdPage = 1;
             }
             this.emit('getMoreInfoBugCrowdIntent');
