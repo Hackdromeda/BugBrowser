@@ -156,6 +156,10 @@ var newSessionHandlers = {
         this.handler.state = states.SEARCHMODE;
         this.emitWithState('getVRTIntent');
     },
+    'getHelpIntent': function () {
+        this.handler.state = states.SEARCHMODE;
+        this.emitWithState('getHelpIntent');
+    },
     'ElementSelected': function () {
         this.handler.state = states.SEARCHMODE;
         this.emitWithState('ElementSelected');
@@ -1154,7 +1158,6 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                 const listItemBuilder = new Alexa.templateBuilders.ListItemBuilder();
                 const listTemplateBuilder = new Alexa.templateBuilders.ListTemplate2Builder();
                 for (var i = 0; i < articles.length && i < 15; i++) {
-                    console.log(articles[i].urlToImage)
                         content += sanitizeInput('\nArticle ' + (i + 1) + ': ' + articles[i].title);
                         listItemBuilder.addItem(makeImage(articles[i].urlToImage ? articles[i].urlToImage : 'https://s3.amazonaws.com/bugbrowser/images/Newspaper.png'), 'newsItemToken' + i, makeRichText("<font size='1'>" + articles[i].title + "</font>"), makeRichText("<font size='1'>" + articles[i].source.name + "</font>"));
                         numberOfResults++;
@@ -1172,6 +1175,42 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                 context.emit(':askWithCard', content + generalReprompt, HelpMessage, 'Bug Browser News', 'Data provided by Newsapi.')
             }
         });
+    },
+    'getHelpIntent': function () {
+        this.handler.state = states.SEARCHMODE;
+        this.attributes.lastAction = "getHelpIntent";
+        var helpMessages = [
+            "Play Video",
+            "Active BugCrowd Programs",
+            "Active HackeOne Programs",
+            "What is BugCrowd?",
+            "What is HackerOne?",
+            "Open program number 1",
+            "Get the vulnerability taxonomy rating",
+            "What is the VRT?"
+        ]
+
+        if (supportsDisplay) {
+            var content = 'Here are some things you can ask Bug Browser:';
+            const listItemBuilder = new Alexa.templateBuilders.ListItemBuilder();
+            const listTemplateBuilder = new Alexa.templateBuilders.ListTemplate1Builder();
+            for (var i = 0; i < helpMessages.length; i++) {
+                content += '\n' + helpMessages[i];
+                listItemBuilder.addItem(null, 'helpItemToken' + i, makeRichText("<font size='1'>" + helpMessages[i] + "</font>"));
+            }
+
+            const listItems = listItemBuilder.build();
+            const listTemplate = listTemplateBuilder.setToken('getHelpToken')
+                                    .setTitle('Help')
+                                    .setListItems(listItems)
+                                    .setBackgroundImage(makeImage('https://s3.amazonaws.com/bugbrowser/images/Circuit.png'))
+                                    .build();
+
+                this.response.speak(content).renderTemplate(listTemplate).listen(content + generalReprompt);
+                this.emit(':responseReady');
+        } else {
+            this.emit(':ask', content + generalReprompt, HelpMessage);
+        }
     },
     'AMAZON.CancelIntent': function () {
         // Use this function to clear up and save any data needed between sessions

@@ -260,6 +260,19 @@
                     ]
                 },
                 {
+                    "name": "getHelpIntent",
+                    "slots": [],
+                    "samples": [
+                        "help",
+                        "How do I use Bug Browser",
+                        "bug browser not working",
+                        "bug browser does not work",
+                        "bug browser commands",
+                        "How to use Bug Browser",
+                        "bug browser help"
+                    ]
+                },
+                {
                     "name": "AMAZON.MoreIntent",
                     "samples": []
                 },
