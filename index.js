@@ -1172,6 +1172,10 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                 context.response.speak(content).cardRenderer('Bug Browser News', 'Data provided by Newsapi: \n\n' + content, null).renderTemplate(listTemplate).listen(content + generalReprompt);
                 context.emit(':responseReady');
             } else {
+                for (var i = 0; i < articles.length && i < 15; i++) {
+                    content += sanitizeInput('\nArticle ' + (i + 1) + ': ' + articles[i].title);
+                    numberOfResults++;
+                }
                 context.emit(':askWithCard', content + generalReprompt, HelpMessage, 'Bug Browser News', 'Data provided by Newsapi.')
             }
         });
@@ -1209,6 +1213,9 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                 this.response.speak(content).renderTemplate(listTemplate).listen(content + generalReprompt);
                 this.emit(':responseReady');
         } else {
+            for (var i = 0; i < helpMessages.length; i++) {
+                content += '\n' + helpMessages[i];
+            }
             this.emit(':ask', content + generalReprompt, HelpMessage);
         }
     },
