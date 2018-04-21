@@ -73,7 +73,7 @@ What are the accomplishments your team is proud of?
 * Learn about BugCrowd through videos (Echo Spot and Echo Show only)
   * Try, *Alexa ask Bug Browser to introduce me to BugCrowd with a video*
   
-# Coming Soon:
+## Coming Soon:
 * Asking for program details by name so user can ask for details about the program without asking for the latest list of programs.
 * Video Queue (Awaiting SDK Support)
 * [Teach how to hack using video queue](https://www.hacker101.com/)
@@ -90,15 +90,16 @@ What are the accomplishments your team is proud of?
   * jquery
 * Lambda
 
-# License
+# Legal
+We are developers, not legal experts. If you own any of the images or content we use and would like it removed for any reason, feel free to open an issue through the Alexa App or on GitHub. We will promptly act on your request. This skill is not affiliated with or endorsed by HackerOne, BugCrowd, or any of its affiliates. All product names, logos, and brands are property of their respective owners. All company, product and service names used in this website are for identification purposes only. Use of these names, logos, and brands does not imply endorsement.
+
+## License
 This project is licensed under the MIT License. See the [LICENSE](LICENSE.md) for details.
 
-# Image Credits
+## Image Credits
 https://www.onelogin.com/assets/img/compliance/bug_bounty_program-icon.svg
 https://www.bugcrowd.com/wp-content/uploads/2018/03/1803-Bugcrowd-BB-Blog-Twitter.png
 https://assets.bugcrowdusercontent.com/packs/images/tracker/logo/vrt-logo-ba20b1de556f194607f690788f072798.svg
 https://pngtree.com/freebackground/motherboard-line-science-and-technology-business-background-blu-ray-abstract_389364.html
 https://www.stevens.edu/sites/stevens_edu/files/Mission_0.jpg
 https://betanews.com/wp-content/uploads/2015/06/Security-e1436347233484.jpg
-
-We are developers, not legal experts. If you own these images and would like one of them removed for any reason, feel free to open an issue through the Alexa App or on GitHub. We will promptly act on your request. This skill is not affiliated with or endorsed by HackerOne, BugCrowd, or any of its affiliates. All product names, logos, and brands are property of their respective owners. All company, product and service names used in this website are for identification purposes only. Use of these names, logos, and brands does not imply endorsement.
