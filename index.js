@@ -1217,11 +1217,11 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                 context.response.speak(content).renderTemplate(listTemplate).listen(content + generalReprompt);
                 context.emit(':responseReady');
         } else {
-            var content = 'Here are some things you can ask Bug Browser:';
+            var content = 'Here are some things you can ask Bug Browser: \n';
             for (var i = 0; i < helpMessages.length; i++) {
-                content += (helpMessages[i] + ' ');
+                content += (helpMessages[i] + '\n');
             }
-            context.emit(':askWithCard', content + generalReprompt, HelpMessage);
+            context.emit(':askWithCard', content + generalReprompt, HelpMessage, 'Bug Browser Help', content);
         }
     },
     'AMAZON.CancelIntent': function () {
