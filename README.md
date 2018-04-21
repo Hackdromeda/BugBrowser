@@ -37,15 +37,15 @@ What was challenging during the development process?
 
 Our team faced several major challenges during the development cycle:
 
-1. Implementing a Graphical User Interface
+#### 1. Implementing a Graphical User Interface
 
 When we started the skill we had not even thought about users who had displays like those on the Echo Spot and Echo Show as well as cards on the Fire TV and Alexa app. One of the goals we set for ourselves was to implement a GUI for Bug Browser and design the best user experience possible. Frequently referring to Amazon's resources and documentation for building user interfaces, we were able to quickly learn the differences between the templates. The next step in the development process was to find the most effective method of building a template. We had trouble implementing the display interfaces initially but soon became experts at using them after learning how to use the standard template builder methods included in the SDK for Lambda. One of the most significant challenged our team had to solve was binding a GUI touch event to an intent or function. After further research and experimentation, we were able to use the ElementSelected function to build a more captivating display experience.
 
-2. Asynchronous Requests
+#### 2. Asynchronous Requests
 
 From the early stages of Bug Browser, our team had agreed on a few basic design principles that would increase the efficiency and reliability of Bug Browser. One of the most important of these principles was the use of asynchronous request for HTTP GET requests because it is the best practice to avoid blocking the main thread whenever possible. We used the request-promise Node.js module for writing asynchronous requests that would retrieve image assets, JSON, and other data that would be parsed with the Cheerio module for Node.js. 
 
-3. Context
+#### 3. Context
 
 Alexa is a smart, conversational AI that, just like any human being, needs context in order to interpret speech and respond to a user query. Not only does Alexa require context, but it also needs to be able to remember session details that would help with routing requests to the correct destination. We implemented a system of context organization that would be able to determine the last intent a user was routed to and used it for page navigation between programs lists and program pages as well as news lists and news pages.
 
