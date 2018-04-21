@@ -41,6 +41,8 @@ var generalReprompt = " What else would you like to know?";
 
 var getMoreInfoMessage = "OK, " + getMoreInfoRepromptMessage;
 
+var generalError = "I had trouble with the requested response. You just found a bug in Bug Browser! See the irony? Please submit a report on GitHub. If you're the developer, time to check CloudWatch! In the meantime, you can try another Bug Browser feature. What would you like me to do?";
+
 var videoError = "Playing videos is not supported on this device. ";
 
 var getMoreInfoRepromptMessage = " If you want to hear another category, you can ask me about the VRT again. What would you like to do?";
@@ -64,7 +66,40 @@ var hintOptions = ["Tell me hacking news",
                    "Introduce me to BugCrowd with a video",
                    "Play BugCrowd overview video",
                    "How do you find bounties?",
-                   "Surprise me"];
+                   "Surprise me"
+                ];
+var helpMessages = [
+                    {
+                        message:"Tell me active BugCrowd programs",
+                        description:"Get bounties from BugCrowd",
+                        intent:"getBugCrowdIntent"
+                    },
+                    {
+                        message:"Tell me active HackerOne programs",
+                        description:"Get bounties from HackerOne",
+                        intent:"getHackerOneIntent"
+                    },
+                    {
+                        message:"What is the vulnerability rating taxonomy",
+                        description:"Learn about the BugCrowd VRT",
+                        intent:"getVRTIntent"
+                    },
+                    {
+                        message:"Tell me the latest news on vulnerabilities",
+                        description:"Get news about security vulnerabilities",
+                        intent:"getNewsIntent"
+                    },
+                    {
+                        message:"Tell me the latest news on vulnerabilities",
+                        description:"Get news about security vulnerabilities",
+                        intent:"getNewsIntent"
+                    },
+                    {
+                        message:"Tell me about bug bounty platforms",
+                        description:"Learn about bug bounties and bug bounty platforms",
+                        intent:"getOverview"
+                    }
+                ];
 
 var bugCrowdPage = 1;
 
@@ -121,9 +156,9 @@ var newSessionHandlers = {
         this.handler.state = states.SEARCHMODE;
         this.emitWithState('getEasterEgg');
     },
-    'getTeachVideo': function () {
+    'registerBugCrowd': function () {
         this.handler.state = states.SEARCHMODE;
-        this.emitWithState('getTeachVideo');
+        this.emitWithState('registerBugCrowd');
     },
     'getNewsIntent': function () {
         this.handler.state = states.SEARCHMODE;
@@ -173,12 +208,54 @@ var newSessionHandlers = {
         output = HelpMessage;
         this.emit(':ask', HelpMessage, HelpMessage);
     },
+    'AMAZON.HelpIntent': function () {
+        this.emit('getHelpIntent');
+    },
     'AMAZON.StopIntent': function () {
-        this.emit(':tell', goodbyeMessage);
+        var self = this;
+        if (this.event.context.System.device.supportedInterfaces.Display) {
+            rp({
+                uri: `https://hackerone.com/hacktivity.json`,
+                transform: function (body) {
+                    return JSON.parse(body);
+                }
+            }).then((data) => {
+                var count = data.count + 96000;
+                var content = 'Imagine if the over ' + count + ' security vulnerabilities patched so far on HackerOne and BugCrowd combined had not been resolved.';
+                var speakContent = 'Imagine if the over <say-as interpret-as="cardinal">' + count + '</say-as> security vulnerabilities patched so far on HackerOne and BugCrowd combined had not been resolved.';
+                const builder = new Alexa.templateBuilders.BodyTemplate1Builder();
+                const template = builder.setTitle('Bug Browser')
+                                        .setToken('cancelIntentToken')
+                                        .setBackButtonBehavior('HIDDEN')
+                                        .setBackgroundImage(makeImage('https://s3.amazonaws.com/bugbrowser/images/Security+Vulnerability.jpg'))
+                                        .setTextContent(makeRichText('<font size="3">' + content + '</font>'))
+                                        .build();
+                this.response.speak(speakContent + ' Anyways, Bug Browser is going to sleep for now.').renderTemplate(template);                   
+                this.emit(':responseReady');
+            }).catch(function (err) {
+                console.log(err);
+                self.emit(':tell', 'Bug Browser is going to sleep for now.');
+            });
+        } else {
+            rp({
+                uri: `https://hackerone.com/hacktivity.json`,
+                transform: function (body) {
+                    return JSON.parse(body);
+                }
+            }).then((data) => {
+                var count = data.count + 96000;
+                var content = 'Imagine if the over ' + count + ' security vulnerabilities patched so far on HackerOne and BugCrowd combined had not been resolved.';
+                var speakContent = 'Imagine if the over <say-as interpret-as="cardinal">' + count + '</say-as> security vulnerabilities patched so far on HackerOne and BugCrowd combined had not been resolved.';
+                this.emit(':tell', speakContent + ' Anyways, Bug Browser is going to sleep for now.');
+            }).catch(function (err) {
+                console.log(err);
+                self.emit(':tell', 'Bug Browser is going to sleep for now.');
+            });
+        }
     },
     'AMAZON.CancelIntent': function () {
         // Use this function to clear up and save any data needed between sessions
-        this.emit(":tell", goodbyeMessage);
+        this.emit('AMAZON.StopIntent');
     },
     'SessionEndedRequest': function () {
         // Use this function to clear up and save any data needed between sessions
@@ -244,8 +321,8 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
             this.emit(':ask', output, appName, output);
         }
     },
-    'getTeachVideo': function () {
-        this.attributes.lastAction = "getTeachVideo";
+    'registerBugCrowd': function () {
+        this.attributes.lastAction = "registerBugCrowd";
         if (this.event.context.System.device.supportedInterfaces.Display) {
             const videoSource = 'https://s3.amazonaws.com/bugbrowser/video/Learn+Bugcrowd+in+10+Minutes.mp4';
             const metadata = {
@@ -259,6 +336,7 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
         }
     },
     'getBugCrowdIntent': function () {
+        var self = this;
         this.attributes.lastAction = "getBugCrowdIntent";
             rp({
               uri: `https://bugcrowd.com/programs/reward?page=` + bugCrowdPage,
@@ -300,7 +378,7 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                 var retrieveError = "I was unable to retrieve any active programs. Please try again later.";
                 if (programs.length > 0) {
                     
-                    read = "Here are the active programs at BugCrowd from page " + bugCrowdPage + " of " + bugCrowdTotal + ":";
+                    read = "Here are the active programs at BugCrowd from page " + bugCrowdPage + " of " + bugCrowdTotal + ": ";
                     for (var counter = 0; counter < programs.length; counter++) {
                         output += (counter + 1) + ". " + programs[counter] + "\n\n";
                         read += "Number " + (counter + 1) + ": " + programs[counter] + "\n\n";
@@ -328,9 +406,13 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
             } else {
                 this.emit(':tell', retrieveError);
             }
+        }).catch(function (err) {
+            console.log(err);
+            self.emit(':ask', generalError, HelpMessage);
         });
     },
     'getHackerOneIntent': function() {
+        var self = this;
         this.attributes.lastAction = "getHackerOneIntent";
         rp({
             uri: `http://bugbrowser.s3-accelerate.amazonaws.com/data/response.json`,
@@ -382,9 +464,13 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
           } else {
               this.emit(':tell', retrieveError);
           }
-      });
+        }).catch(function (err) {
+            console.log(err);
+            self.emit(':ask', generalError, HelpMessage);
+        });
     },
     'getMoreInfoBugCrowdIntent': function () {
+        var self = this;
         this.attributes.lastAction = "getMoreInfoBugCrowdIntent";
         rp({
             uri: `https://bugcrowd.com/programs/reward?page=` + bugCrowdPage,
@@ -499,15 +585,22 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                     else {
                         this.emit(':ask', noProgramErrorMessage + moreInfoProgram, noProgramErrorMessage + moreInfoProgram);
                     }
+                }).catch(function (err) {
+                    console.log(err);
+                    self.emit(':ask', generalError, HelpMessage);
                 });
             }
             else {
                 this.emit(':ask', noProgramErrorMessage + moreInfoProgram, noProgramErrorMessage + moreInfoProgram);
             }
             
-          });
+        }).catch(function (err) {
+            console.log(err);
+            self.emit(':ask', generalError, HelpMessage);
+        });
     },
     'getMoreInfoHackerOneIntent': function() {
+        var self = this;
         this.attributes.lastAction = "getMoreInfoHackerOneIntent";
         rp({
             uri: `http://bugbrowser.s3-accelerate.amazonaws.com/data/response.json`,
@@ -612,13 +705,19 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                     this.attributes.lastSpeech = noProgramErrorMessage + moreInfoProgram;
                     this.emit(':ask', noProgramErrorMessage + moreInfoProgram, noProgramErrorMessage + moreInfoProgram);
                 }
+            }).catch(function (err) {
+                console.log(err);
+                self.emit(':ask', generalError, HelpMessage);
             });
             }
             else {
                 this.attributes.lastSpeech = noProgramErrorMessage + moreInfoProgram;
                 this.emit(':ask', noProgramErrorMessage + moreInfoProgram, noProgramErrorMessage + moreInfoProgram);
             }
-      });
+        }).catch(function (err) {
+            console.log(err);
+            self.emit(':ask', generalError, HelpMessage);
+        });
     },
     'getProgramsIntent': function () {
         output = "Would you like to hear about the active BugCrowd programs? If so, please say tell me active BugCrowd bounties. If you would like to hear about active HackerOne bounties, please say tell me active HackerOne bounties. What would you like me to do?";
@@ -637,6 +736,7 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
         }
     },
     'getVRTIntent': function () {
+        var self = this;
         this.attributes.lastAction = "getVRTIntent";
         rp({
             uri: `https://raw.githubusercontent.com/bugcrowd/vulnerability-rating-taxonomy/master/vulnerability-rating-taxonomy.json`,
@@ -646,22 +746,21 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
           })
           .then((data) => {
             var vrts = [];
-            data.content.forEach(function(element) {
-                if (element.children) {
-                    element.children.forEach(function(child) {
-                        if (child.children) {
-                            vrts.push(element);
-                        }
-                    })
-                }
-            });
+                data.content.forEach(function(element) {
+                    if (element.children) {
+                        element.children.forEach(function(child) {
+                            if (child.children) {
+                                vrts.push(element);
+                            }
+                        })
+                    }
+                });
 
             var randomSelection = Math.floor(Math.random () * (vrts.length));
             var innerRandomSelection = Math.floor(Math.random () * (vrts[randomSelection].children.length));
             var selectedVrt = vrts[randomSelection];
             return selectedVrt;
-            })
-            .then((selectedVrt) => {
+            }).then((selectedVrt) => {
                 var cardTitle = "Vulnerability Rating Taxonomy (VRT)";
                 var output = "";
                 var read = "";
@@ -713,11 +812,15 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                     this.attributes.lastSpeech = retrieveError;
                     this.emit(':tell', retrieveError);
                 }
+            }).catch(function (err) {
+                console.log(err);
+                self.emit(':tell', generalError);
             });
     },
     "ElementSelected": function() {
         this.attributes.lastAction = "ElementSelected";
         var context = this;
+        var self = this;
         var supportsDisplay = this.event.context.System.device.supportedInterfaces.Display;
         console.log (this.event.request.token);
         var newToken = this.event.request.token;
@@ -828,9 +931,15 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                             this.attributes.lastSpeech = noProgramErrorMessage + moreInfoProgram;
                             this.emit(':ask', noProgramErrorMessage + moreInfoProgram, noProgramErrorMessage + moreInfoProgram);
                         }
+                    }).catch(function (err) {
+                        console.log(err);
+                        self.emit(':ask', generalError, HelpMessage);
                     });
                 
-              });
+                }).catch(function (err) {
+                    console.log(err);
+                    self.emit(':ask', generalError, HelpMessage);
+                });
         }
         else if((this.event.request.token).substring(0, 21) == "hackerOneProgramToken" || (this.event.request.token).substring(0, 26) == "eventhackerOneProgramToken"){
             this.attributes.lastAction = "getMoreInfoHackerOneIntent";
@@ -931,18 +1040,29 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                         this.attributes.lastSpeech = noProgramErrorMessage + moreInfoProgram;
                         this.emit(':ask', noProgramErrorMessage + moreInfoProgram, noProgramErrorMessage + moreInfoProgram);
                     }
+                }).catch(function (err) {
+                    console.log(err);
+                    self.emit(':ask', generalError, HelpMessage);
                 });
                 }
                 else {
                     this.attributes.lastSpeech = noProgramErrorMessage + moreInfoProgram;
                     this.emit(':ask', noProgramErrorMessage + moreInfoProgram, noProgramErrorMessage + moreInfoProgram);
                 }
-          });
+            }).catch(function (err) {
+                console.log(err);
+                self.emit(':ask', generalError, HelpMessage);
+            });
         }
         else if((this.event.request.token).substring(0, 13) == "listItemToken"){
             var selectedToken = (this.event.request.token).substring(13);
-            console.log ('List Token Detected');
-            this.emit(':ask', "No additonal information is available about subcategory " + selectedToken + "." + HelpMessage);
+            console.log ('List Token Detected ' + selectedToken);
+            this.emit(':ask', "No additonal information is available about subcategory " + selectedToken + "." + HelpMessage, HelpMessage.substring(1));
+        }
+        else if((this.event.request.token).substring(0, 13) == "helpItemToken"){
+            var selectedToken = (this.event.request.token).substring(13);
+            console.log ('Help Token Detected ' + selectedToken);
+            this.emit(helpMessages[selectedToken].intent);
         }
         else if((this.event.request.token).substring(0, 13) == "newsItemToken") {
             var index = parseInt(this.event.request.token.replace(/[^0-9]/g, ''), 13);
@@ -1004,6 +1124,9 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                 } else {
                     context.emit(':askWithCard', articles[index].title + ': ' + content, hearMoreMessage, articles[index].title, articles[index].description, makeImage(articles[index].urlToImage ? articles[index].urlToImage : 'https://s3.amazonaws.com/bugbrowser/images/Circuit.png'));
                 }
+            }).catch(function (err) {
+                console.log(err);
+                self.emit(':ask', generalError, HelpMessage);
             });
         }
     },
@@ -1014,8 +1137,8 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
         else if(this.attributes.lastAction == "getEasterEgg"){
             this.emit('getEasterEgg');
         }
-        else if(this.attributes.lastAction == "getTeachVideo"){
-            this.emit('getTeachVideo');
+        else if(this.attributes.lastAction == "registerBugCrowd"){
+            this.emit('registerBugCrowd');
         }
         else if(this.attributes.lastSpeech != null){
             this.emit('ask', this.attributes.lastSpeech, HelpMessage); 
@@ -1101,9 +1224,10 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
         }
     },
     'AMAZON.NoIntent': function () {
-        this.emit('AMAZON.CancelIntent');
+        this.emit('AMAZON.StopIntent');
     },
     'AMAZON.StopIntent': function () {
+        var self = this;
         if (this.event.context.System.device.supportedInterfaces.Display) {
             rp({
                 uri: `https://hackerone.com/hacktivity.json`,
@@ -1112,17 +1236,20 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                 }
             }).then((data) => {
                 var count = data.count + 96000;
-                var content = 'Imagine if the over ' + count + ' security vulnerabilities patched so far on HackerOne and BugCrowd combined had not been resolved;';
-                var speakContent = 'Imagine if the over <say-as interpret-as="cardinal">' + count + '</say-as> security vulnerabilities patched so far on HackerOne and BugCrowd combined had not been resolved;';
-                const builder = new Alexa.templateBuilders.BodyTemplate6Builder();
+                var content = 'Imagine if the over ' + count + ' security vulnerabilities patched so far on HackerOne and BugCrowd combined had not been resolved.';
+                var speakContent = 'Imagine if the over <say-as interpret-as="cardinal">' + count + '</say-as> security vulnerabilities patched so far on HackerOne and BugCrowd combined had not been resolved.';
+                const builder = new Alexa.templateBuilders.BodyTemplate1Builder();
                 const template = builder.setTitle('Bug Browser')
                                         .setToken('cancelIntentToken')
                                         .setBackButtonBehavior('HIDDEN')
                                         .setBackgroundImage(makeImage('https://s3.amazonaws.com/bugbrowser/images/Security+Vulnerability.jpg'))
-                                        .setTextContent(makeRichText('<font size="1">' + content + '</font>'))
+                                        .setTextContent(makeRichText('<font size="3">' + content + '</font>'))
                                         .build();
-                this.response.speak(speakContent + ' anyways, Bug Browser is going to sleep for now.').renderTemplate(template);                   
+                this.response.speak(speakContent + ' Anyways, Bug Browser is going to sleep for now.').renderTemplate(template);                   
                 this.emit(':responseReady');
+            }).catch(function (err) {
+                console.log(err);
+                self.emit(':tell', 'Bug Browser is going to sleep for now.');
             });
         } else {
             rp({
@@ -1132,15 +1259,17 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                 }
             }).then((data) => {
                 var count = data.count + 96000;
-                var content = 'Imagine if the over ' + count + ' security vulnerabilities patched so far on HackerOne and BugCrowd combined had not been resolved;';
-                var speakContent = 'Imagine if the over <say-as interpret-as="cardinal">' + count + '</say-as> security vulnerabilities patched so far on HackerOne and BugCrowd combined had not been resolved;';
-                this.emit(':tell', speakContent + ' anyways, Bug Browser is going to sleep for now.');
+                var content = 'Imagine if the over ' + count + ' security vulnerabilities patched so far on HackerOne and BugCrowd combined had not been resolved.';
+                var speakContent = 'Imagine if the over <say-as interpret-as="cardinal">' + count + '</say-as> security vulnerabilities patched so far on HackerOne and BugCrowd combined had not been resolved.';
+                this.emit(':tell', speakContent + ' Anyways, Bug Browser is going to sleep for now.');
+            }).catch(function (err) {
+                console.log(err);
+                self.emit(':tell', 'Bug Browser is going to sleep for now.');
             }); 
         }
     },
     'AMAZON.HelpIntent': function () {
-        output = HelpMessage;
-        this.emit(':ask', output, HelpMessage);
+        this.emit('getHelpIntent');
     },
     'getNewsIntent': function () {
         this.attributes.lastAction = "getNewsIntent";
@@ -1203,7 +1332,7 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                                         .setBackgroundImage(makeImage('https://s3.amazonaws.com/bugbrowser/images/Circuit.png'))
                                         .build();
 
-                context.response.speak(content).cardRenderer('Bug Browser News', 'Data provided by Newsapi: \n\n' + content, null).renderTemplate(listTemplate).listen(content + generalReprompt);
+                context.response.speak(content + generalReprompt).cardRenderer('Bug Browser News', 'Data provided by NewsAPI: \n\n' + content, null).renderTemplate(listTemplate).listen(HelpMessage);
                 context.emit(':responseReady');
             } else {
                 for (var i = 0; i < articles.length && i < 15; i++) {
@@ -1217,77 +1346,39 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
         var context = this;
         this.handler.state = states.SEARCHMODE;
         this.attributes.lastAction = "getHelpIntent";
-        var helpMessages = [
-            "Play Video.",
-            "Active BugCrowd Programs.",
-            "Active HackeOne Programs.",
-            "What is BugCrowd?",
-            "What is HackerOne?",
-            "Open program number 1.",
-            "Get the vulnerability taxonomy rating.",
-            "What is the VRT?"
-        ]
+        var cardTitle = "Bug Browser Help";
 
         if (context.event.context.System.device.supportedInterfaces.Display) {
-            var content = 'Here are some things you can ask Bug Browser:\n';
+            var content = 'Here are some things you can ask or say to Bug Browser:\n';
+            var speak = 'Here are some things you can ask or say to Bug Browser:\n';
             const listItemBuilder = new Alexa.templateBuilders.ListItemBuilder();
             const listTemplateBuilder = new Alexa.templateBuilders.ListTemplate1Builder();
             for (var i = 0; i < helpMessages.length; i++) {
-                content += (helpMessages[i] + ' ');
-                listItemBuilder.addItem(null, 'helpItemToken' + i, makeRichText("<font size='1'>" + helpMessages[i] + "</font>"));
+                speak += "Number " + (i + 1) + ". " + helpMessages[i].message + ". \n";
+                content += (i + 1) + ". " + helpMessages[i].message + ". \n";
+                listItemBuilder.addItem(null, 'helpItemToken' + i, makeRichText("<font size='2'>" + helpMessages[i].message + "</font>"), makeRichText("<i><font size='1'>" + helpMessages[i].description + "</font></i>"));
             }
+            content += "What would you like to do?";
 
             const listItems = listItemBuilder.build();
             const listTemplate = listTemplateBuilder.setToken('getHelpToken')
-                                    .setTitle('Help')
+                                    .setTitle(cardTitle)
                                     .setListItems(listItems)
                                     .setBackgroundImage(makeImage('https://s3.amazonaws.com/bugbrowser/images/Circuit.png'))
                                     .build();
 
-                context.response.speak(content).renderTemplate(listTemplate).listen(content + generalReprompt);
+                context.response.speak(speak).renderTemplate(listTemplate).cardRenderer(cardTitle, content, null).listen(speak);
                 context.emit(':responseReady');
         } else {
-            var content = 'Here are some things you can ask Bug Browser: \n';
+            var content = 'Here are some things you can ask or say to Bug Browser:\n';
             for (var i = 0; i < helpMessages.length; i++) {
-                content += (helpMessages[i] + '\n');
+                content += (i + 1) + ". " + helpMessages[i].message + ". \n";
             }
             context.emit(':askWithCard', content + generalReprompt, HelpMessage, 'Bug Browser Help', content);
         }
     },
     'AMAZON.CancelIntent': function () {
-        if (this.event.context.System.device.supportedInterfaces.Display) {
-            rp({
-                uri: `https://hackerone.com/hacktivity.json`,
-                transform: function (body) {
-                    return JSON.parse(body);
-                }
-            }).then((data) => {
-                var count = data.count + 96000;
-                var content = 'Imagine if the over ' + count + ' security vulnerabilities patched so far on HackerOne and BugCrowd combined had not been resolved;';
-                var speakContent = 'Imagine if the over <say-as interpret-as="cardinal">' + count + '</say-as> security vulnerabilities patched so far on HackerOne and BugCrowd combined had not been resolved;';
-                const builder = new Alexa.templateBuilders.BodyTemplate6Builder();
-                const template = builder.setTitle('Bug Browser')
-                                        .setToken('cancelIntentToken')
-                                        .setBackButtonBehavior('HIDDEN')
-                                        .setBackgroundImage(makeImage('https://s3.amazonaws.com/bugbrowser/images/Security+Vulnerability.jpg'))
-                                        .setTextContent(makeRichText('<font size="1">' + content + '</font>'))
-                                        .build();
-                this.response.speak(speakContent + ' anyways, Bug Browser is going to sleep for now.').renderTemplate(template);                   
-                this.emit(':responseReady');
-            });
-        } else {
-            rp({
-                uri: `https://hackerone.com/hacktivity.json`,
-                transform: function (body) {
-                    return JSON.parse(body);
-                }
-            }).then((data) => {
-                var count = data.count + 96000;
-                var content = 'Imagine if the over ' + count + ' security vulnerabilities patched so far on HackerOne and BugCrowd combined had not been resolved;';
-                var speakContent = 'Imagine if the over <say-as interpret-as="cardinal">' + count + '</say-as> security vulnerabilities patched so far on HackerOne and BugCrowd combined had not been resolved;';
-                this.emit(':tell', speakContent + ' anyways, Bug Browser is going to sleep for now.');
-            }); 
-        }
+        this.emit('AMAZON.StopIntent');
     },
     'SessionEndedRequest': function () {
         // Use this function to clear up and save any data needed between sessions
