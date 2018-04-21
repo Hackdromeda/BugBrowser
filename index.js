@@ -997,7 +997,7 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                                     .setToken('getMoreInfoNewsToken')
                                     .setBackButtonBehavior('VISIBLE')
                                     .setBackgroundImage(makeImage('https://s3.amazonaws.com/bugbrowser/images/Circuit.png'))
-                                    .setImage(makeImage(articles[index].urlToImage ? articles[index].urlToImage: 'https://s3.amazonaws.com/bugbrowser/images/Newspaper.png'))
+                                    .setImage(makeImage(articles[index].urlToImage ? articles[index].urlToImage: 'https://s3.amazonaws.com/bugbrowser/images/HackerNewsLogo.jpeg'))
                                     .setTextContent(makeRichText("<font size='1'>" + content + "</font>"))
                                     .build();
                 context.response.speak(articles[index].title + ': ' + content).listen(hearMoreMessage).cardRenderer(articles[index].title, articles[index].description, articles[index].urlToImage).renderTemplate(template);                   
@@ -1163,7 +1163,7 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                 const listTemplateBuilder = new Alexa.templateBuilders.ListTemplate2Builder();
                 for (var i = 0; i < articles.length && i < 15; i++) {
                         content += sanitizeInput('\nArticle ' + (i + 1) + ': ' + articles[i].title);
-                        listItemBuilder.addItem(makeImage(articles[i].urlToImage ? articles[i].urlToImage : 'https://s3.amazonaws.com/bugbrowser/images/Newspaper.png'), 'newsItemToken' + i, makeRichText("<font size='1'>" + articles[i].title + "</font>"), makeRichText("<font size='1'>" + articles[i].source.name + "</font>"));
+                        listItemBuilder.addItem(makeImage(articles[i].urlToImage ? articles[i].urlToImage : 'https://s3.amazonaws.com/bugbrowser/images/HackerNewsLogo.jpeg'), 'newsItemToken' + i, makeRichText("<font size='1'>" + articles[i].title + "</font>"), makeRichText("<font size='1'>" + articles[i].source.name + "</font>"));
                         numberOfResults++;
                 }
                 const listItems = listItemBuilder.build();
