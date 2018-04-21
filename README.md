@@ -1,5 +1,5 @@
 # Bug Browser #
-Bug Browser is your one-stop skill for everything cybersecurity. Bug Browswer will provide a flash briefing on recent hacks and security vulnerabilities around the world, information about bug bounty programs and bug bounty platforms, the BugCrowd Vulnerability Ratings Taxonomy, active HackerOne bounties, and active BugCrowd bounties as well as provide additional information on these bounties.
+Bug Browser is your one-stop skill for everything cybersecurity. Bug Browswer will provide a flash briefing on recent hacks and security vulnerabilities around the world, information about bug bounty programs and bug bounty platforms, the BugCrowd VRT, active HackerOne bounties, and active BugCrowd bounties as well as provide additional information on these bounties.
 
 Developed in the Bay Area by Avi Shah and Naval Patel
 
@@ -7,14 +7,14 @@ Developed in the Bay Area by Avi Shah and Naval Patel
 [Amazon US Skill](https://www.amazon.com/dp/B07BPVH1S5/)
 
 ## Inspiration
-We realized that there were very few skills for [security researchers](https://www.amazon.com/s/ref=nb_sb_noss_2?url=search-alias%3Dalexa-skills&field-keywords=Hacker) and [developers](https://www.amazon.com/s/ref=nb_sb_noss_2?url=search-alias%3Dalexa-skills&field-keywords=Developer) after meeting with the principal engineer and the community manager at BugCrowd at Los Altos Hacks III. They challenged us to create a skill that would a) inform them of active bug bounties, b) provide details about the specific bounties, and c) make the lives as security researchers easier in any other way. 
+We realized that there were very few skills for [security researchers](https://www.amazon.com/s/ref=nb_sb_noss_2?url=search-alias%3Dalexa-skills&field-keywords=Hacker) and [developers](https://www.amazon.com/s/ref=nb_sb_noss_2?url=search-alias%3Dalexa-skills&field-keywords=Developer) after meeting with the principal engineer and the community manager at BugCrowd at Los Altos Hacks III. They challenged us to create a skill that would a) inform them of active bug bounties, b) provide details about the specific bounties, and c) make their lives as security researchers easier in any other way. 
 
 ## Mission
-**Why bug bounties?**
+Why bug bounties?
 
 A large part of our days now revolve around devices and being connected to the internet. Customers have come to expect security and confidence in the company handling their data. Even the best developers in the world can leave security vulnerabilities open in their applications. Platforms such as BugCrowd and HackerOne make it easier for security researchers to get connected with companies and allow companies to reach a vast network of researchers. Breaches and security vulnerabilities are expensive to recover from, much more expensive than the few-thousand-dollar reward hackers receive for their finding. Companies such as Facebook, Equifax, Intel, 24/7 AI, eBay, Home Depot, Target, and a handful of companies have experienced security breaches as a result of vulnerabilities exploited by black hat hackers and their reputations have suffered as a result.
 
-**Who is this Alexa skill for?**
+Who is this Alexa skill for?
 1. General Public - *All customers and clients value their private data. As such, they expect the company entrusted with their data to do everything in their power to protect that data. Now more than ever, breaches of customer data are a common occurance. Users should not, however, become desensitized or numb to such news but rather proactively take action to protect their data.* - Bug Browser can help anyone keep up-to-date on the latest news about security vulnerabilities, hacks, and other cybersecurity issues. 
   - How does this skill provide convenience, save time, and improve the lives of the general public?
     - Bug Browser provides focused news on the topic of cybersecurity. In today's fast paced news cycle, not everyone in the public is made aware of hacks and vulnerabilities that afffect them. Users who learn they are affected by a security breach thorugh Bug Browser can then take proactive steps to prevent further losses by changing their password, freezing their credit reports, activating identity protection services, canceling their credit cards, updating their computer or device software, and/or using 2-factor authentication. Bug Browser ultimately can save the general public from the headaches of recovering lost accounts and data, reversing unauthorized transactions, and more.
@@ -28,16 +28,28 @@ A large part of our days now revolve around devices and being connected to the i
 - How does this skill provide convenience, save time, and improve the lives of novice hackers?
   - Bug Browser can describe specific vulnerabilities, how to find security flaws, and explain how to get paid with bug bounties. Whether users are interested in learning about bug bounties, have a background in computer science, or are seasoned security professionals, they can learn something from Bug Browsers library of lessons (powered by [Hacker101](https://github.com/Hacker0x01/hacker101)). 
  
-4. Active Security Researchers - *Security researchers do not work your typical 9-to-5 workday.* - Security researchers can ask for a list of active programs and additional details about a specific program.
+4. Active Security Researchers - *Security researchers do not work your typical 9-to-5 workday.* - Security researchers can ask about active programs, 
 
 - How does this skill provide convenience, save time, and improve the lives of security researchers?
   - Security researchers often work on their own schedule and have flexible hours. Alexa can simplify the process of learning of new programs from various platforms when security researchers have a mess of data and programs open such as packed code, virtual or sandbox environments, text editors, and online network utilities and when using Alexa is simply more convenient.
 
-**What was challenging during the development process?**
+What was challenging during the development process?
 
-When we started the skill we had not even thought about users who had displays like those on the Echo Spot and Echo Show as well as cards on the Fire TV and Alexa app. We had trouble implementing the display interfaces initially but soon became experts at using them. Another issue was waiting for the functions to return responses before responding to the user. We used request-promises so that responses were exactly what the user expected. We also added context so that Alexa could repeat responses and adequately deal with more vague responses.
+Our team faced several major challenges during the development cycle:
 
-**What are the accomplishments your team is proud of?**
+1. Implementing a Graphical User Interface
+
+When we started the skill we had not even thought about users who had displays like those on the Echo Spot and Echo Show as well as cards on the Fire TV and Alexa app. One of the goals we set for ourselves was to implement a GUI for Bug Browser and design the best user experience possible. Frequently referring to Amazon's resources and documentation for building user interfaces, we were able to quickly learn the differences between the templates. The next step in the development process was to find the most effective method of building a template. We had trouble implementing the display interfaces initially but soon became experts at using them after learning how to use the standard template builder methods included in the SDK for Lambda. One of the most significant challenged our team had to solve was binding a GUI touch event to an intent or function. After further research and experimentation, we were able to use the ElementSelected function to build a more captivating display experience.
+
+2. Asynchronous Requests
+
+From the early stages of Bug Browser, our team had agreed on a few basic design principles that would increase the efficiency and reliability of Bug Browser. One of the most important of these principles was the use of asynchronous request for HTTP GET requests because it is the best practice to avoid blocking the main thread whenever possible. We used the request-promise Node.js module for writing asynchronous requests that would retrieve image assets, JSON, and other data that would be parsed with the Cheerio module for Node.js. 
+
+3. Context
+
+Alexa is a smart, conversational AI that, just like any human being, needs context in order to interpret speech and respond to a user query. Not only does Alexa require context, but it also needs to be able to remember session details that would help with routing requests to the correct destination. We implemented a system of context organization that would be able to determine the last intent a user was routed to and used it for page navigation between programs lists and program pages as well as news lists and news pages.
+
+What are the accomplishments your team is proud of?
 
 - Bug Browser is our first display interface skill entering production
 - Bug Browser is also our first skill which dynamically gets information and can do advanced functions with the data
@@ -74,7 +86,6 @@ When we started the skill we had not even thought about users who had displays l
   * Try, *Alexa ask Bug Browser to introduce me to BugCrowd with a video*
   
 ## Coming Soon:
-* Link your security researcher or company BugCrowd account to check for information relevant to your account including bug reports
 * Asking for program details by name so user can ask for details about the program without asking for the latest list of programs.
 * Video Queue (Awaiting SDK Support)
 * [Teach how to hack using video queue](https://www.hacker101.com/)
