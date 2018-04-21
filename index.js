@@ -356,7 +356,6 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
               if (hackerOnePrograms.length > 0) {
                   
                   read = "Here are the active programs from HackerOne: ";
-                  output += "HackerOne Programs: \n\n";
                   for (var counter = hackerOneMax - 25; counter < (hackerOnePrograms.length <= hackerOneMax ? hackerOnePrograms.length: hackerOneMax); counter++) {
                       output += (counter + 1 - hackerOneMax + 25) + ". " + hackerOnePrograms[counter].name + "\n\n";
                       read += "Number " + (counter + 1 - hackerOneMax + 25) + ": " + hackerOnePrograms[counter].name + "\n\n";
@@ -1114,7 +1113,8 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                 }
             }).then((data) => {
                 var count = data.count + 96000;
-                var content = 'Imagine if the over' + count + ' security vulnerabilities patched so far on HackerOne and BugCrowd combined had not been resolved;';
+                var content = 'Imagine if the over ' + count + ' security vulnerabilities patched so far on HackerOne and BugCrowd combined had not been resolved;';
+                var speakContent = 'Imagine if the over <say-as interpret-as="cardinal">' + count + '</say-as> security vulnerabilities patched so far on HackerOne and BugCrowd combined had not been resolved;';
                 const builder = new Alexa.templateBuilders.BodyTemplate6Builder();
                 const template = builder.setTitle('Bug Browser')
                                         .setToken('cancelIntentToken')
@@ -1122,7 +1122,7 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                                         .setBackgroundImage(makeImage('https://s3.amazonaws.com/bugbrowser/images/Security+Vulnerability.jpg'))
                                         .setTextContent(makeRichText('<font size="1">' + content + '</font>'))
                                         .build();
-                this.response.speak(content + ' anyways, Bug Browser is going to sleep for now.').renderTemplate(template);                   
+                this.response.speak(speakContent + ' anyways, Bug Browser is going to sleep for now.').renderTemplate(template);                   
                 this.emit(':responseReady');
             });
         } else {
@@ -1133,8 +1133,9 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                 }
             }).then((data) => {
                 var count = data.count + 96000;
-                var content = 'Imagine if the over ' + count + ' security vulnerabilities patched so far on HackerOne and BugCrowd combined had not been resolved; anyways, Bug Browser going to sleep for now;';
-                this.emit(':tell', content + ' anyways, Bug Browser is going to sleep for now.');
+                var content = 'Imagine if the over ' + count + ' security vulnerabilities patched so far on HackerOne and BugCrowd combined had not been resolved;';
+                var speakContent = 'Imagine if the over <say-as interpret-as="cardinal">' + count + '</say-as> security vulnerabilities patched so far on HackerOne and BugCrowd combined had not been resolved;';
+                this.emit(':tell', speakContent + ' anyways, Bug Browser is going to sleep for now.');
             }); 
         }
     },
@@ -1263,7 +1264,8 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                 }
             }).then((data) => {
                 var count = data.count + 96000;
-                var content = 'Imagine if the over' + count + ' security vulnerabilities patched so far on HackerOne and BugCrowd combined had not been resolved;';
+                var content = 'Imagine if the over ' + count + ' security vulnerabilities patched so far on HackerOne and BugCrowd combined had not been resolved;';
+                var speakContent = 'Imagine if the over <say-as interpret-as="cardinal">' + count + '</say-as> security vulnerabilities patched so far on HackerOne and BugCrowd combined had not been resolved;';
                 const builder = new Alexa.templateBuilders.BodyTemplate6Builder();
                 const template = builder.setTitle('Bug Browser')
                                         .setToken('cancelIntentToken')
@@ -1271,7 +1273,7 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                                         .setBackgroundImage(makeImage('https://s3.amazonaws.com/bugbrowser/images/Security+Vulnerability.jpg'))
                                         .setTextContent(makeRichText('<font size="1">' + content + '</font>'))
                                         .build();
-                this.response.speak(content + ' anyways, Bug Browser is going to sleep for now.').renderTemplate(template);                   
+                this.response.speak(speakContent + ' anyways, Bug Browser is going to sleep for now.').renderTemplate(template);                   
                 this.emit(':responseReady');
             });
         } else {
@@ -1282,8 +1284,9 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                 }
             }).then((data) => {
                 var count = data.count + 96000;
-                var content = 'Imagine if the over ' + count + ' security vulnerabilities patched so far on HackerOne and BugCrowd combined had not been resolved; anyways, Bug Browser going to sleep for now;';
-                this.emit(':tell', content + ' anyways, Bug Browser is going to sleep for now.');
+                var content = 'Imagine if the over ' + count + ' security vulnerabilities patched so far on HackerOne and BugCrowd combined had not been resolved;';
+                var speakContent = 'Imagine if the over <say-as interpret-as="cardinal">' + count + '</say-as> security vulnerabilities patched so far on HackerOne and BugCrowd combined had not been resolved;';
+                this.emit(':tell', speakContent + ' anyways, Bug Browser is going to sleep for now.');
             }); 
         }
     },
