@@ -94,12 +94,12 @@ What are the accomplishments your team is proud of?
 * Font color customized (Awaiting SDK Support)
 
 # Built With
-* Node.js
+* [Node.js](https://nodejs.org/en/)
   * [request-promise](https://www.npmjs.com/package/request-promise)
   * [alexa-sdk](https://www.npmjs.com/package/alexa-sdk)
   * [cheerio](https://www.npmjs.com/package/cheerio)
   * [bluebird](https://www.npmjs.com/package/bluebird)
-* jQuery
+* [jQuery](https://www.npmjs.com/package/jquery)
 * Lambda
 
 # Legal
