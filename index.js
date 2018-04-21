@@ -719,6 +719,7 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
     "ElementSelected": function() {
         this.attributes.lastAction = "ElementSelected";
         var context = this;
+        var supportsDisplay = this.event.context.System.device.supportedInterfaces.Display;
         console.log (this.event.request.token);
         var newToken = this.event.request.token;
         if((this.event.request.token).substring(0, 12) == "programToken" || (this.event.request.token).substring(0, 17) == "eventprogramToken") {
@@ -944,10 +945,9 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
             console.log ('List Token Detected');
             this.emit(':ask', "No additonal information is available about subcategory " + selectedToken + "." + HelpMessage);
         }
-        /*else if((this.event.request.token).substring(0, 13) == "newsItemToken") {
-            var selectedToken = parseInt((this.event.request.token).substring(13));
-            var supportsDisplay = this.event.context.System.device.supportedInterfaces.Display;
-        var content = '';
+        else if((this.event.request.token).substring(0, 13) == "newsItemToken") {
+            var index = parseInt(this.event.request.token.replace(/[^0-9]/g, ''), 13);
+            var content = '';
         var options1 = {
             uri: 'https://newsapi.org/v2/everything?sources=' + newsSources + '&apiKey=268d120f43684696b93f40d62a17dcd1&q=' + "security hacks",
             transform: function (body) {
@@ -990,19 +990,23 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
            .spread(function (response1, response2, response3, response4, response5) {
                var articles = [];
                articles = articles.concat(response1.articles, response2.articles, response3.articles, response4.articles, response5.articles);
+               content += sanitizeInput(articles[index].description);
                if (supportsDisplay) {
                 const builder = new Alexa.templateBuilders.BodyTemplate2Builder();
-                const template = builder.setTitle(articles[selectedToken].title)
+                const template = builder.setTitle(articles[index].title)
                                     .setToken('getMoreInfoNewsToken')
                                     .setBackButtonBehavior('VISIBLE')
                                     .setBackgroundImage(makeImage('https://s3.amazonaws.com/bugbrowser/images/Circuit.png'))
-                                    .setTextContent(makeRichText('<font size="1">' + content + '</font>'))
-                                    .setImage(makeImage('https://s3.amazonaws.com/bugbrowser/images/Circuit.png'))
+                                    .setImage(makeImage(articles[index].urlToImage ? articles[index].urlToImage: 'https://s3.amazonaws.com/bugbrowser/images/Newspaper.png'))
+                                    .setTextContent(makeRichText("<font size='1'>" + content + "</font>"))
                                     .build();
-                content += sanitizeInput(articles[selectedToken].title + '\n' + articles[selectedToken].description);
-               }
-        });
-        }*/
+                context.response.speak(articles[index].title + ': ' + content).listen(hearMoreMessage).cardRenderer(articles[index].title, articles[index].description, articles[index].urlToImage).renderTemplate(template);                   
+                context.emit(':responseReady');
+                } else {
+                    context.emit(':askWithCard', articles[index].title + ': ' + content, hearMoreMessage, articles[index].title, articles[index].description, makeImage(articles[index].urlToImage ? articles[index].urlToImage : 'https://s3.amazonaws.com/bugbrowser/images/Circuit.png'));
+                }
+            });
+        }
     },
     'AMAZON.RepeatIntent': function () { 
         if(this.attributes.lastAction == "getOverviewVideo"){
