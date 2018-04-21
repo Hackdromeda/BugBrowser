@@ -5,6 +5,7 @@ const makeImage = Alexa.utils.ImageUtils.makeImage;
 const cheerio = require('cheerio');
 const request = require('request');
 const rp = require('request-promise');
+const Bluebird = require('bluebird');
 
 var states = {
     SEARCHMODE: '_SEARCHMODE'
@@ -50,7 +51,7 @@ var newsIntroMessage = "These are the " + numberOfResults + " most recent securi
 
 var newsSources = "hacker-news,wired,the-verge,techcrunch";
 
-var newsQuery = ["security hacks", "security vulnerability", "bug bounty", "security researcher", "cybersecurity"]
+var newsQueries = ["security hacks", "security vulnerability", "bug bounty", "security researcher", "cybersecurity"]
 
 var bugCrowdPage = 1;
 
@@ -713,9 +714,10 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
     },
     "ElementSelected": function() {
         this.attributes.lastAction = "ElementSelected";
+        var context = this;
         console.log (this.event.request.token);
         var newToken = this.event.request.token;
-        if((this.event.request.token).substring(0, 12) == "programToken" || (this.event.request.token).substring(0, 17) == "eventprogramToken"){
+        if((this.event.request.token).substring(0, 12) == "programToken" || (this.event.request.token).substring(0, 17) == "eventprogramToken") {
             this.attributes.lastAction = "getMoreInfoBugCrowdIntent";
             var index = parseInt(newToken.replace(/[^0-9]/g, ''), 10); //leave only the digits
             console.log ('Program Token Detected');
@@ -938,15 +940,65 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
             console.log ('List Token Detected');
             this.emit(':ask', "No additonal information is available about subcategory " + selectedToken + "." + HelpMessage);
         }
-        else if((this.event.request.token).substring(0, 13) == "newsItemToken"){
+        /*else if((this.event.request.token).substring(0, 13) == "newsItemToken") {
             var selectedToken = parseInt((this.event.request.token).substring(13));
-            console.log ('News Token Detected');
-            this.emit(':ask', "See your Alexa app for more information about news headline number " + selectedToken + "." + HelpMessage);
+            var supportsDisplay = this.event.context.System.device.supportedInterfaces.Display;
+        var content = '';
+        var options1 = {
+            uri: 'https://newsapi.org/v2/everything?sources=' + newsSources + '&apiKey=268d120f43684696b93f40d62a17dcd1&q=' + "security hacks",
+            transform: function (body) {
+            return JSON.parse(body);
+            }
+       }
+       var options2 = {
+            uri: 'https://newsapi.org/v2/everything?sources=' + newsSources + '&apiKey=268d120f43684696b93f40d62a17dcd1&q=' + "security vulnerability",
+            transform: function (body) {
+            return JSON.parse(body);
+            }
         }
-        else{
-            console.log ('Unhandled Token Detected');
-            this.emit('Unhandled');
+        var options3 = {
+            uri: 'https://newsapi.org/v2/everything?sources=' + newsSources + '&apiKey=268d120f43684696b93f40d62a17dcd1&q=' + "bug bounty",
+            transform: function (body) {
+            return JSON.parse(body);
+            }
+       }
+       var options4 = {
+            uri: 'https://newsapi.org/v2/everything?sources=' + newsSources + '&apiKey=268d120f43684696b93f40d62a17dcd1&q=' + "security researcher",
+            transform: function (body) {
+            return JSON.parse(body);
+            }
+       }
+       var options5 = {
+            uri: 'https://newsapi.org/v2/everything?sources=' + newsSources + '&apiKey=268d120f43684696b93f40d62a17dcd1&q=' + "cybersecurity",
+            transform: function (body) {
+            return JSON.parse(body);
+            }
         }
+
+       
+       var request1 = rp(options1);
+       var request2 = rp(options2);
+       var request3 = rp(options3);
+       var request4 = rp(options4);
+       var request5 = rp(options5);
+       
+       Bluebird.all([request1, request2, request3, request4, request5])
+           .spread(function (response1, response2, response3, response4, response5) {
+               var articles = [];
+               articles = articles.concat(response1.articles, response2.articles, response3.articles, response4.articles, response5.articles);
+               if (supportsDisplay) {
+                const builder = new Alexa.templateBuilders.BodyTemplate2Builder();
+                const template = builder.setTitle(articles[selectedToken].title)
+                                    .setToken('getMoreInfoNewsToken')
+                                    .setBackButtonBehavior('VISIBLE')
+                                    .setBackgroundImage(makeImage('https://s3.amazonaws.com/bugbrowser/images/Circuit.png'))
+                                    .setTextContent(makeRichText('<font size="1">' + content + '</font>'))
+                                    .setImage(makeImage('https://s3.amazonaws.com/bugbrowser/images/Circuit.png'))
+                                    .build();
+                content += sanitizeInput(articles[selectedToken].title + '\n' + articles[selectedToken].description);
+               }
+        });
+        }*/
     },
     'AMAZON.RepeatIntent': function () { 
         if(this.attributes.lastAction == "getOverviewVideo"){
@@ -1052,63 +1104,74 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
         this.emit(':ask', output, HelpMessage);
     },
     'getNewsIntent': function () {
-        rp({
-            uri: 'http://api.nytimes.com/svc/search/v2/articlesearch.json?q=hack&sort=newest&api-key=' + newsKey,
+        this.attributes.lastAction = "getNewsIntent";
+        var supportsDisplay = this.event.context.System.device.supportedInterfaces.Display;
+        var content = '';
+        var context = this;
+        var options1 = {
+            uri: 'https://newsapi.org/v2/everything?sources=' + newsSources + '&apiKey=268d120f43684696b93f40d62a17dcd1&q=' + "security hacks",
             transform: function (body) {
-              return JSON.parse(body);
+            return JSON.parse(body);
             }
-          })
-          .then((responseData) => {
-            var articles = [];
-            var cardContent = "Data provided by The New York Times" + "\n" + "\n";
-            // Check if we have correct data, If not create an error speech out to try again.
-            if (responseData == null) {
-                output = "There was a problem with getting data please try again";
+       }
+       var options2 = {
+            uri: 'https://newsapi.org/v2/everything?sources=' + newsSources + '&apiKey=268d120f43684696b93f40d62a17dcd1&q=' + "security vulnerability",
+            transform: function (body) {
+            return JSON.parse(body);
             }
-            else {
-                output = newsIntroMessage;
-                // If we have data.
-                for (var i = 0; i < responseData.response.docs.length; i++) {
-
-                    if (i < numberOfResults) {
-                        // Get the name and description JSON structure.
-                        var headline = responseData.response.docs[i].headline.main;
-                        var index = i + 1;
-                        articles[i] = {
-                            name: headline
-                        };
-
-                        output += "Headline " + index + ": " + headline + "; ";
-
-                        cardContent += "Headline " + index + ".\n";
-                        cardContent += headline + ".\n\n";
-                    }
-                }
-
-                output += " See your Alexa app for more information.";
+        }
+        var options3 = {
+            uri: 'https://newsapi.org/v2/everything?sources=' + newsSources + '&apiKey=268d120f43684696b93f40d62a17dcd1&q=' + "bug bounty",
+            transform: function (body) {
+            return JSON.parse(body);
             }
+       }
+       var options4 = {
+            uri: 'https://newsapi.org/v2/everything?sources=' + newsSources + '&apiKey=268d120f43684696b93f40d62a17dcd1&q=' + "security researcher",
+            transform: function (body) {
+            return JSON.parse(body);
+            }
+       }
+       var options5 = {
+            uri: 'https://newsapi.org/v2/everything?sources=' + newsSources + '&apiKey=268d120f43684696b93f40d62a17dcd1&q=' + "cybersecurity",
+            transform: function (body) {
+            return JSON.parse(body);
+            }
+        }
 
-            var cardTitle = appName + " News";
-            if (this.event.context.System.device.supportedInterfaces.Display) {
+       
+       var request1 = rp(options1);
+       var request2 = rp(options2);
+       var request3 = rp(options3);
+       var request4 = rp(options4);
+       var request5 = rp(options5);
+       
+       Bluebird.all([request1, request2, request3, request4, request5])
+           .spread(function (response1, response2, response3, response4, response5) {
+               var articles = [];
+               articles = articles.concat(response1.articles, response2.articles, response3.articles, response4.articles, response5.articles);
+               if (supportsDisplay) {
                 const listItemBuilder = new Alexa.templateBuilders.ListItemBuilder();
-                const listTemplateBuilder = new Alexa.templateBuilders.ListTemplate1Builder();
-                for (i = 0; i < articles.length; i++) {
-                    listItemBuilder.addItem(null, 'newsItemToken' + i, makeRichText("<font size='1'>" + articles[i].name + "</font>"));
+                const listTemplateBuilder = new Alexa.templateBuilders.ListTemplate2Builder();
+                for (var i = 0; i < articles.length && i < 15; i++) {
+                    console.log(articles[i].urlToImage)
+                        content += sanitizeInput('\nArticle ' + (i + 1) + ': ' + articles[i].title);
+                        listItemBuilder.addItem(makeImage(articles[i].urlToImage ? articles[i].urlToImage : 'https://s3.amazonaws.com/bugbrowser/images/Newspaper.png'), 'newsItemToken' + i, makeRichText("<font size='1'>" + articles[i].title + "</font>"), makeRichText("<font size='1'>" + articles[i].source.name + "</font>"));
+                        numberOfResults++;
                 }
                 const listItems = listItemBuilder.build();
-                const listTemplate = listTemplateBuilder.setToken('listToken')
-                                        .setTitle(cardTitle)
+                const listTemplate = listTemplateBuilder.setToken('getNewsIntentToken')
+                                        .setTitle('Bug Browser News')
                                         .setListItems(listItems)
-                                        .setBackgroundImage(makeImage('https://s3.amazonaws.com/bugbrowser/images/Encryption.jpg'))
+                                        .setBackgroundImage(makeImage('https://s3.amazonaws.com/bugbrowser/images/Circuit.png'))
                                         .build();
-                this.response.speak(output + generalReprompt).cardRenderer(cardTitle, cardContent, null).renderTemplate(listTemplate).listen(output + generalReprompt);
-                this.emit(':responseReady');
-            }
-            else{
-                this.emit(':askWithCard', output + generalReprompt, HelpMessage, cardTitle, cardContent);
+
+                context.response.speak(content).cardRenderer('Bug Browser News', 'Data provided by Newsapi: \n\n' + content, null).renderTemplate(listTemplate).listen(content + generalReprompt);
+                context.emit(':responseReady');
+            } else {
+                context.emit(':askWithCard', content + generalReprompt, HelpMessage, 'Bug Browser News', 'Data provided by Newsapi.')
             }
         });
-        
     },
     'AMAZON.CancelIntent': function () {
         // Use this function to clear up and save any data needed between sessions
