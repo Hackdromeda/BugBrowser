@@ -1106,7 +1106,37 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
         this.emit('AMAZON.CancelIntent');
     },
     'AMAZON.StopIntent': function () {
-        this.emit(':tell', goodbyeMessage);
+        if (this.event.context.System.device.supportedInterfaces.Display) {
+            rp({
+                uri: `https://hackerone.com/hacktivity.json`,
+                transform: function (body) {
+                    return JSON.parse(body);
+                }
+            }).then((data) => {
+                var count = data.count + 96000;
+                var content = 'Imagine if the over' + count + ' security vulnerabilities patched so far on HackerOne and BugCrowd combined had not been resolved;';
+                const builder = new Alexa.templateBuilders.BodyTemplate6Builder();
+                const template = builder.setTitle('Bug Browser')
+                                        .setToken('cancelIntentToken')
+                                        .setBackButtonBehavior('HIDDEN')
+                                        .setBackgroundImage(makeImage('https://s3.amazonaws.com/bugbrowser/images/Security+Vulnerability.jpg'))
+                                        .setTextContent(makeRichText('<font size="1">' + content + '</font>'))
+                                        .build();
+                this.response.speak(content + ' anyways, Bug Browser is going to sleep for now.').renderTemplate(template);                   
+                this.emit(':responseReady');
+            });
+        } else {
+            rp({
+                uri: `https://hackerone.com/hacktivity.json`,
+                transform: function (body) {
+                    return JSON.parse(body);
+                }
+            }).then((data) => {
+                var count = data.count + 96000;
+                var content = 'Imagine if the over ' + count + ' security vulnerabilities patched so far on HackerOne and BugCrowd combined had not been resolved; anyways, Bug Browser going to sleep for now;';
+                this.emit(':tell', content + ' anyways, Bug Browser is going to sleep for now.');
+            }); 
+        }
     },
     'AMAZON.HelpIntent': function () {
         output = HelpMessage;
@@ -1225,8 +1255,37 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
         }
     },
     'AMAZON.CancelIntent': function () {
-        // Use this function to clear up and save any data needed between sessions
-        this.emit(":tell", goodbyeMessage);
+        if (this.event.context.System.device.supportedInterfaces.Display) {
+            rp({
+                uri: `https://hackerone.com/hacktivity.json`,
+                transform: function (body) {
+                    return JSON.parse(body);
+                }
+            }).then((data) => {
+                var count = data.count + 96000;
+                var content = 'Imagine if the over' + count + ' security vulnerabilities patched so far on HackerOne and BugCrowd combined had not been resolved;';
+                const builder = new Alexa.templateBuilders.BodyTemplate6Builder();
+                const template = builder.setTitle('Bug Browser')
+                                        .setToken('cancelIntentToken')
+                                        .setBackButtonBehavior('HIDDEN')
+                                        .setBackgroundImage(makeImage('https://s3.amazonaws.com/bugbrowser/images/Security+Vulnerability.jpg'))
+                                        .setTextContent(makeRichText('<font size="1">' + content + '</font>'))
+                                        .build();
+                this.response.speak(content + ' anyways, Bug Browser is going to sleep for now.').renderTemplate(template);                   
+                this.emit(':responseReady');
+            });
+        } else {
+            rp({
+                uri: `https://hackerone.com/hacktivity.json`,
+                transform: function (body) {
+                    return JSON.parse(body);
+                }
+            }).then((data) => {
+                var count = data.count + 96000;
+                var content = 'Imagine if the over ' + count + ' security vulnerabilities patched so far on HackerOne and BugCrowd combined had not been resolved; anyways, Bug Browser going to sleep for now;';
+                this.emit(':tell', content + ' anyways, Bug Browser is going to sleep for now.');
+            }); 
+        }
     },
     'SessionEndedRequest': function () {
         // Use this function to clear up and save any data needed between sessions
