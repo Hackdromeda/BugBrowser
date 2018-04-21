@@ -1,5 +1,5 @@
 # Bug Browser #
-Bug Browser is your one-stop skill for everything cybersecurity. Bug Browswer will provide a flash briefing on recent hacks and security vulnerabilities around the world, information about bug bounty programs and bug bounty platforms, the BugCrowd VRT, active HackerOne bounties, and active BugCrowd bounties as well as provide additional information on these bounties.
+Bug Browser is your one-stop skill for everything cybersecurity. Bug Browswer will provide a flash briefing on recent hacks and security vulnerabilities around the world, information about bug bounty programs and bug bounty platforms, the BugCrowd Vulnerability Ratings Taxonomy, active HackerOne bounties, and active BugCrowd bounties as well as provide additional information on these bounties.
 
 Developed in the Bay Area by Avi Shah and Naval Patel
 
