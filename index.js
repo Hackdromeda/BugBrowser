@@ -1176,30 +1176,31 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                     content += sanitizeInput('\nArticle ' + (i + 1) + ': ' + articles[i].title);
                     numberOfResults++;
                 }
-                context.emit(':askWithCard', content + generalReprompt, HelpMessage, 'Bug Browser News', 'Data provided by Newsapi.')
+                context.emit(':askWithCard', content + generalReprompt, HelpMessage, 'Bug Browser News', content);
             }
         });
     },
     'getHelpIntent': function () {
+        var context = this;
         this.handler.state = states.SEARCHMODE;
         this.attributes.lastAction = "getHelpIntent";
         var helpMessages = [
-            "Play Video",
-            "Active BugCrowd Programs",
-            "Active HackeOne Programs",
+            "Play Video.",
+            "Active BugCrowd Programs.",
+            "Active HackeOne Programs.",
             "What is BugCrowd?",
             "What is HackerOne?",
-            "Open program number 1",
-            "Get the vulnerability taxonomy rating",
+            "Open program number 1.",
+            "Get the vulnerability taxonomy rating.",
             "What is the VRT?"
         ]
 
-        if (supportsDisplay) {
+        if (context.event.context.System.device.supportedInterfaces.Display) {
             var content = 'Here are some things you can ask Bug Browser:';
             const listItemBuilder = new Alexa.templateBuilders.ListItemBuilder();
             const listTemplateBuilder = new Alexa.templateBuilders.ListTemplate1Builder();
             for (var i = 0; i < helpMessages.length; i++) {
-                content += '\n' + helpMessages[i];
+                content += (helpMessages[i] + ' ');
                 listItemBuilder.addItem(null, 'helpItemToken' + i, makeRichText("<font size='1'>" + helpMessages[i] + "</font>"));
             }
 
@@ -1210,13 +1211,14 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                                     .setBackgroundImage(makeImage('https://s3.amazonaws.com/bugbrowser/images/Circuit.png'))
                                     .build();
 
-                this.response.speak(content).renderTemplate(listTemplate).listen(content + generalReprompt);
-                this.emit(':responseReady');
+                context.response.speak(content).renderTemplate(listTemplate).listen(content + generalReprompt);
+                context.emit(':responseReady');
         } else {
+            var content = 'Here are some things you can ask Bug Browser:';
             for (var i = 0; i < helpMessages.length; i++) {
-                content += '\n' + helpMessages[i];
+                content += (helpMessages[i] + ' ');
             }
-            this.emit(':ask', content + generalReprompt, HelpMessage);
+            context.emit(':askWithCard', content + generalReprompt, HelpMessage);
         }
     },
     'AMAZON.CancelIntent': function () {
