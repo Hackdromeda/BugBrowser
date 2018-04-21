@@ -160,6 +160,62 @@ var newSessionHandlers = {
         this.handler.state = states.SEARCHMODE;
         this.emitWithState('registerBugCrowd');
     },
+    'getLessonOne': function () {
+        this.handler.state = states.SEARCHMODE;
+        this.emitWithState('getLessonOne');
+    },
+    'getLessonTwo': function () {
+        this.handler.state = states.SEARCHMODE;
+        this.emitWithState('getLessonTwo');
+    },
+    'getLessonThree': function () {
+        this.handler.state = states.SEARCHMODE;
+        this.emitWithState('getLessonThree');
+    },
+    'getLessonFour': function () {
+        this.handler.state = states.SEARCHMODE;
+        this.emitWithState('getLessonFour');
+    },
+    'getLessonFive': function () {
+        this.handler.state = states.SEARCHMODE;
+        this.emitWithState('getLessonFive');
+    },
+    'getLessonSix': function () {
+        this.handler.state = states.SEARCHMODE;
+        this.emitWithState('getLessonSix');
+    },
+    'getLessonSeven': function () {
+        this.handler.state = states.SEARCHMODE;
+        this.emitWithState('getLessonSeven');
+    },
+    'getLessonEight': function () {
+        this.handler.state = states.SEARCHMODE;
+        this.emitWithState('getLessonEight');
+    },
+    'getLessonNine': function () {
+        this.handler.state = states.SEARCHMODE;
+        this.emitWithState('getLessonNine');
+    },
+    'getLessonEleven': function () {
+        this.handler.state = states.SEARCHMODE;
+        this.emitWithState('getLessonEleven');
+    },
+    'getLessonTwelve': function () {
+        this.handler.state = states.SEARCHMODE;
+        this.emitWithState('getLessonTwelve');
+    },
+    'getLessonThirteen': function () {
+        this.handler.state = states.SEARCHMODE;
+        this.emitWithState('getLessonThirteen');
+    },
+    'getLessonFourteen': function () {
+        this.handler.state = states.SEARCHMODE;
+        this.emitWithState('getLessonFourteen');
+    },
+    'getTeachVideos': function () {
+        this.handler.state = states.SEARCHMODE;
+        this.emitWithState('getTeachVideos');
+    },
     'getNewsIntent': function () {
         this.handler.state = states.SEARCHMODE;
         this.emitWithState('getNewsIntent');
