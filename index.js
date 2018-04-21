@@ -53,6 +53,19 @@ var newsSources = "hacker-news,wired,the-verge,techcrunch";
 
 var newsQueries = ["security hacks", "security vulnerability", "bug bounty", "security researcher", "cybersecurity"]
 
+var hintOptions = ["Tell me hacking news",
+                   "Give me a flash briefing on hacks",
+                   "Tell me some facts about BugCrowd",
+                   "Introduce me to BugCrowd",
+                   "What companies are looking for security researchers?",
+                   "Tell me the top active programs",
+                   "Tell me about the Vulnerability Rating Taxonomy",
+                   "Tell me about the VRT",
+                   "Introduce me to BugCrowd with a video",
+                   "Play BugCrowd overview video",
+                   "How do you find bounties?",
+                   "Surprise me"];
+
 var bugCrowdPage = 1;
 
 var bugCrowdTotal = 3;
@@ -72,18 +85,6 @@ var newSessionHandlers = {
         output = welcomeMessage;
         this.attributes.lastSpeech = welcomeMessage;
         if (this.event.context.System.device.supportedInterfaces.Display) {
-            var hintOptions = ["Tell me hacking news",
-                               "Give me a flash briefing on hacks",
-                               "Tell me some facts about BugCrowd",
-                               "Introduce me to BugCrowd",
-                               "What companies are looking for security researchers?",
-                               "Tell me the top active programs",
-                               "Tell me about the Vulnerability Rating Taxonomy",
-                               "Tell me about the VRT",
-                               "Introduce me to BugCrowd with a video",
-                               "Play BugCrowd overview video",
-                               "How do you find bounties?",
-                               "Surprise me"]
 
             var hint = hintOptions[Math.floor(Math.random() * (hintOptions.length))];
 
@@ -1164,7 +1165,6 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                 for (var i = 0; i < articles.length && i < 15; i++) {
                         content += sanitizeInput('\nArticle ' + (i + 1) + ': ' + articles[i].title);
                         listItemBuilder.addItem(makeImage(articles[i].urlToImage ? articles[i].urlToImage : 'https://s3.amazonaws.com/bugbrowser/images/HackerNewsLogo.jpeg'), 'newsItemToken' + i, makeRichText("<font size='1'>" + articles[i].title + "</font>"), makeRichText("<font size='1'>" + articles[i].source.name + "</font>"));
-                        numberOfResults++;
                 }
                 const listItems = listItemBuilder.build();
                 const listTemplate = listTemplateBuilder.setToken('getNewsIntentToken')
@@ -1178,7 +1178,6 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
             } else {
                 for (var i = 0; i < articles.length && i < 15; i++) {
                     content += sanitizeInput('\nArticle ' + (i + 1) + ': ' + articles[i].title);
-                    numberOfResults++;
                 }
                 context.emit(':askWithCard', content + generalReprompt, HelpMessage, 'Bug Browser News', content);
             }
@@ -1200,7 +1199,7 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
         ]
 
         if (context.event.context.System.device.supportedInterfaces.Display) {
-            var content = 'Here are some things you can ask Bug Browser:';
+            var content = 'Here are some things you can ask Bug Browser:\n';
             const listItemBuilder = new Alexa.templateBuilders.ListItemBuilder();
             const listTemplateBuilder = new Alexa.templateBuilders.ListTemplate1Builder();
             for (var i = 0; i < helpMessages.length; i++) {
