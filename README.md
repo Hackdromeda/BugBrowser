@@ -95,11 +95,11 @@ What are the accomplishments your team is proud of?
 
 # Built With
 * Node.js
-  * request-promise
-  * alexa-sdk
-  * cheerio
-  * bluebird
-  * jquery
+  * [request-promise](https://www.npmjs.com/package/request-promise)
+  * [alexa-sdk](https://www.npmjs.com/package/alexa-sdk)
+  * [cheerio](https://www.npmjs.com/package/cheerio)
+  * [bluebird](https://www.npmjs.com/package/bluebird)
+* jQuery
 * Lambda
 
 # Legal
