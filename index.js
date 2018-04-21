@@ -301,7 +301,6 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                 if (programs.length > 0) {
                     
                     read = "Here are the active programs at BugCrowd from page " + bugCrowdPage + " of " + bugCrowdTotal + ":";
-                    output += "BugCrowd Programs: \n\n";
                     for (var counter = 0; counter < programs.length; counter++) {
                         output += (counter + 1) + ". " + programs[counter] + "\n\n";
                         read += "Number " + (counter + 1) + ": " + programs[counter] + "\n\n";
