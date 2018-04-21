@@ -15,15 +15,12 @@ This Alexa skill will provide a flash briefing on recent hacks and security vuln
    
 * Get more bounties beyond the first set of cards provided
   * Try, *Alexa next page*
-  * Try, *Alexa previous page*
-  * Try, *Yes* when prompted if you want to hear more programs
   
 * Get additional details for bounties from BugCrowd and/or HackerOne
   * Try, *Alexa ask Bug Browser to tell me more about program number five*
   * Try, *Alexa ask Bug Browser to tell me more about BugCrowd bounty number five*
-  * Try, *Yes* when prompted if you want to learn about more programs
   
-* Learn about hacking news using The New York Times and [NewsAPI](https://newsapi.org/)
+* Learn about hacking news
   * Try, *Alexa ask Bug Browser, give me a flash briefing on hacks?*
   
 * Learn about the BugCrowd Vulnerability Rating Taxonomy (VRT)
@@ -35,7 +32,6 @@ This Alexa skill will provide a flash briefing on recent hacks and security vuln
 # Coming Soon:
 * Asking for program details by name so user can ask for details about the program without asking for the latest list of programs.
 * Video Queue (Awaiting SDK Support)
-* [Teach how to hack using video queue](https://www.hacker101.com/)
 * Confirm Choices *ex. Did you say you want more details about program number 5?*
 * Highlight text and automatically switch cards for Display Interface (Awaiting SDK Support)
 * Font color customized (Awaiting SDK Support)
