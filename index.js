@@ -196,6 +196,10 @@ var newSessionHandlers = {
         this.handler.state = states.SEARCHMODE;
         this.emitWithState('getLessonNine');
     },
+    'getLessonTen': function () {
+        this.handler.state = states.SEARCHMODE;
+        this.emitWithState('getLessonTen');
+    },
     'getLessonEleven': function () {
         this.handler.state = states.SEARCHMODE;
         this.emitWithState('getLessonEleven');
@@ -392,63 +396,201 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
         }
     },
     'getLessonOne': function () {
-        const speechOutput = 'In this Hacker101 session the instructor Cody Brocious will talk about how you can take the things you learn in this class and apply them to real situations. You will learn about the required tools, thinking like a breaker, attacker-defender imbalance, lightweight threat assessment and prioritization, and how to write good bug reports.';
-        const behavior = 'REPLACE_ALL';
-        const url = 'https://s3.amazonaws.com/bugbrowser/audio/Hacker101+-+Introduction.m4a';
-        const token = 'lessonOne';
-        const expectedPreviousToken = 'lessonStream';
-        const offsetInMilliseconds = 10000;
-        this.response.speak(speechOutput)
-                    .audioPlayerPlay(behavior, url, token, expectedPreviousToken, offsetInMilliseconds);
-        this.emit(':responseReady');
+        const description = 'In this Hacker101 lesson the instructor Cody Brocious will talk about how you can take the things you learn in this class and apply them to real situations. You will learn about the required tools, thinking like a breaker, attacker-defender imbalance, lightweight threat assessment and prioritization, and how to write good bug reports.';
+        this.attributes.lastAction = "getLessonOne";
+        if (this.event.context.System.device.supportedInterfaces.Display) {
+            const videoSource = 'https://s3.amazonaws.com/bugbrowser/video/Hacker101/Hacker101+-+Introduction.mp4';
+            const metadata = {
+                'title': 'Introduction to Hacking',
+                'subtitle': 'Lesson 1'
+            };
+            this.response.playVideo(videoSource, metadata);
+            this.emit(':responseReady');
+        } else {
+            this.emit(':ask', videoError + overview + generalReprompt, HelpMessage);
+        }
     },
     'getLessonTwo': function () {
-        this.handler.state = states.SEARCHMODE;
-        this.emitWithState('getLessonTwo');
+        this.attributes.lastAction = "getLessonTwo";
+        if (this.event.context.System.device.supportedInterfaces.Display) {
+            const videoSource = 'https://s3.amazonaws.com/bugbrowser/video/Hacker101/Hacker101+-+The+Web+In+Depth.mp4';
+            const metadata = {
+                'title': 'The Web In Depth',
+                'subtitle': 'Lesson 2'
+            };
+            this.response.playVideo(videoSource, metadata);
+            this.emit(':responseReady');
+        } else {
+            this.emit(':ask', videoError + overview + generalReprompt, HelpMessage);
+        }
     },
     'getLessonThree': function () {
-        this.handler.state = states.SEARCHMODE;
-        this.emitWithState('getLessonThree');
+        this.attributes.lastAction = "getLessonThree";
+        if (this.event.context.System.device.supportedInterfaces.Display) {
+            const videoSource = 'https://s3.amazonaws.com/bugbrowser/video/Hacker101/Hacker101+-+XSS+and+Authorization.mp4';
+            const metadata = {
+                'title': 'XSS and Authorization',
+                'subtitle': 'Lesson Three'
+            };
+            this.response.playVideo(videoSource, metadata);
+            this.emit(':responseReady');
+        } else {
+            this.emit(':ask', videoError + overview + generalReprompt, HelpMessage);
+        }
     },
     'getLessonFour': function () {
-        this.handler.state = states.SEARCHMODE;
-        this.emitWithState('getLessonFour');
+        this.attributes.lastAction = "getLessonFour";
+        if (this.event.context.System.device.supportedInterfaces.Display) {
+            const videoSource = 'https://s3.amazonaws.com/bugbrowser/video/Hacker101/Hacker101+-+SQL+Injection+and+Friends.mp4';
+            const metadata = {
+                'title': 'SQL Injection',
+                'subtitle': 'Lesson 4'
+            };
+            this.response.playVideo(videoSource, metadata);
+            this.emit(':responseReady');
+        } else {
+            this.emit(':ask', videoError + overview + generalReprompt, HelpMessage);
+        }
     },
     'getLessonFive': function () {
-        this.handler.state = states.SEARCHMODE;
-        this.emitWithState('getLessonFive');
+        this.attributes.lastAction = "getLessonFive";
+        if (this.event.context.System.device.supportedInterfaces.Display) {
+            const videoSource = 'https://s3.amazonaws.com/bugbrowser/video/Hacker101/Hacker101+-+Session+Fixation.mp4';
+            const metadata = {
+                'title': 'Session Fixation',
+                'subtitle': 'Lesson 5'
+            };
+            this.response.playVideo(videoSource, metadata);
+            this.emit(':responseReady');
+        } else {
+            this.emit(':ask', videoError + overview + generalReprompt, HelpMessage);
+        }
     },
     'getLessonSix': function () {
-        this.handler.state = states.SEARCHMODE;
-        this.emitWithState('getLessonSix');
+        this.attributes.lastAction = "getLessonSix";
+        if (this.event.context.System.device.supportedInterfaces.Display) {
+            const videoSource = 'https://s3.amazonaws.com/bugbrowser/video/Hacker101/Hacker101+-+Clickjacking.mp4';
+            const metadata = {
+                'title': 'Clickjacking',
+                'subtitle': 'Lesson 6'
+            };
+            this.response.playVideo(videoSource, metadata);
+            this.emit(':responseReady');
+        } else {
+            this.emit(':ask', videoError + overview + generalReprompt, HelpMessage);
+        }
     },
     'getLessonSeven': function () {
-        this.handler.state = states.SEARCHMODE;
-        this.emitWithState('getLessonSeven');
+        this.attributes.lastAction = "getLessonSeven";
+        if (this.event.context.System.device.supportedInterfaces.Display) {
+            const videoSource = 'https://s3.amazonaws.com/bugbrowser/video/Hacker101/Hacker101+-+File+Inclusion.mp4';
+            const metadata = {
+                'title': 'File Inclusion',
+                'subtitle': 'Lesson 7'
+            };
+            this.response.playVideo(videoSource, metadata);
+            this.emit(':responseReady');
+        } else {
+            this.emit(':ask', videoError + overview + generalReprompt, HelpMessage);
+        }
     },
     'getLessonEight': function () {
-        this.handler.state = states.SEARCHMODE;
-        this.emitWithState('getLessonEight');
+        this.attributes.lastAction = "getLessonEight";
+        if (this.event.context.System.device.supportedInterfaces.Display) {
+            const videoSource = 'https://s3.amazonaws.com/bugbrowser/video/Hacker101/Hacker101+-+File+Upload+Bugs.mp4';
+            const metadata = {
+                'title': 'File Upload Bugs',
+                'subtitle': 'Lesson 8'
+            };
+            this.response.playVideo(videoSource, metadata);
+            this.emit(':responseReady');
+        } else {
+            this.emit(':ask', videoError + overview + generalReprompt, HelpMessage);
+        }
     },
     'getLessonNine': function () {
-        this.handler.state = states.SEARCHMODE;
-        this.emitWithState('getLessonNine');
+        this.attributes.lastAction = "getLessonNine";
+        if (this.event.context.System.device.supportedInterfaces.Display) {
+            const videoSource = 'https://s3.amazonaws.com/bugbrowser/video/Hacker101/Hacker101+-+Null+Termination+Bugs.mp4';
+            const metadata = {
+                'title': 'Null Termination Bugs',
+                'subtitle': 'Lesson 9'
+            };
+            this.response.playVideo(videoSource, metadata);
+            this.emit(':responseReady');
+        } else {
+            this.emit(':ask', videoError + overview + generalReprompt, HelpMessage);
+        }
+    },
+    'getLessonTen': function () {
+        this.attributes.lastAction = "getLessonTen";
+        if (this.event.context.System.device.supportedInterfaces.Display) {
+            const videoSource = 'https://s3.amazonaws.com/bugbrowser/video/Hacker101/Hacker101+-+Unchecked+Redirects.mp4';
+            const metadata = {
+                'title': 'Unchecked Redirects',
+                'subtitle': 'Lesson 10'
+            };
+            this.response.playVideo(videoSource, metadata);
+            this.emit(':responseReady');
+        } else {
+            this.emit(':ask', videoError + overview + generalReprompt, HelpMessage);
+        }
     },
     'getLessonEleven': function () {
-        this.handler.state = states.SEARCHMODE;
-        this.emitWithState('getLessonEleven');
+        this.attributes.lastAction = "getLessonEleven";
+        if (this.event.context.System.device.supportedInterfaces.Display) {
+            const videoSource = 'https://s3.amazonaws.com/bugbrowser/video/Hacker101/Hacker101+-+Secure+Password+Storage.mp4';
+            const metadata = {
+                'title': 'Secure Password Storage',
+                'subtitle': 'Lesson 11'
+            };
+            this.response.playVideo(videoSource, metadata);
+            this.emit(':responseReady');
+        } else {
+            this.emit(':ask', videoError + overview + generalReprompt, HelpMessage);
+        }
     },
     'getLessonTwelve': function () {
-        this.handler.state = states.SEARCHMODE;
-        this.emitWithState('getLessonTwelve');
+        this.attributes.lastAction = "getLessonTwelve";
+        if (this.event.context.System.device.supportedInterfaces.Display) {
+            const videoSource = 'https://s3.amazonaws.com/bugbrowser/video/Hacker101/Hacker101+-+Crypto+Crash+Course.mp4';
+            const metadata = {
+                'title': 'Crypto Crash Course',
+                'subtitle': 'Lesson 12'
+            };
+            this.response.playVideo(videoSource, metadata);
+            this.emit(':responseReady');
+        } else {
+            this.emit(':ask', videoError + overview + generalReprompt, HelpMessage);
+        }
     },
     'getLessonThirteen': function () {
-        this.handler.state = states.SEARCHMODE;
-        this.emitWithState('getLessonThirteen');
+        this.attributes.lastAction = "getLessonThirteen";
+        if (this.event.context.System.device.supportedInterfaces.Display) {
+            const videoSource = 'https://s3.amazonaws.com/bugbrowser/video/Hacker101/Hacker101+-+Crypto+Attacks.mp4';
+            const metadata = {
+                'title': 'Crypto Attacks',
+                'subtitle': 'Lesson 13'
+            };
+            this.response.playVideo(videoSource, metadata);
+            this.emit(':responseReady');
+        } else {
+            this.emit(':ask', videoError + overview + generalReprompt, HelpMessage);
+        }
     },
     'getLessonFourteen': function () {
-        this.handler.state = states.SEARCHMODE;
-        this.emitWithState('getLessonFourteen');
+        this.attributes.lastAction = "getLessonFourteen";
+        if (this.event.context.System.device.supportedInterfaces.Display) {
+            const videoSource = 'https://s3.amazonaws.com/bugbrowser/video/Hacker101/Hacker101+-+Crypto+Wrap-Up.mp4';
+            const metadata = {
+                'title': 'Crypto Wrap-Up',
+                'subtitle': 'Lesson 14'
+            };
+            this.response.playVideo(videoSource, metadata);
+            this.emit(':responseReady');
+        } else {
+            this.emit(':ask', videoError + overview + generalReprompt, HelpMessage);
+        }
     },
     'getTeachVideos': function () {
         this.handler.state = states.SEARCHMODE;
