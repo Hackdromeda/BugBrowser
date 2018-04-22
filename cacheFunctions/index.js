@@ -10,6 +10,7 @@ function writeToS3(bucket, key, data){
       Bucket : bucket,
       Key : key,
       Body : data,
+      ContentType: 'application/json',
       ACL:'public-read'
   }
   s3.putObject(params, function(err, data) {
