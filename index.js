@@ -101,6 +101,186 @@ var helpMessages = [
                     }
                 ];
 
+var lessons = [
+                    {
+                        name: "registerBugCrowd",
+                        slots: [],
+                        hints: [
+                            "how do you register for bugcrowd",
+                            "how do you use bugcrowd",
+                            "Teach me how to use bugcrowd"
+                        ]
+                    },
+                    {
+                        name: "getLessonOne",
+                        slots: [],
+                        hints: [
+                            "what tools do I need to get started hacking",
+                            "introduce me to hacking",
+                            "play the introduction to hacking video"
+                        ]
+                    },
+                    {
+                        name: "getLessonTwo",
+                        slots: [],
+                        hints: [
+                            "teach me Same-Origin Policy",
+                            "teach me MIME sniffing",
+                            "teach me HTML parsing",
+                            "teach me cookie security",
+                            "teach me HTTP basics",
+                            "teach me CSRF",
+                            "teach me Cross-Site Request Forgery",
+                            "play the lesson The Web In Depth",
+                            "play the video The Web In Depth"
+                        ]
+                    },
+                    {
+                        name: "getLessonThree",
+                        slots: [],
+                        hints: [
+                            "teach me about authorization bypasses",
+                            "teach me about forced browsing",
+                            "teach me about XSS",
+                            "teach me about types of XSS",
+                            "teach me about Cross-Site Scripting",
+                            "play the lesson XSS and Authorization",
+                            "play the video XSS and Authorization"
+                        ]
+                    },
+                    {
+                        name: "getLessonFour",
+                        slots: [],
+                        hints: [
+                            "teach me about command injection",
+                            "teach me about directory traversal",
+                            "teach me about SQL Injection",
+                            "teach me about SQLi",
+                            "play the lesson SQL Injection and Friends",
+                            "play the video SQL Injection and Friends"
+                        ]
+                    },
+                    {
+                        name: "getLessonFive",
+                        slots: [],
+                        hints: [
+                            "play the lesson session fixation",
+                            "play the video session fixation",
+                            "teach me about session fixation"
+                        ]
+                    },
+                    {
+                        name: "getLessonSix",
+                        slots: [],
+                        hints: [
+                            "play the lesson clickjacking",
+                            "play the video clickjacking",
+                            "teach me about clickjacking"
+                        ]
+                    },
+                    {
+                        name: "getLessonSeven",
+                        slots: [],
+                        hints: [
+                            "play the lesson file inclusion bugs",
+                            "teach me about file inclusion",
+                            "teach me about RFI",
+                            "teach me about LFI",
+                            "teach me about remote file inclusion",
+                            "teach me about local file inclusion",
+                            "play the video file inclusion bugs"
+                        ]
+                    },
+                    {
+                        name: "getLessonEight",
+                        slots: [],
+                        hints: [
+                            "play the lesson file upload bugs",
+                            "play the video file upload bugs",
+                            "teach me about file upload bugs",
+                            "teach me about hiding data in PNG files",
+                            "teach me about MIME type attacks",
+                            "teach me about filename-based attacks",
+                            "teach me about how multipart POSTs work"
+                        ]
+                    },
+                    {
+                        name: "getLessonNine",
+                        slots: [],
+                        hints: [
+                            "play the lesson null termination bugs",
+                            "play the video null termination bugs",
+                            "teach me about null terminators"
+                        ]
+                    },
+                    {
+                        name: "getLessonTen",
+                        slots: [],
+                        hints: [
+                            "play the lesson unchecked redirects",
+                            "play the video unchecked redirects",
+                            "teach me about unchecked redirects"
+                        ]
+                    },
+                    {
+                        name: "getLessonEleven",
+                        slots: [],
+                        hints: [
+                            "teach me about methods of storing passwords",
+                            "teach me about bare hash",
+                            "teach me about Scrypt",
+                            "teach me about Bcrypt",
+                            "play the lesson password storage",
+                            "play the video password storage"
+                        ]
+                    },
+                    {
+                        name: "getLessonTwelve",
+                        slots: [],
+                        hints: [
+                            "play the lesson crypto crash course",
+                            "play the video crypto crash course",
+                            "teach me about Hash-based MAC",
+                            "teach me about HMAC",
+                            "teach me about Message Authentication Codes",
+                            "teach me about MACs",
+                            "teach me about hashes",
+                            "teach me about Cipher Block Chaining",
+                            "teach me about Electronic Codebook",
+                            "teach me about CBC",
+                            "teach me about ECB",
+                            "teach me about block cipher modes",
+                            "teach me about types of ciphers",
+                            "teach me about one-time pads",
+                            "teach me about XOR and its importance for cryptography"
+                        ]
+                    },
+                    {
+                        name: "getLessonThirteen",
+                        slots: [],
+                        hints: [
+                            "teach me about padding oracles",
+                            "teach me about hash length extension",
+                            "teach me about ECB decryption",
+                            "teach me about ECB block reordering",
+                            "teach me about stream cipher key reuse",
+                            "play the lesson crypto attacks",
+                            "play the video crypto attacks"
+                        ]
+                    },
+                    {
+                        name: "getLessonFourteen",
+                        slots: [],
+                        hints: [
+                            "finish up the crypto video",
+                            "teach me about padbuster",
+                            "teach me about ECB mode",
+                            "play the video crypto wrap-up",
+                            "teach me about crypto wrap-up"
+                        ]
+                    }
+                ];
+
 var bugCrowdPage = 1;
 
 var bugCrowdTotal = 3;
@@ -676,7 +856,7 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
         var self = this;
         this.attributes.lastAction = "getHackerOneIntent";
         rp({
-            uri: `http://bugbrowser.s3-accelerate.amazonaws.com/data/response.json`,
+            uri: `http://bugbrowsercache.s3-accelerate.amazonaws.com/hackerone.json`,
             transform: function (body) {
               return JSON.parse(body);
             }
@@ -864,7 +1044,7 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
         var self = this;
         this.attributes.lastAction = "getMoreInfoHackerOneIntent";
         rp({
-            uri: `http://bugbrowser.s3-accelerate.amazonaws.com/data/response.json`,
+            uri: `http://bugbrowsercache.s3-accelerate.amazonaws.com/hackerone.json`,
             transform: function (body) {
               return JSON.parse(body);
             }
@@ -1206,7 +1386,7 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
             this.attributes.lastAction = "getMoreInfoHackerOneIntent";
             var index = parseInt(newToken.replace(/[^0-9]/g, ''), 10) + hackerOneMax - 25; //leave only the digits
             rp({
-                uri: `http://bugbrowser.s3-accelerate.amazonaws.com/data/response.json`,
+                uri: `http://bugbrowsercache.s3-accelerate.amazonaws.com/hackerone.json`,
                 transform: function (body) {
                   return JSON.parse(body);
                 }
