@@ -106,10 +106,11 @@ var lessons = [
                         name: "registerBugCrowd",
                         slots: [],
                         hints: [
-                            "how do you register for bugcrowd",
-                            "how do you use bugcrowd",
-                            "Teach me how to use bugcrowd"
-                        ]
+                            "how do you register for BugCrowd",
+                            "how do you use BugCrowd",
+                            "Teach me how to use BugCrowd"
+                        ],
+                        description: "Learn the basics of using BugCrowd."
                     },
                     {
                         name: "getLessonOne",
@@ -118,7 +119,8 @@ var lessons = [
                             "what tools do I need to get started hacking",
                             "introduce me to hacking",
                             "play the introduction to hacking video"
-                        ]
+                        ],
+                        description: "Get the tools you need to start hacking."
                     },
                     {
                         name: "getLessonTwo",
@@ -133,7 +135,8 @@ var lessons = [
                             "teach me Cross-Site Request Forgery",
                             "play the lesson The Web In Depth",
                             "play the video The Web In Depth"
-                        ]
+                        ],
+                        description: "Learn about the web in depth including HTTP basics and MIME sniffing."
                     },
                     {
                         name: "getLessonThree",
@@ -146,7 +149,8 @@ var lessons = [
                             "teach me about Cross-Site Scripting",
                             "play the lesson XSS and Authorization",
                             "play the video XSS and Authorization"
-                        ]
+                        ],
+                        description: "Learn about Cross-Site Scripting and Authorization."
                     },
                     {
                         name: "getLessonFour",
@@ -158,7 +162,8 @@ var lessons = [
                             "teach me about SQLi",
                             "play the lesson SQL Injection and Friends",
                             "play the video SQL Injection and Friends"
-                        ]
+                        ],
+                        description: "Learn about SQL Injection and Friends."
                     },
                     {
                         name: "getLessonFive",
@@ -167,7 +172,8 @@ var lessons = [
                             "play the lesson session fixation",
                             "play the video session fixation",
                             "teach me about session fixation"
-                        ]
+                        ],
+                        description: "Learn about Session Fixation."
                     },
                     {
                         name: "getLessonSix",
@@ -176,7 +182,8 @@ var lessons = [
                             "play the lesson clickjacking",
                             "play the video clickjacking",
                             "teach me about clickjacking"
-                        ]
+                        ],
+                        description: "Learn about Clickjacking."
                     },
                     {
                         name: "getLessonSeven",
@@ -189,7 +196,8 @@ var lessons = [
                             "teach me about remote file inclusion",
                             "teach me about local file inclusion",
                             "play the video file inclusion bugs"
-                        ]
+                        ],
+                        description: "Learn about File Inclusion Bugs."
                     },
                     {
                         name: "getLessonEight",
@@ -202,7 +210,8 @@ var lessons = [
                             "teach me about MIME type attacks",
                             "teach me about filename-based attacks",
                             "teach me about how multipart POSTs work"
-                        ]
+                        ],
+                        description: "Learn about File Upload Bugs."
                     },
                     {
                         name: "getLessonNine",
@@ -211,7 +220,8 @@ var lessons = [
                             "play the lesson null termination bugs",
                             "play the video null termination bugs",
                             "teach me about null terminators"
-                        ]
+                        ],
+                        description: "Learn about Null Termination Bugs."
                     },
                     {
                         name: "getLessonTen",
@@ -220,7 +230,8 @@ var lessons = [
                             "play the lesson unchecked redirects",
                             "play the video unchecked redirects",
                             "teach me about unchecked redirects"
-                        ]
+                        ],
+                        description: "Learn about Unchecked Redirects."
                     },
                     {
                         name: "getLessonEleven",
@@ -232,7 +243,8 @@ var lessons = [
                             "teach me about Bcrypt",
                             "play the lesson password storage",
                             "play the video password storage"
-                        ]
+                        ],
+                        description: "Learn about Secure Password Storage."
                     },
                     {
                         name: "getLessonTwelve",
@@ -253,7 +265,8 @@ var lessons = [
                             "teach me about types of ciphers",
                             "teach me about one-time pads",
                             "teach me about XOR and its importance for cryptography"
-                        ]
+                        ],
+                        description: "Get an overview of cryptography."
                     },
                     {
                         name: "getLessonThirteen",
@@ -266,7 +279,8 @@ var lessons = [
                             "teach me about stream cipher key reuse",
                             "play the lesson crypto attacks",
                             "play the video crypto attacks"
-                        ]
+                        ],
+                        description: "Learn about cryptography attacks."
                     },
                     {
                         name: "getLessonFourteen",
@@ -277,7 +291,8 @@ var lessons = [
                             "teach me about ECB mode",
                             "play the video crypto wrap-up",
                             "teach me about crypto wrap-up"
-                        ]
+                        ],
+                        description: "Learn more about cryptography."
                     }
                 ];
 
@@ -773,8 +788,45 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
         }
     },
     'getTeachVideos': function () {
+        var context = this;
         this.handler.state = states.SEARCHMODE;
-        this.emitWithState('getTeachVideos');
+        this.attributes.lastAction = "getTeachVideos";
+        var cardTitle = "Bug Browser Lessons";
+
+        if (context.event.context.System.device.supportedInterfaces.Display) {
+            if(this.event && this.event.request && this.event.request.intent && this.event.request.intent.slots && this.event.request.intent.slots.program.value && this.event.request.intent.slots.program.value != null && this.event.request.intent.slots.program.value != "?"){
+                //open program based on slots #.
+                //(Add ElementSelected as well)
+            }
+            else{
+                var content = 'Here are some things Bug Browser can teach:\n';
+                var speak = 'Here are some things Bug Browser can teach:\n';
+                const listItemBuilder = new Alexa.templateBuilders.ListItemBuilder();
+                const listTemplateBuilder = new Alexa.templateBuilders.ListTemplate1Builder();
+                for (var i = 0; i < lessons.length; i++) {
+                    var value = Math.random() * lessons[i].hints.length;
+                    var raw = lessons[i].hints[value];
+                    var complete = raw.charAt(0).toUpperCase() + raw.substring(1);
+                    speak += "Number " + (i + 1) + ". " + complete + ". \n";
+                    content += (i + 1) + ". Say " + complete + ": " + lessons[i].description + "\n";
+                    listItemBuilder.addItem(null, 'lessonItemToken' + i, makeRichText("<font size='2'>" + complete + "</font>"), makeRichText("<i><font size='1'>" + lessons[i].description + "</font></i>"));
+                }
+                speak += "What would you like to do?";
+
+                const listItems = listItemBuilder.build();
+                const listTemplate = listTemplateBuilder.setToken('getLessonToken')
+                                        .setTitle(cardTitle)
+                                        .setListItems(listItems)
+                                        .setBackgroundImage(makeImage('https://s3.amazonaws.com/bugbrowser/images/Coding-Monitors.jpg'))
+                                        .build();
+
+                    context.response.speak(speak).renderTemplate(listTemplate).cardRenderer(cardTitle, content, null).listen(speak);
+                    context.emit(':responseReady');
+            }
+        } else {
+            var content = 'Bug Browser lessons are only available for video-enabled devices at this time.';
+            context.emit(':askWithCard', content + generalReprompt, HelpMessage);
+        }
     },
     'getBugCrowdIntent': function () {
         var self = this;
@@ -1799,7 +1851,7 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                 content += (i + 1) + ". " + helpMessages[i].message + ". \n";
                 listItemBuilder.addItem(null, 'helpItemToken' + i, makeRichText("<font size='2'>" + helpMessages[i].message + "</font>"), makeRichText("<i><font size='1'>" + helpMessages[i].description + "</font></i>"));
             }
-            content += "What would you like to do?";
+            speak += "What would you like to do?";
 
             const listItems = listItemBuilder.build();
             const listTemplate = listTemplateBuilder.setToken('getHelpToken')
