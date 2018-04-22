@@ -136,7 +136,7 @@ var lessons = [
                             "play the lesson The Web In Depth",
                             "play the video The Web In Depth"
                         ],
-                        description: "Learn about the web in depth including HTTP basics and MIME sniffing."
+                        description: "Learn about the web in depth including HTTP basics."
                     },
                     {
                         name: "getLessonThree",
@@ -932,7 +932,7 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
               var retrieveError = "I was unable to retrieve any active programs. Please try again later.";
               if (hackerOnePrograms.length > 0) {
                   
-                  read = "Here are the active programs from HackerOne: ";
+                  read = "Here are the active programs from HackerOne from page " + Math.floor(hackerOneMax/25) + " of " + Math.floor(hackerOneTotal/25) + ": ";
                   for (var counter = hackerOneMax - 25; counter < (hackerOnePrograms.length <= hackerOneMax ? hackerOnePrograms.length: hackerOneMax); counter++) {
                       output += (counter + 1 - hackerOneMax + 25) + ". " + hackerOnePrograms[counter].name + "\n\n";
                       read += "Number " + (counter + 1 - hackerOneMax + 25) + ": " + hackerOnePrograms[counter].name + "\n\n";
@@ -1595,7 +1595,7 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                     content += 'Status Code ' + statusCodes[i].code + ': ' + statusCodes[i].description + '; ';
                     cardContent += '' + statusCodes[i].code + ': ' + statusCodes[i].description + '\n';
             }
-            this.emit(':askWithCard', content, generalReprompt, cardTitle, cardContent)
+            this.emit(':askWithCard', content + generalReprompt, HelpMessage, cardTitle, cardContent)
         }
     },
     "ElementSelected": function() {
