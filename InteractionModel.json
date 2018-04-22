@@ -328,6 +328,13 @@
                         }
                     ],
                     "samples": [
+                        "teach me the ways of hacking",
+                        "train me in hacking",
+                        "give me security training",
+                        "give me hacking lessons",
+                        "give me lessons about hacking",
+                        "teach me how to hack",
+                        "teach me something",
                         "select lesson {program}",
                         "play video {program}",
                         "show lesson {program}",
@@ -541,6 +548,9 @@
                     "name": "listStatusCodesIntent",
                     "slots": [],
                     "samples": [
+                        "server-side errors",
+                        "client-side errors",
+                        "help me understand web errors",
                         "HTTP status codes",
                         "list status codes",
                         "list http status codes",

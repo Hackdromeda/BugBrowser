@@ -1,42 +1,42 @@
 {
-  "name": "skill-bug-browser",
-  "version": "2.0.0",
-  "description": "Bug Browser is your one-stop skill for everything cybersecurity. Bug Browswer will provide a flash briefing on recent hacks and security vulnerabilities around the world, information about bug bounty programs and bug bounty platforms, the BugCrowd VRT, active HackerOne bounties, and active BugCrowd bounties as well as provide additional information on these bounties.",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "keywords": [
-    "amazon",
-    "echo",
-    "alexa",
-    "skills"
-  ],
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/as0218PUSD/BugBrowser.git"
-  },
-  "bugs": {
-    "url": "https://github.com/as0218PUSD/BugBrowser/issues"
-  },
-  "contributors": [
-    {
-      "name": "Avi Shah",
-      "email": "as0218@pleasantonusd.net"
+    "name": "skill-bug-browser",
+    "version": "2.0.0",
+    "description": "Bug Browser is your one-stop skill for everything cybersecurity. Bug Browswer will provide a flash briefing on recent hacks and security vulnerabilities around the world, information about bug bounty programs and bug bounty platforms, the BugCrowd VRT, active HackerOne bounties, and active BugCrowd bounties as well as provide additional information on these bounties.",
+    "main": "index.js",
+    "scripts": {
+      "test": "echo \"Error: no test specified\" && exit 1"
     },
-    {
-      "name": "Naval Patel",
-      "email": "me@navalpatel.me"	
+    "keywords": [
+      "amazon",
+      "echo",
+      "alexa",
+      "skills"
+    ],
+    "repository": {
+      "type": "git",
+      "url": "https://github.com/as0218PUSD/BugBrowser.git"
+    },
+    "bugs": {
+      "url": "https://github.com/as0218PUSD/BugBrowser/issues"
+    },
+    "contributors": [
+      {
+        "name": "Avi Shah",
+        "email": "as0218@pleasantonusd.net"
+      },
+      {
+        "name": "Naval Patel",
+        "email": "me@navalpatel.me"	
+      }
+    ],
+    "author": "Avi Shah and Naval Patel",
+    "license": "MIT",
+    "dependencies": {
+      "alexa-sdk": "^1.0.25",
+      "cheerio": "^1.0.0-rc.2",
+      "jquery": "^3.3.1",
+      "npm": "^5.8.0",
+      "request": "^2.85.0",
+      "request-promise": "^4.2.2"
     }
-  ],
-  "author": "Avi Shah and Naval Patel",
-  "license": "MIT",
-  "dependencies": {
-    "alexa-sdk": "^1.0.25",
-    "cheerio": "^1.0.0-rc.2",
-    "jquery": "^3.3.1",
-    "npm": "^5.8.0",
-    "request": "^2.85.0",
-    "request-promise": "^4.2.2"
   }
-}
