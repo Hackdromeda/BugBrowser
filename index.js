@@ -391,6 +391,69 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
             this.emit(':ask', videoError + HelpMessage, appName, output + HelpMessage);
         }
     },
+    'getLessonOne': function () {
+        const speechOutput = 'In this Hacker101 session the instructor Cody Brocious will talk about how you can take the things you learn in this class and apply them to real situations. You will learn about the required tools, thinking like a breaker, attacker-defender imbalance, lightweight threat assessment and prioritization, and how to write good bug reports.';
+        const behavior = 'REPLACE_ALL';
+        const url = 'https://s3.amazonaws.com/bugbrowser/audio/Hacker101+-+Introduction.m4a';
+        const token = 'lessonOne';
+        const expectedPreviousToken = 'lessonStream';
+        const offsetInMilliseconds = 10000;
+        this.response.speak(speechOutput)
+                    .audioPlayerPlay(behavior, url, token, expectedPreviousToken, offsetInMilliseconds);
+        this.emit(':responseReady');
+    },
+    'getLessonTwo': function () {
+        this.handler.state = states.SEARCHMODE;
+        this.emitWithState('getLessonTwo');
+    },
+    'getLessonThree': function () {
+        this.handler.state = states.SEARCHMODE;
+        this.emitWithState('getLessonThree');
+    },
+    'getLessonFour': function () {
+        this.handler.state = states.SEARCHMODE;
+        this.emitWithState('getLessonFour');
+    },
+    'getLessonFive': function () {
+        this.handler.state = states.SEARCHMODE;
+        this.emitWithState('getLessonFive');
+    },
+    'getLessonSix': function () {
+        this.handler.state = states.SEARCHMODE;
+        this.emitWithState('getLessonSix');
+    },
+    'getLessonSeven': function () {
+        this.handler.state = states.SEARCHMODE;
+        this.emitWithState('getLessonSeven');
+    },
+    'getLessonEight': function () {
+        this.handler.state = states.SEARCHMODE;
+        this.emitWithState('getLessonEight');
+    },
+    'getLessonNine': function () {
+        this.handler.state = states.SEARCHMODE;
+        this.emitWithState('getLessonNine');
+    },
+    'getLessonEleven': function () {
+        this.handler.state = states.SEARCHMODE;
+        this.emitWithState('getLessonEleven');
+    },
+    'getLessonTwelve': function () {
+        this.handler.state = states.SEARCHMODE;
+        this.emitWithState('getLessonTwelve');
+    },
+    'getLessonThirteen': function () {
+        this.handler.state = states.SEARCHMODE;
+        this.emitWithState('getLessonThirteen');
+    },
+    'getLessonFourteen': function () {
+        this.handler.state = states.SEARCHMODE;
+        this.emitWithState('getLessonFourteen');
+    },
+    'getTeachVideos': function () {
+        this.handler.state = states.SEARCHMODE;
+        this.emitWithState('getTeachVideos');
+    },
     'getBugCrowdIntent': function () {
         var self = this;
         this.attributes.lastAction = "getBugCrowdIntent";

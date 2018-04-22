@@ -29,7 +29,7 @@ exports.handler = function(event, context, callback) {
         ],
         "path": [
           "programs",
-          "search.json"
+          "search.json??query=type%3Ahackerone&limit=400"
         ]
       };
       
