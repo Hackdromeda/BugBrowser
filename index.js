@@ -537,7 +537,7 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
             output = overview + " If you would like to learn more about bug bounty platforms you can ask me to play the BugCrowd overview video or ask me to teach you how to use BugCrowd. What would you like me to do?"
             const builder = new Alexa.templateBuilders.BodyTemplate1Builder();
             const template = builder.setTitle(cardTitle)
-                                    .setBackgroundImage(makeImage('https://s3.amazonaws.com/bugbrowser/images/BugCrowdBR.png'))
+                                    .setBackgroundImage(makeImage('https://s3.amazonaws.com/bugbrowser/images/Bug-Window.jpg'))
                                     .setTextContent(makePlainText(output))
                                     .build();
             this.response.speak(output).renderTemplate(template).cardRenderer(cardTitle, overview, imageObj).listen(HelpMessage);
@@ -887,7 +887,7 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                     const listTemplate = listTemplateBuilder.setToken('listToken')
     										.setTitle(cardTitle)
                                             .setListItems(listItems)
-                                            .setBackgroundImage(makeImage('https://s3.amazonaws.com/bugbrowser/images/Search.jpg'))
+                                            .setBackgroundImage(makeImage('https://s3.amazonaws.com/bugbrowser/images/Web-Iconv2.jpg'))
                                             .build();
                     this.response.speak(read).renderTemplate(listTemplate).cardRenderer(cardTitle, output, null).listen(moreInfoProgram);
                     this.emit(':responseReady');
@@ -945,7 +945,7 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                   const listTemplate = listTemplateBuilder.setToken('hackerOneListToken')
                                           .setTitle(cardTitle)
                                           .setListItems(listItems)
-                                          .setBackgroundImage(makeImage('https://s3.amazonaws.com/bugbrowser/images/CircuitLock.jpg'))
+                                          .setBackgroundImage(makeImage('https://s3.amazonaws.com/bugbrowser/images/Search.jpg'))
                                           .build();
                   this.response.speak(read).renderTemplate(listTemplate).cardRenderer(cardTitle, output, null).listen(moreInfoProgram);
                   this.emit(':responseReady');
@@ -1064,7 +1064,7 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                             const template = builder.setTitle(cardTitle)
                                                 .setToken('getMoreInfoBugCrowdIntentToken')
                                                 .setBackButtonBehavior('VISIBLE')
-                                                .setBackgroundImage(makeImage('https://s3.amazonaws.com/bugbrowser/images/Circuit.png'))
+                                                .setBackgroundImage(makeImage('https://s3.amazonaws.com/bugbrowser/images/Encryption.jpg'))
                                                 .setTextContent(makeRichText('<font size="1">' + cardContent + '</font>'))
                                                 .setImage(makeImage(imageObj.largeImageUrl))
                                                 .build();
@@ -1411,7 +1411,7 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                                 const template = builder.setTitle(cardTitle)
                                                     .setToken('getMoreInfoBugCrowdIntentToken')
                                                     .setBackButtonBehavior('VISIBLE')
-                                                    .setBackgroundImage(makeImage('https://s3.amazonaws.com/bugbrowser/images/Circuit.png'))
+                                                    .setBackgroundImage(makeImage('https://s3.amazonaws.com/bugbrowser/images/Search.jpg'))
                                                     .setTextContent(makeRichText('<font size="5">' + cardContent + '</font>'))
                                                     .setImage(makeImage(imageObj.largeImageUrl))
                                                     .build();
@@ -1518,7 +1518,7 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                             const template = builder.setTitle(cardTitle)
                                                 .setToken('getMoreInfoHackerOneIntentToken')
                                                 .setBackButtonBehavior('VISIBLE')
-                                                .setBackgroundImage(makeImage('https://s3.amazonaws.com/bugbrowser/images/Circuit.png'))
+                                                .setBackgroundImage(makeImage('https://s3.amazonaws.com/bugbrowser/images/Search.jpg'))
                                                 .setTextContent(makeRichText('<font size="1">' + bounty + ' ' + (hackerOnePrograms[index].about ? sanitizeInput(hackerOnePrograms[index].about.replace(/\n/g,' ')): cardContent) + '</font>'))
                                                 .setImage(makeImage(images[0] ? images[0]: imageObj.smallImageUrl))
                                                 .build();
@@ -1612,7 +1612,7 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                 const template = builder.setTitle(articles[index].title)
                                     .setToken('getMoreInfoNewsToken')
                                     .setBackButtonBehavior('VISIBLE')
-                                    .setBackgroundImage(makeImage('https://s3.amazonaws.com/bugbrowser/images/Circuit.png'))
+                                    .setBackgroundImage(makeImage('https://s3.amazonaws.com/bugbrowser/images/Newspaper.png'))
                                     .setImage(makeImage(articles[index].urlToImage ? articles[index].urlToImage: 'https://s3.amazonaws.com/bugbrowser/images/HackerNewsLogo.jpeg'))
                                     .setTextContent(makeRichText("<font size='1'>" + content + "</font>"))
                                     .build();
@@ -1826,7 +1826,7 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                 const listTemplate = listTemplateBuilder.setToken('getNewsIntentToken')
                                         .setTitle('Bug Browser News')
                                         .setListItems(listItems)
-                                        .setBackgroundImage(makeImage('https://s3.amazonaws.com/bugbrowser/images/Circuit.png'))
+                                        .setBackgroundImage(makeImage('https://s3.amazonaws.com/bugbrowser/images/Newspaper.png'))
                                         .build();
 
                 context.response.speak(content + generalReprompt).cardRenderer('Bug Browser News', 'Data provided by NewsAPI: \n\n' + content, null).renderTemplate(listTemplate).listen(HelpMessage);
@@ -1861,7 +1861,7 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
             const listTemplate = listTemplateBuilder.setToken('getHelpToken')
                                     .setTitle(cardTitle)
                                     .setListItems(listItems)
-                                    .setBackgroundImage(makeImage('https://s3.amazonaws.com/bugbrowser/images/Circuit.png'))
+                                    .setBackgroundImage(makeImage('https://s3.amazonaws.com/bugbrowser/images/LockTreeDark.png'))
                                     .build();
 
                 context.response.speak(speak).renderTemplate(listTemplate).cardRenderer(cardTitle, content, null).listen(speak);
@@ -2016,8 +2016,8 @@ function renderTemplate (content) {
                             "type": "Standard",
                             "title": content.bodyTemplateTitle,
                             "image": {
-                                "smallImageUrl": "https://s3.amazonaws.com/bugbrowser/images/Circuit.png",
-                                "largeImageUrl": "https://s3.amazonaws.com/bugbrowser/images/Circuit.png"
+                                "smallImageUrl": "https://s3.amazonaws.com/bugbrowser/images/Web-Iconv2.jpg",
+                                "largeImageUrl": "https://s3.amazonaws.com/bugbrowser/images/Web-Iconv2.jpg"
                             },
                             "text": content.speechText
                         },
