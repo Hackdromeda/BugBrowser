@@ -1569,15 +1569,16 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
             },
         ];
 
+        var cardTitle = 'HTTP Status Codes';
+        var content = '';
+        var cardContent = '';
+
         if (this.event.context.System.device.supportedInterfaces.Display) {
             const listItemBuilder = new Alexa.templateBuilders.ListItemBuilder();
             const listTemplateBuilder = new Alexa.templateBuilders.ListTemplate1Builder();
-            var cardTitle = 'HTTP Status Codes';
-            var content = '';
-            var cardContent = '';
             for (var i = 0; i < statusCodes.length; i++) {
                     content += 'Status Code ' + statusCodes[i].code + ': ' + statusCodes[i].description + '; ';
-                    cardContent += '' + statusCodes[i].code + '\n' + statusCodes[i].description + '\n';
+                    cardContent += '' + statusCodes[i].code + ': ' + statusCodes[i].description + '\n';
                     listItemBuilder.addItem(null, 'httpStatusCodeToken' + i, makePlainText('' + statusCodes[i].code), makePlainText(statusCodes[i].description));
             }
             const listItems = listItemBuilder.build();
@@ -1590,6 +1591,10 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
             this.response.speak(content + generalReprompt).cardRenderer('HTTP Status Codes', cardContent, null).renderTemplate(listTemplate).listen(HelpMessage);
             this.emit(':responseReady');
         } else {
+            for (var i = 0; i < statusCodes.length; i++) {
+                    content += 'Status Code ' + statusCodes[i].code + ': ' + statusCodes[i].description + '; ';
+                    cardContent += '' + statusCodes[i].code + ': ' + statusCodes[i].description + '\n';
+            }
             this.emit(':askWithCard', content, generalReprompt, cardTitle, cardContent)
         }
     },
