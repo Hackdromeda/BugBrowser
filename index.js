@@ -17,13 +17,13 @@ var newsKey = "54c1f13414d24544a837a4bdccbf5d21";
 
 var numberOfResults = 5;
 
-var welcomeMessage = "Welcome to " + appName + ". You can ask me for a flash briefing on recent hacks and security vulnerabilities around the world, information about bug bounty platforms, the VRT, active HackerOne bounties, and active BugCrowd bounties. What will it be?";
+var welcomeMessage = "Welcome to " + appName + ". You can ask me for a flash briefing on recent hacks and security vulnerabilities around the world, lessons about hacking, information about bug bounty platforms, the VRT, active HackerOne bounties, and active BugCrowd bounties. What will it be?";
 
-var welcomeReprompt = "You can ask me for a flash briefing on recent hacks and security vulnerabilities around the world, information about bug bounty platforms, active HackerOne bounties, active BugCrowd programs, or ask for help. What will it be?";
+var welcomeReprompt = "You can ask me for a flash briefing on recent hacks and security vulnerabilities around the world, lessons about hacking, information about bug bounty platforms, active HackerOne bounties, active BugCrowd programs, or ask for help. What will it be?";
 
 var overview = "Bug bounty platforms such as BugCrowd and HackerOne connect organizations to a global crowd of trusted security researchers. Bug Bounty programs allow the developers to discover and resolve bugs before the general public is aware of them, preventing incidents of widespread abuse.";
 
-var HelpMessage = "Here are some things you can say: Give me a flash briefing on hacks. Tell me what bug bounty platforms are. Tell me about the VRT. Tell me some active BugCrowd programs. Tell me some active HackerOne bounties. What would you like to do?";
+var HelpMessage = "Here are some things you can say: Give me a flash briefing on hacks. Teach me how to hack. Tell me what bug bounty platforms are. Tell me about the VRT. Tell me some active BugCrowd programs. Tell me some active HackerOne bounties. What would you like to do?";
 
 var moreInformation = "See your Alexa app for more information.";
 
@@ -474,7 +474,7 @@ var newSessionHandlers = {
         var self = this;
         if (this.event.context.System.device.supportedInterfaces.Display) {
             rp({
-                uri: `https://hackerone.com/hacktivity.json`,
+                uri: `http://bugbrowsercache.s3-accelerate.amazonaws.com/hacktivity.json`,
                 transform: function (body) {
                     return JSON.parse(body);
                 }
@@ -497,7 +497,7 @@ var newSessionHandlers = {
             });
         } else {
             rp({
-                uri: `https://hackerone.com/hacktivity.json`,
+                uri: `http://bugbrowsercache.s3-accelerate.amazonaws.com/hacktivity.json`,
                 transform: function (body) {
                     return JSON.parse(body);
                 }
@@ -2016,7 +2016,7 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
         var self = this;
         if (this.event.context.System.device.supportedInterfaces.Display) {
             rp({
-                uri: `https://hackerone.com/hacktivity.json`,
+                uri: `http://bugbrowsercache.s3-accelerate.amazonaws.com/hacktivity.json`,
                 transform: function (body) {
                     return JSON.parse(body);
                 }
@@ -2039,7 +2039,7 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
             });
         } else {
             rp({
-                uri: `https://hackerone.com/hacktivity.json`,
+                uri: `http://bugbrowsercache.s3-accelerate.amazonaws.com/hacktivity.json`,
                 transform: function (body) {
                     return JSON.parse(body);
                 }
