@@ -328,6 +328,13 @@
                         }
                     ],
                     "samples": [
+                        "select lesson {video}",
+                        "play video {video}",
+                        "show lesson {video}",
+                        "open video {video}",
+                        "play lesson {video}",
+                        "what lessons do you have",
+                        "what can you teach me",
                         "show me video {video}",
                         "how do you hack",
                         "teach me hacking",
@@ -359,8 +366,8 @@
                     "name": "getLessonOne",
                     "slots": [],
                     "samples": [
+                        "play the lesson introduction video",
                         "what tools do I need to get started hacking",
-                        "introduce me to hacking",
                         "play the introduction to hacking video"
                     ]
                 },

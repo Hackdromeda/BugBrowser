@@ -794,22 +794,21 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
         var cardTitle = "Bug Browser Lessons";
 
         if (context.event.context.System.device.supportedInterfaces.Display) {
-            if(this.event && this.event.request && this.event.request.intent && this.event.request.intent.slots && this.event.request.intent.slots.program.value && this.event.request.intent.slots.program.value != null && this.event.request.intent.slots.program.value != "?"){
-                //open program based on slots #.
-                //(Add ElementSelected as well)
+            if(context.event && context.event.request && context.event.request.intent && context.event.request.intent.slots && context.event.request.intent.slots.video && context.event.request.intent.slots.video.value && context.event.request.intent.slots.video.value != null && context.event.request.intent.slots.video.value != "?"){
+                context.emit(lessons[context.event.request.intent.slots.video.value - 1].name)
             }
             else{
                 var content = 'Here are some things Bug Browser can teach:\n';
-                var speak = 'Here are some things Bug Browser can teach:\n';
+                var speak = 'Here are some things you can say to Bug Browser: ';
                 const listItemBuilder = new Alexa.templateBuilders.ListItemBuilder();
                 const listTemplateBuilder = new Alexa.templateBuilders.ListTemplate1Builder();
                 for (var i = 0; i < lessons.length; i++) {
-                    var value = Math.random() * lessons[i].hints.length;
+                    var value = Math.floor(Math.random() * lessons[i].hints.length);
                     var raw = lessons[i].hints[value];
                     var complete = raw.charAt(0).toUpperCase() + raw.substring(1);
                     speak += "Number " + (i + 1) + ". " + complete + ". \n";
-                    content += (i + 1) + ". Say " + complete + ": " + lessons[i].description + "\n";
-                    listItemBuilder.addItem(null, 'lessonItemToken' + i, makeRichText("<font size='2'>" + complete + "</font>"), makeRichText("<i><font size='1'>" + lessons[i].description + "</font></i>"));
+                    content += (i + 1) + ". Say " + raw + ": " + lessons[i].description + "\n";
+                    listItemBuilder.addItem(null, 'lessonItemToken' + i, makeRichText("<font size='2'>" + lessons[i].description + "</font>"), makeRichText("<font size='1'>" + "Say " + "<i>" + raw + "</i>" + "</font>"));
                 }
                 speak += "What would you like to do?";
 
@@ -817,7 +816,7 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                 const listTemplate = listTemplateBuilder.setToken('getLessonToken')
                                         .setTitle(cardTitle)
                                         .setListItems(listItems)
-                                        .setBackgroundImage(makeImage('https://s3.amazonaws.com/bugbrowser/images/Coding-Monitors.jpg'))
+                                        .setBackgroundImage(makeImage('https://s3.amazonaws.com/bugbrowser/images/Coding-Monitors.png'))
                                         .build();
 
                     context.response.speak(speak).renderTemplate(listTemplate).cardRenderer(cardTitle, content, null).listen(speak);
@@ -1556,6 +1555,11 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
             var selectedToken = (this.event.request.token).substring(13);
             console.log ('Help Token Detected ' + selectedToken);
             this.emit(helpMessages[selectedToken].intent);
+        }
+        else if((this.event.request.token).substring(0, 15) == "lessonItemToken"){ 
+            var selectedToken = (this.event.request.token).substring(15);
+            console.log ('Lesson Token Detected ' + selectedToken);
+            this.emit(lessons[selectedToken].name);
         }
         else if((this.event.request.token).substring(0, 13) == "newsItemToken") {
             var index = parseInt(this.event.request.token.replace(/[^0-9]/g, ''), 13);
