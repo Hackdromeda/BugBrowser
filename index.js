@@ -887,7 +887,7 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                     const listTemplate = listTemplateBuilder.setToken('listToken')
     										.setTitle(cardTitle)
                                             .setListItems(listItems)
-                                            .setBackgroundImage(makeImage('https://s3.amazonaws.com/bugbrowser/images/Search.jpg'))
+                                            .setBackgroundImage(makeImage('http://bugbrowser.s3-accelerate.amazonaws.com/images/Search.png'))
                                             .build();
                     this.response.speak(read).renderTemplate(listTemplate).cardRenderer(cardTitle, output, null).listen(moreInfoProgram);
                     this.emit(':responseReady');
@@ -945,7 +945,7 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                   const listTemplate = listTemplateBuilder.setToken('hackerOneListToken')
                                           .setTitle(cardTitle)
                                           .setListItems(listItems)
-                                          .setBackgroundImage(makeImage('https://s3.amazonaws.com/bugbrowser/images/Search.jpg'))
+                                          .setBackgroundImage(makeImage('http://bugbrowser.s3-accelerate.amazonaws.com/images/Search.png'))
                                           .build();
                   this.response.speak(read).renderTemplate(listTemplate).cardRenderer(cardTitle, output, null).listen(moreInfoProgram);
                   this.emit(':responseReady');
@@ -1183,7 +1183,7 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                         const template = builder.setTitle(cardTitle)
                                             .setToken('getMoreInfoHackerOneIntentToken')
                                             .setBackButtonBehavior('VISIBLE')
-                                            .setBackgroundImage(makeImage('https://s3.amazonaws.com/bugbrowser/images/Search.jpg'))
+                                            .setBackgroundImage(makeImage('http://bugbrowser.s3-accelerate.amazonaws.com/images/Search.png'))
                                             .setTextContent(makeRichText('<font size="1">' + bounty + ' ' + (hackerOnePrograms[index].about ? sanitizeInput(hackerOnePrograms[index].about.replace(/\n/g,' ')): cardContent) + '</font>'))
                                             .setImage(makeImage(images[0] ? images[0]: imageObj.smallImageUrl))
                                             .build();
@@ -1521,7 +1521,7 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                             const template = builder.setTitle(cardTitle)
                                                 .setToken('getMoreInfoHackerOneIntentToken')
                                                 .setBackButtonBehavior('VISIBLE')
-                                                .setBackgroundImage(makeImage('https://s3.amazonaws.com/bugbrowser/images/Search.jpg'))
+                                                .setBackgroundImage(makeImage('http://bugbrowser.s3-accelerate.amazonaws.com/images/Search.png'))
                                                 .setTextContent(makeRichText('<font size="1">' + bounty + ' ' + (hackerOnePrograms[index].about ? sanitizeInput(hackerOnePrograms[index].about.replace(/\n/g,' ')): cardContent) + '</font>'))
                                                 .setImage(makeImage(images[0] ? images[0]: imageObj.smallImageUrl))
                                                 .build();
