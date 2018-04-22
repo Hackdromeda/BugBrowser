@@ -536,6 +536,16 @@
                         "play the video crypto wrap-up",
                         "teach me about crypto wrap-up"
                     ]
+                },
+                {
+                    "name": "listStatusCodesIntent",
+                    "slots": [],
+                    "samples": [
+                        "HTTP status codes",
+                        "list status codes",
+                        "list http status codes",
+                        "all status codes"
+                    ]
                 }
             ],
             "types": []
