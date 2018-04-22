@@ -23,12 +23,12 @@ function writeToS3(bucket, key, data){
 
 exports.handler = function(event, context, callback) {
       rp({
-        uri: `https://hackerone.com/programs/search.json?query=type%3Ahackerone&limit=200`,
+        uri: `https://hackerone.com/programs/search.json?query=type%3Ahackerone&limit=400`,
         transform: function (body) {
           return body;
         }
       }).then((data) => {
-        writeToS3('bugbrowserdev', 'hackerone.json', data);
+        writeToS3('bugbrowsercache', 'hackerone.json', data);
         callback(null); //callback(response.StatusCode);
       }).catch((error) => {
         console.log(error);
