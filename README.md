@@ -12,7 +12,7 @@ We realized that there were very few skills for [security researchers](https://w
 ## Mission
 Why bug bounties?
 
-A large part of our days now revolve around devices and being connected to the internet. Customers have come to expect security and confidence in the company handling their data. Even the best developers in the world can leave security vulnerabilities open in their applications. Platforms such as BugCrowd and HackerOne make it easier for security researchers to get connected with companies and allow companies to reach a vast network of researchers. Breaches and security vulnerabilities are expensive to recover from, much more expensive than the few-thousand-dollar reward hackers receive for their finding. Companies such as Facebook, Equifax, Intel, 24/7 AI, eBay, Home Depot, Target, and a handful of companies have experienced security breaches as a result of vulnerabilities exploited by black hat hackers and their reputations have suffered as a result.
+A large part of our days now revolve around devices and being connected to the internet. Customers have come to expect security and confidence in the company handling their data. Even the best developers in the world can leave security vulnerabilities open in their applications. Platforms such as BugCrowd and HackerOne make it easier for security researchers to get connected with companies and allow companies to reach a vast network of researchers. Breaches and security vulnerabilities are expensive to recover from, much more expensive than the few-thousand-dollar reward hackers receive for their finding(s). Facebook, Equifax, Intel, 24/7 AI, eBay, Home Depot, Target, and a handful of other companies have experienced security breaches as a result of vulnerabilities exploited by black hat hackers and their reputations have suffered as a result.
 
 Who is this Alexa skill for?
 1. **General Public** - *All customers and clients value their private data. As such, they expect the company entrusted with their data to do everything in their power to protect that data. Now more than ever, breaches of customer data are a common occurance. Users should not, however, become desensitized or numb to such news but rather proactively take action to protect their data.* - Bug Browser can help anyone keep up-to-date on the latest news about security vulnerabilities, hacks, and other cybersecurity issues. 
@@ -47,7 +47,9 @@ From the early stages of Bug Browser, our team had agreed on a few basic design 
 
 #### 3. Context
 
-Alexa is a smart, conversational AI that, just like any human being, needs context in order to interpret speech and respond to a user query. Not only does Alexa require context, but it also needs to be able to remember session details that would help with routing requests to the correct destination. We implemented a system of context organization that would be able to determine the last intent a user was routed to and used it for page navigation between programs lists and program pages as well as news lists and news pages.
+Alexa is a smart, conversational AI that, just like any human being, needs context in order to interpret speech and respond to a user query. Not only does Alexa require context, but it also needs to be able to remember session details that would help with routing requests to the correct destination. We implemented a system of context organization that would be able to determine the last intent a user was routed to and used it for page navigation between programs lists and program pages as well as news lists and news pages. 
+
+For example, if a user asks for *"number one"* that could either mean a HackerOne program, a BugCrowd program, or a lesson number. Session-level attributes help us know what the user wants without forcing them to be more specific.
 
 What are the accomplishments your team is proud of?
 
@@ -88,7 +90,6 @@ What are the accomplishments your team is proud of?
 ## Coming Soon:
 * Asking for program details by name so user can ask for details about the program without asking for the latest list of programs.
 * Video Queue (Awaiting SDK Support)
-* [Teach how to hack using video queue](https://www.hacker101.com/)
 * Confirm Choices *ex. Did you say you want more details about program number 5?*
 * Highlight text and automatically switch cards for Display Interface (Awaiting SDK Support)
 * Font color customized (Awaiting SDK Support)
