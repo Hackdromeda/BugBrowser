@@ -63,10 +63,15 @@ What are the accomplishments your team is proud of?
 * Learn about BugCrowd and HackerOne
   * Try, *Alexa ask Bug Browser to tell me some facts about BugCrowd.*
   * Try, *Alexa ask Bug Browser to introduce me to BugCrowd.*
+
+* Learn how to use BugCrowd
+  * Try, *Alexa how do you use BugCrowd?*
   
 * Get bounties from BugCrowd and/or HackerOne
   * Try, *Alexa ask Bug Browser, how do you find bounties?*
   * Try, *Alexa ask Bug Browser, what companies are looking for security researchers?*
+  * Try, *Alexa ask Bug Browser, what are some bounties available from BugCrowd?*
+  * Try, *Alexa ask Bug Browser to tell me about HackerOne programs*
    
 * Get more bounties beyond the first set of cards provided
   * Try, *Alexa next page*
@@ -86,7 +91,29 @@ What are the accomplishments your team is proud of?
   
 * Learn about BugCrowd through videos (Echo Spot and Echo Show only)
   * Try, *Alexa ask Bug Browser to introduce me to BugCrowd with a video*
+
+* Get Bug Browser to list all of the HTTP status codes
+  * Try, *Alexa ask Bug Browser to list HTTP status codes*
+
+* Get a flash briefing on cybersecurity and recent vulnerabilities
+  * Try, *Alexa ask Bug Browser to give me a flash briefing on hacks*
   
+* Learn about cybersecurity through video tutorials
+  * Try, *Alexa ask Bug Browser to play the lesson introduction video*
+  * Try, *Alexa ask Bug Browser to teach me Same-Origin Policy*
+  * Try, *Alexa ask Bug Browser to teach me about types of XSS*
+  * Try, *Alexa ask Bug Browser to teach me about directory traversal*
+  * Try, *Alexa ask Bug Browser to teach me about session fixation*
+  * Try, *Alexa ask Bug Browser to teach me about clickjacking*
+  * Try, *Alexa ask Bug Browser to teach me about remote file inclusion*
+  * Try, *Alexa ask Bug Browser to teach me about how multipart POSTs work*
+  * Try, *Alexa ask Bug Browser to teach me about null terminators*
+  * Try, *Alexa ask Bug Browser to teach me about unchecked redirects*
+  * Try, *Alexa ask Bug Browser to teach me about methods of storing passwords*
+  * Try, *Alexa ask Bug Browser to teach me about block cipher modes*
+  * Try, *Alexa ask Bug Browser to teach me about stream cipher key reuse*
+  * Try, *Alexa ask Bug Browser to teach me about ECB mode*
+
 ## Coming Soon:
 * Asking for program details by name so user can ask for details about the program without asking for the latest list of programs.
 * Video Queue (Awaiting SDK Support)
@@ -116,3 +143,4 @@ https://assets.bugcrowdusercontent.com/packs/images/tracker/logo/vrt-logo-ba20b1
 https://pngtree.com/freebackground/motherboard-line-science-and-technology-business-background-blu-ray-abstract_389364.html
 https://www.stevens.edu/sites/stevens_edu/files/Mission_0.jpg
 https://betanews.com/wp-content/uploads/2015/06/Security-e1436347233484.jpg
+
