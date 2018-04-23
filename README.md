@@ -3,6 +3,12 @@ Bug Browser is your one-stop skill for everything cybersecurity. Bug Browser wil
 
 Developed in the Bay Area by Avi Shah and Naval Patel
 
+# MISSING from README:
+- Testimonials from all tiers of users
+- Explanation of how we dynamically get data
+- Caching system for faster response time
+- Challenges: ElementSelected, etc.
+
 ## Enable the Skill:
 [Amazon US Skill](https://www.amazon.com/dp/B07BPVH1S5/)
 
@@ -28,7 +34,7 @@ Who is this Alexa skill for?
 - How does this skill provide convenience, save time, and improve the lives of novice hackers?
   - Bug Browser can describe specific vulnerabilities, how to find security flaws, and explain how to get paid with bug bounties. Whether users are interested in learning about bug bounties, have a background in computer science, or are seasoned security professionals, they can learn something from Bug Browsers library of lessons (powered by [Hacker101](https://github.com/Hacker0x01/hacker101)). 
  
-4. **Active Security Researchers** - *Security researchers do not work your typical 9-to-5 workday.* - Security researchers can ask about active programs, 
+4. **Active Security Researchers** - *Security researchers do not work your typical 9-to-5 workday. People in this field do not have to have a college diploma or a certification to do it, just a good understanding of programming, computers, and hardware. Security research can be challenging but very rewarding. Ethical hackers protect companies, organizations, and institutions from abuse from malicious hackers. These ethical hackers gain anything from points on the platform to monetary rewards.* - Security researchers can ask about active programs, get more details about these programs, and refer back to the skill for updates and new programs daily.
 
 - How does this skill provide convenience, save time, and improve the lives of security researchers?
   - Security researchers often work on their own schedule and have flexible hours. Alexa can simplify the process of learning of new programs from various platforms when security researchers have a mess of data and programs open such as packed code, virtual or sandbox environments, text editors, and online network utilities and when using Alexa is simply more convenient.
@@ -63,6 +69,8 @@ What are the accomplishments your team is proud of?
 * Learn about BugCrowd and HackerOne
   * Try, *Alexa ask Bug Browser to tell me some facts about BugCrowd.*
   * Try, *Alexa ask Bug Browser to introduce me to BugCrowd.*
+  * Try, *Alexa ask Bug Browser to tell me what bug bounties and bug bounty platforms are*
+  * See the Alexa app or interface for a recap of this information (iOS, Android, and Fire TV)
 
 * Learn how to use BugCrowd
   * Try, *Alexa how do you use BugCrowd?*
@@ -72,7 +80,7 @@ What are the accomplishments your team is proud of?
   * Try, *Alexa ask Bug Browser, what companies are looking for security researchers?*
   * Try, *Alexa ask Bug Browser, what are some bounties available from BugCrowd?*
   * Try, *Alexa ask Bug Browser to tell me about HackerOne programs*
-  * See the Alexa app or interface for additional details such as program requirements (iOS, Android, and Fire TV)
+  * See the Alexa app or interface for the list of programs (iOS, Android, and Fire TV)
    
 * Get more bounties beyond the first set of cards provided
   * Try, *Alexa next page*
@@ -80,26 +88,26 @@ What are the accomplishments your team is proud of?
   * Try, *Yes* when prompted if you want to hear more programs
   
 * Get additional details for bounties from BugCrowd and/or HackerOne
-  * Try, *Alexa ask Bug Browser to tell me more about program number five*
+  * Try, *Alexa ask Bug Browser to tell me more about program number five* after asking for the list on the desired platform
   * Try, *Alexa ask Bug Browser to tell me more about BugCrowd bounty number five*
   * Try, *Yes* when prompted if you want to learn about more programs
+  * See the Alexa app or interface for additional details such as program requirements (iOS, Android, and Fire TV)
   
 * Learn about hacking news using The New York Times and [NewsAPI](https://newsapi.org/)
-  * Try, *Alexa ask Bug Browser, give me a flash briefing on hacks?*
+  * Try, *Alexa ask Bug Browser to give me a flash briefing on hacks*
+  * Try, *Alexa ask Bug Browser to tell me the latest news on vulnerabilities*
   * Tap on the article for additional details (Echo Spot and Echo Show only)
   * See the Alexa app or interface for additional details (iOS, Android, and Fire TV)
   
 * Learn about the BugCrowd Vulnerability Rating Taxonomy (VRT)
   * Try, *Alexa ask Bug Browser to tell me about the VRT*
+  * See the Alexa app or interface for additional details (iOS, Android, and Fire TV)
   
 * Learn about BugCrowd through videos (Echo Spot and Echo Show only)
   * Try, *Alexa ask Bug Browser to introduce me to BugCrowd with a video*
 
 * Learn about HTTP status codes
   * Try, *Alexa ask Bug Browser to list HTTP status codes*
-
-* Get a flash briefing on cybersecurity and recent vulnerabilities
-  * Try, *Alexa ask Bug Browser to give me a flash briefing on hacks*
   
 * Learn about cybersecurity through video tutorials (Echo Spot and Echo Show only)
   * Try, *Alexa ask Bug Browser to play the lesson introduction video*
@@ -123,6 +131,7 @@ What are the accomplishments your team is proud of?
 * Confirm Choices *ex. Did you say you want more details about program Netflix?*
 * Highlight text and automatically switch cards for Display Interface (Awaiting SDK Support)
 * Font color customized (Awaiting SDK Support)
+* Learn about bugs in your own code (ArrayOutOfBounds exception in Java, etc.)
 
 # Built With
 * [Node.js](https://nodejs.org/en/)
@@ -132,6 +141,7 @@ What are the accomplishments your team is proud of?
   * [bluebird](https://www.npmjs.com/package/bluebird)
 * [jQuery](https://www.npmjs.com/package/jquery)
 * Lambda
+and [over 20 more dependancies](https://github.com/as0218PUSD/BugBrowser/network/dependencies)
 
 # Legal
 We are developers, not legal experts. If you own any of the images or content we use and would like it removed for any reason, feel free to open an issue through the Alexa App or on GitHub. We will promptly act on your request. This skill is not affiliated with or endorsed by HackerOne, BugCrowd, or any of its affiliates. All product names, logos, and brands are property of their respective owners. All company, product and service names used in this website are for identification purposes only. Use of these names, logos, and brands does not imply endorsement.
