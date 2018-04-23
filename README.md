@@ -72,6 +72,7 @@ What are the accomplishments your team is proud of?
   * Try, *Alexa ask Bug Browser, what companies are looking for security researchers?*
   * Try, *Alexa ask Bug Browser, what are some bounties available from BugCrowd?*
   * Try, *Alexa ask Bug Browser to tell me about HackerOne programs*
+  * See the Alexa app or interface for additional details such as program requirements (iOS, Android, and Fire TV)
    
 * Get more bounties beyond the first set of cards provided
   * Try, *Alexa next page*
@@ -85,6 +86,8 @@ What are the accomplishments your team is proud of?
   
 * Learn about hacking news using The New York Times and [NewsAPI](https://newsapi.org/)
   * Try, *Alexa ask Bug Browser, give me a flash briefing on hacks?*
+  * Tap on the article for additional details (Echo Spot and Echo Show only)
+  * See the Alexa app or interface for additional details (iOS, Android, and Fire TV)
   
 * Learn about the BugCrowd Vulnerability Rating Taxonomy (VRT)
   * Try, *Alexa ask Bug Browser to tell me about the VRT*
@@ -92,13 +95,13 @@ What are the accomplishments your team is proud of?
 * Learn about BugCrowd through videos (Echo Spot and Echo Show only)
   * Try, *Alexa ask Bug Browser to introduce me to BugCrowd with a video*
 
-* Get Bug Browser to list all of the HTTP status codes
+* Learn about HTTP status codes
   * Try, *Alexa ask Bug Browser to list HTTP status codes*
 
 * Get a flash briefing on cybersecurity and recent vulnerabilities
   * Try, *Alexa ask Bug Browser to give me a flash briefing on hacks*
   
-* Learn about cybersecurity through video tutorials
+* Learn about cybersecurity through video tutorials (Echo Spot and Echo Show only)
   * Try, *Alexa ask Bug Browser to play the lesson introduction video*
   * Try, *Alexa ask Bug Browser to teach me Same-Origin Policy*
   * Try, *Alexa ask Bug Browser to teach me about types of XSS*
@@ -117,7 +120,7 @@ What are the accomplishments your team is proud of?
 ## Coming Soon:
 * Asking for program details by name so user can ask for details about the program without asking for the latest list of programs.
 * Video Queue (Awaiting SDK Support)
-* Confirm Choices *ex. Did you say you want more details about program number 5?*
+* Confirm Choices *ex. Did you say you want more details about program Netflix?*
 * Highlight text and automatically switch cards for Display Interface (Awaiting SDK Support)
 * Font color customized (Awaiting SDK Support)
 
@@ -137,8 +140,6 @@ We are developers, not legal experts. If you own any of the images or content we
 This project is licensed under the MIT License. See the [LICENSE](LICENSE.md) for details.
 
 ## Image Credits
-https://www.onelogin.com/assets/img/compliance/bug_bounty_program-icon.svg
-
 https://www.bugcrowd.com/wp-content/uploads/2018/03/1803-Bugcrowd-BB-Blog-Twitter.png
 
 https://assets.bugcrowdusercontent.com/packs/images/tracker/logo/vrt-logo-ba20b1de556f194607f690788f072798.svg
