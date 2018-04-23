@@ -31,7 +31,7 @@ Who is this Alexa skill for?
     - Bug Browser has overview videos and descriptions to get developers hooked on the lifestyle that is security research. Bug Browser will walk developers through the reasons bug bounty programs exist, how they can join bug bounty platforms, and set them on their way to being a novice hacker. Bug Browser effectively exposes developers to new ways to apply their existing interests and knowledge of computer science including to develop and defeat new security techniques and find strengths and weaknesses in code.
   - What are HTTP status codes?
     - HTTP Status codes are standard codes for communicating between network requests. It is crucial to know what these codes mean when analyzing server-client interactions. Bug Browser can list 62 standard HTTP status codes.
-      - Example: `200  Success`
+      - Example: `200  OK`
 
 3. **New and Intermediate Hackers** - *Hackers who are just starting their career or hobby in security research will not have the coding experience to find bugs immediately but have enough of an understanding of code, computers, web development, server-side scripting, hardware, networking, operating systems, etcetera to learn how to hack. These hackers are likely developers looking to make additional money or improve their own skills* - Bug Browser provides tutorials for how to hack for people with basic experience and understanding in the world of computers including application and development of software in C++, C, or Python, as well as experience developing software applications in Linux, macOS, and/or Windows environments. Novice hackers can listen to the descriptions or watch the videos in the background while they work on other tasks.
 
