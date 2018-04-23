@@ -37,6 +37,10 @@ var hearMoreMessage = " Would you like to hear about another active bounty? You 
 
 var noProgramErrorMessage = "There is no program with this number.";
 
+var noLessonErrorMessage = "There is no lesson with this number. ";
+
+var hearMoreLessons = "Which lesson would you like me to play?"
+
 var generalReprompt = " What else would you like to know?";
 
 var getMoreInfoMessage = "OK, " + getMoreInfoRepromptMessage;
@@ -311,7 +315,6 @@ var alexa;
 var newSessionHandlers = {
     'LaunchRequest': function () {
         this.handler.state = states.SEARCHMODE;
-        this.attributes.lastAction = "LaunchRequest";
         output = welcomeMessage;
         this.attributes.lastSpeech = welcomeMessage;
         if (this.event.context.System.device.supportedInterfaces.Display) {
@@ -459,6 +462,18 @@ var newSessionHandlers = {
         this.handler.state = states.SEARCHMODE;
         this.emitWithState('ElementSelected');
     },
+    'AMAZON.RepeatIntent': function () {
+        this.handler.state = states.SEARCHMODE;
+        this.emitWithState('AMAZON.RepeatIntent');
+    },
+    'AMAZON.NextIntent': function () {
+        this.handler.state = states.SEARCHMODE;
+        this.emitWithState('AMAZON.NextIntent');
+    },
+    'AMAZON.PreviousIntent': function () {
+        this.handler.state = states.SEARCHMODE;
+        this.emitWithState('AMAZON.PreviousIntent');
+    },
     'AMAZON.YesIntent': function () {
         output = HelpMessage;
         this.emit(':ask', output, HelpMessage);
@@ -521,7 +536,7 @@ var newSessionHandlers = {
         this.emit('AMAZON.StopIntent');
     },
     'Unhandled': function () {
-        console.log("First Unhandled event" + this.event.request.token);
+        console.log("Second Unhandled event of token " + this.event.request.token + ' from ' + this.attributes.lastAction);
         output = HelpMessage;
         this.emit(':ask', output, welcomeReprompt);
     },
@@ -799,7 +814,13 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
 
         if (context.event.context.System.device.supportedInterfaces.Display) {
             if(context.event && context.event.request && context.event.request.intent && context.event.request.intent.slots && context.event.request.intent.slots.program && context.event.request.intent.slots.program.value && context.event.request.intent.slots.program.value != null && context.event.request.intent.slots.program.value != "?"){
-                context.emit(lessons[context.event.request.intent.slots.program.value - 1].name)
+                var desired = context.event.request.intent.slots.program.value - 1;
+                if(desired < lessons.length){
+                    context.emit(lessons[desired].name)
+                }
+                else{
+                    context.emit(':ask', noLessonErrorMessage + hearMoreLessons, hearMoreLessons);
+                }
             }
             else{
                 var content = 'Here are some things Bug Browser can teach:\n';
@@ -1072,17 +1093,21 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                                                 .setTextContent(makeRichText('<font size="1">' + cardContent + '</font>'))
                                                 .setImage(makeImage(imageObj.largeImageUrl))
                                                 .build();
+                            this.attributes.lastSpeech = output;
                             this.response.speak(output).listen(hearMoreMessage.substring(1)).cardRenderer(cardTitle, cardContent, imageObj).renderTemplate(template);                   
                             this.emit(':responseReady');
                         } else {
+                            this.attributes.lastSpeech = output;
                             this.emit(':askWithCard', output, hearMoreMessage.substring(1), cardTitle, cardContent, imageObj);
                         }
                     }
                     else {
+                        this.attributes.lastSpeech = noProgramErrorMessage + moreInfoProgram;
                         this.emit(':ask', noProgramErrorMessage + moreInfoProgram, noProgramErrorMessage + moreInfoProgram);
                     }
                 }).catch(function (err) {
                     console.log(err);
+                    this.attributes.lastSpeech = noProgramErrorMessage + moreInfoProgram;
                     self.emit(':ask', generalError, HelpMessage);
                 });
             }
@@ -1115,13 +1140,16 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
 
         }).then((hackerOnePrograms) => {
             var index;
+            var allowed = false;
             if(this.event && this.event.request && this.event.request.intent && this.event.request.intent.slots && this.event.request.intent.slots.program.value && this.event.request.intent.slots.program.value != null && this.event.request.intent.slots.program.value != "?"){
                 index = parseInt(this.event.request.intent.slots.program.value) - 1 + hackerOneMax - 25;
+                allowed = ((parseInt(this.event.request.intent.slots.program.value) + hackerOneMax) < hackerOneTotal);
             }
             else{
                 index = Math.floor(Math.random() * 25) + hackerOneMax - 25;
             }
-            if (hackerOnePrograms[index].url != null) {
+            console.log("Index is allowed? " + allowed + " because it's value is")
+            if (allowed && hackerOnePrograms[index] != null && hackerOnePrograms[index].url != null) {
                 rp({
                     uri: `https://hackerone.com` + hackerOnePrograms[index].url,
                     transform: function (body) {
@@ -1587,7 +1615,7 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                                     .setListItems(listItems)
                                     .setBackgroundImage(makeImage('https://s3.amazonaws.com/bugbrowser/images/Bug-Window-Dark.png'))
                                     .build();
-
+            this.attributes.lastSpeech = content + generalReprompt;
             this.response.speak(content + generalReprompt).cardRenderer('HTTP Status Codes', cardContent, null).renderTemplate(listTemplate).listen(HelpMessage);
             this.emit(':responseReady');
         } else {
@@ -1724,7 +1752,8 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
         }
         else if((this.event.request.token).substring(0, 21) == "hackerOneProgramToken" || (this.event.request.token).substring(0, 26) == "eventhackerOneProgramToken"){
             this.attributes.lastAction = "getMoreInfoHackerOneIntent";
-            var index = parseInt(newToken.replace(/[^0-9]/g, ''), 10) + hackerOneMax - 25; //leave only the digits
+            var index = parseInt(newToken.replace(/[^0-9]/g, ''), 10); //leave only the digits
+            console.log('Hacker One Index: ' + index);
             rp({
                 uri: `http://bugbrowsercache.s3-accelerate.amazonaws.com/hackerone.json`,
                 transform: function (body) {
@@ -1915,25 +1944,23 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                 self.emit(':ask', generalError, HelpMessage);
             });
         }
+        else{
+            console.log ('Unhandled Token Detected');
+            this.emit('Unhandled');
+        }
     },
     'AMAZON.RepeatIntent': function () { 
-        if(this.attributes.lastAction == "getOverviewVideo"){
-            this.emit('getOverviewVideo');
-        }
-        else if(this.attributes.lastAction == "getEasterEgg"){
-            this.emit('getEasterEgg');
-        }
-        else if(this.attributes.lastAction == "registerBugCrowd"){
-            this.emit('registerBugCrowd');
+        if(this.attributes.lastAction != null){
+            this.emit(this.attributes.lastAction);
         }
         else if(this.attributes.lastSpeech != null){
             this.emit('ask', this.attributes.lastSpeech, HelpMessage); 
         }
         else{
-            console.log ("Repeat speech unavailable.")
+            console.log ("Bug Browser could not find speech to repeat.")
             this.emit('ask', HelpMessage, HelpMessage)
         }
-    } ,
+    },
     'AMAZON.NextIntent': function () {
         if(this.attributes.lastAction == "getBugCrowdIntent"){
             bugCrowdPage++;
@@ -2171,7 +2198,7 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
         this.emit('AMAZON.StopIntent');
     },
     'Unhandled': function () {
-        console.log("Second Unhandled event" + this.event);
+        console.log("Second Unhandled event of token " + this.event.request.token + ' from ' + this.attributes.lastAction);
         output = HelpMessage;
         this.emit(':ask', output, welcomeReprompt);
     }
