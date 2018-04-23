@@ -22,6 +22,9 @@ Who is this Alexa skill for?
 2. **Developers** - *Developers who have experience with code, computers, and other fields of computer science but are not focused on hacking, cybersecurity, or security research as a career or hobby* - Bug Browser can introduce developers to the importance of bug bounties and bug bounty platforms.
   - How does this skill provide convenience, save time, and improve the lives of developers?
     - Bug Browser has overview videos and descriptions to get developers hooked on the lifestyle that is security research. Bug Browser will walk developers through the reasons bug bounty programs exist, how they can join bug bounty platforms, and set them on their way to being a novice hacker. Bug Browser effectively exposes developers to new ways to apply their existing interests and knowledge of computer science including to develop and defeat new security techniques and find strengths and weaknesses in code.
+  - What are HTTP status codes?
+    - HTTP Status codes are standard codes for communicating between network requests. It is crucial to know what these codes mean when analyzing server-client interactions. Bug Browser can list 62 standard HTTP status codes.
+      - Example: `200  Success`
 
 3. **New and Intermediate Hackers** - *Hackers who are just starting their career or hobby in security research will not have the coding experience to find bugs immediately but have enough of an understanding of code, computers, web development, server-side scripting, hardware, networking, operating systems, etcetera to learn how to hack. These hackers are likely developers looking to make additional money or improve their own skills* - Bug Browser provides tutorials for how to hack for people with basic experience and understanding in the world of computers including application and development of software in C++, C, or Python, as well as experience developing software applications in Linux, macOS, and/or Windows environments. Novice hackers can listen to the descriptions or watch the videos in the background while they work on other tasks.
 
@@ -33,25 +36,25 @@ Who is this Alexa skill for?
 - How does this skill provide convenience, save time, and improve the lives of security researchers?
   - Security researchers often work on their own schedule and have flexible hours. Alexa can simplify the process of learning of new programs from various platforms when security researchers have a mess of data and programs open such as packed code, virtual or sandbox environments, text editors, and online network utilities and when using Alexa is simply more convenient.
 
-What was challenging during the development process?
+**What was challenging during the development process?**
 
 Our team faced several major challenges during the development cycle:
 
-#### 1. Implementing a Graphical User Interface
+**1. Implementing a Graphical User Interface**
 
 When we started the skill we had not even thought about users who had displays like those on the Echo Spot and Echo Show as well as cards on the Fire TV and Alexa app. One of the goals we set for ourselves was to implement a GUI for Bug Browser and design the best user experience possible. Frequently referring to Amazon's resources and documentation for building user interfaces, we were able to quickly learn the differences between the templates. The next step in the development process was to find the most effective method of building a template. We had trouble implementing the display interfaces initially but soon became experts at using them after learning how to use the standard template builder methods included in the SDK for Lambda. One of the most significant challenges our team had to solve was binding a GUI touch event to an intent or function. After further research and experimentation, we were able to use the ElementSelected function to build a more captivating display experience.
 
-#### 2. Asynchronous Requests
+**2. Asynchronous Requests**
 
 From the early stages of Bug Browser, our team had agreed on a few basic design principles that would increase the efficiency and reliability of Bug Browser. One of the most important of these principles was the use of asynchronous request for HTTP GET requests because it is the best practice to avoid blocking the main thread whenever possible. We used the request-promise Node.js module for writing asynchronous requests that would retrieve image assets, JSON, and other data that would be parsed with the Cheerio module for Node.js. 
 
-#### 3. Context
+**3. Context**
 
 Alexa is a smart, conversational AI that, just like any human being, needs context in order to interpret speech and respond to a user query. Not only does Alexa require context, but it also needs to be able to remember session details that would help with routing requests to the correct destination. We implemented a system of context organization that would be able to determine the last intent a user was routed to and used it for page navigation between programs lists and program pages as well as news lists and news pages. 
 
 For example, if a user asks for *"number one"* that could either mean a HackerOne program, a BugCrowd program, or a lesson number. Session-level attributes help us know what the user wants without forcing them to be more specific.
 
-What are the accomplishments your team is proud of?
+**What are the accomplishments your team is proud of?**
 
 - Bug Browser is our first display interface skill entering production
 - Bug Browser is also our first skill which dynamically gets information and can do advanced functions with the data
