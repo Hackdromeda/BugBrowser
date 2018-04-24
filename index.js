@@ -6,6 +6,8 @@ const cheerio = require('cheerio');
 const request = require('request');
 const rp = require('request-promise');
 const Bluebird = require('bluebird');
+const _ = require('lodash')
+const alexaLists = require('@blazingedge/alexa-lists');
 
 var states = {
     SEARCHMODE: '_SEARCHMODE'
@@ -317,6 +319,14 @@ var newSessionHandlers = {
         this.handler.state = states.SEARCHMODE;
         output = welcomeMessage;
         this.attributes.lastSpeech = welcomeMessage;
+        
+        var accessToken = this.event.context.System.apiAccessToken
+        if (!this.event.context.System.user.permissions) {
+            this.emit(':tellWithPermissionCard', 'Please grant Bug Browser the permissions to read and write to your list.', 'Please grant Bug Browser the permissions to read and write to your list.', ['read::alexa:household:list','write::alexa:household:list']);
+        }
+        alexaLists.init(accessToken).createCustomList('Bug Bounties')
+        //alexaLists.init(accessToken).createNewListItem('Bug Bounties', 'Bounty 1', 'active')
+
         if (this.event.context.System.device.supportedInterfaces.Display) {
 
             var hint = hintOptions[Math.floor(Math.random() * (hintOptions.length))];

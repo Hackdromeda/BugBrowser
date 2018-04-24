@@ -1,11 +1,12 @@
 {
-  "name": "BugBrowser",
+  "name": "bugbrowser",
   "version": "1.0.0",
   "main": "index.js",
   "repository": "https://github.com/as0218PUSD/BugBrowser.git",
   "author": "Avi Shah and Naval Patel",
   "license": "MIT",
   "dependencies": {
+    "@blazingedge/alexa-lists": "^1.0.0",
     "alexa-sdk": "1.0.25",
     "cheerio": "^1.0.0-rc.2",
     "jquery": "3.3.1",
