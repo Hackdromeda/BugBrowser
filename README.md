@@ -188,6 +188,9 @@ We are developers, not legal experts. If you own any of the images or content we
 ## License
 This project is licensed under the MIT License. See the [LICENSE](LICENSE.md) for details.
 
+## Privacy Policy
+See the [PRIVACY POLICY](PRIVACYPOLICY.md) for details.
+
 ## Image Credits
 https://www.bugcrowd.com/wp-content/uploads/2018/03/1803-Bugcrowd-BB-Blog-Twitter.png
 
