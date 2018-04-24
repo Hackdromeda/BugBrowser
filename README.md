@@ -4,24 +4,43 @@ Bug Browser is your one-stop skill for everything cybersecurity. Bug Browser wil
 Developed in the Bay Area by Avi Shah and Naval Patel
 
 # MISSING from README:
-- Testimonials from all tiers of users
-- Explanation of life of security researcher and why this improves their lives (work at home skill prize explanation) 
-- Explanation of how we dynamically get data
-- Caching system for faster response time
-- Challenges: ElementSelected, etc.
+- Testimonials from **all** tiers of users
+- Explanation of life of security researcher and why this improves their lives **(work at home skill prize explanation)** 
+- Explanation of how we dynamically get data (see section below)
+- Caching system for faster response time (see section below)
+- Challenges: ElementSelected, etc. (see section below)
+
+## Testimonials
+
+*"For bug bounty hunters, bug hunting is a passion. The Bug Browser Alexa Skill allows a hacker to keep up to date with hacking news, helps them find stuff to hack on, and it can even teach some of the basics of hacking. And this can all come from a device on your countertop. Very cool!"*
+
+-Sam
+*Senior Community Manager at BugCrowd*
 
 ## Enable the Skill:
 [Amazon US Skill](https://www.amazon.com/dp/B07BPVH1S5/)
 
 ## Inspiration
-We realized that there were very few skills for [security researchers](https://www.amazon.com/s/ref=nb_sb_noss_2?url=search-alias%3Dalexa-skills&field-keywords=Hacker) and [developers](https://www.amazon.com/s/ref=nb_sb_noss_2?url=search-alias%3Dalexa-skills&field-keywords=Developer) after meeting with the principal engineer and the community manager at BugCrowd at Los Altos Hacks III. They challenged us to create a skill that would a) inform them of active bug bounties, b) provide details about the specific bounties, and c) make their lives as security researchers easier in any other way. 
+
+**Where did the idea come from?**
+
+We realized that there were very few skills for [security researchers](https://www.amazon.com/s/ref=nb_sb_noss_2?url=search-alias%3Dalexa-skills&field-keywords=Hacker) and [developers](https://www.amazon.com/s/ref=nb_sb_noss_2?url=search-alias%3Dalexa-skills&field-keywords=Developer) after meeting with the principal engineer and the community manager at BugCrowd at Los Altos Hacks III. They challenged us to create a skill that would a) inform them of active bug bounties, b) provide details about the specific bounties, and c) make their lives as security researchers easier in any other way.
+
+What motivated you?
+
+We wanted to tap the [over 166,000](https://www.hackerone.com/sites/default/files/2018-01/2018_Hacker_Report.pdf) registered ethical hackers on HackerOne (as of December 2017) and the [over 60,000](https://www.bugcrowd.com/resource/2017-state-of-bug-bounty/) registered security researchers on BugCrowd and hundreds of thousands of developers who do not have many skills meant to help them with their work from home or programming passions. We also wanted to make the skill applicable to the general public.
+
+These are the crowdsourced heroes who help keep our data safe. **One thing we hate the most** is losing our precious data to black hat hackers or cyber criminals as a result of undiscovered security vulnerabilities. Companies such as Facebook could have benefitted from larger exposure to their existing bug bounty programs or new bug bounty programs. **This is where our skill comes in, it gives larger exposure to public bug bounty programs with an emphasis on new ones.**
 
 ## Mission
-Why bug bounties?
+
+**Why bug bounties?**
 
 A large part of our days now revolve around devices and being connected to the internet. Customers have come to expect security and confidence in the company handling their data. Even the best developers in the world can leave security vulnerabilities open in their applications. Platforms such as BugCrowd and HackerOne make it easier for security researchers to get connected with companies and allow companies to reach a vast network of researchers. Breaches and security vulnerabilities are expensive to recover from, much more expensive than the few-thousand-dollar reward hackers receive for their finding(s). Facebook, Equifax, Intel, 24/7 AI, eBay, Home Depot, Target, and a handful of other companies have experienced security breaches as a result of vulnerabilities exploited by black hat hackers and their reputations have suffered as a result.
 
-Who is this Alexa skill for?
+## Use Cases 
+*Who is this Alexa skill for?*
+
 1. **General Public** - *All customers and clients value their private data. As such, they expect the company entrusted with their data to do everything in their power to protect that data. Now more than ever, breaches of customer data are a common occurance. Users should not, however, become desensitized or numb to such news but rather proactively take action to protect their data.* - Bug Browser can help anyone keep up-to-date on the latest news about security vulnerabilities, hacks, and other cybersecurity issues. 
   - How does this skill provide convenience, save time, and improve the lives of the general public?
     - Bug Browser provides focused news on the topic of cybersecurity. In today's fast paced news cycle, not everyone in the public is made aware of hacks and vulnerabilities that afffect them. Users who learn they are affected by a security breach thorugh Bug Browser can then take proactive steps to prevent further losses by changing their password, freezing their credit reports, activating identity protection services, canceling their credit cards, updating their computer or device software, and/or using 2-factor authentication. Bug Browser ultimately can save the general public from the headaches of recovering lost accounts and data, reversing unauthorized transactions, and more.
@@ -38,10 +57,12 @@ Who is this Alexa skill for?
 - How does this skill provide convenience, save time, and improve the lives of novice hackers?
   - Bug Browser can describe specific vulnerabilities, how to find security flaws, and explain how to get paid with bug bounties. Whether users are interested in learning about bug bounties, have a background in computer science, or are seasoned security professionals, they can learn something from Bug Browsers library of lessons (powered by [Hacker101](https://github.com/Hacker0x01/hacker101)). 
  
-4. **Active Security Researchers** - *Security researchers do not work your typical 9-to-5 workday. People in this field do not have to have a college diploma or a certification to do it, just a good understanding of programming, computers, and hardware. Security research can be challenging but very rewarding. Ethical hackers protect companies, organizations, and institutions from abuse from malicious hackers. These ethical hackers gain anything from points on the platform to monetary rewards.* - Security researchers can ask about active programs, get more details about these programs, and refer back to the skill for updates and new programs daily.
+4. **Active Security Researchers** - *Security researchers do not work your typical 9-to-5 workday. People in this field do not have to have a college diploma or a certification to do it, just a good understanding of programming, computers, and hardware. Security research can be challenging but very rewarding. Ethical hackers protect companies, organizations, and institutions from abuse from malicious hackers. These ethical hackers gain anything from points on the platform to monetary rewards.* - Security researchers can ask about active programs, get more details about these programs, and refer back to the skill for updates and new programs daily. We can reach the [over 166,000](https://www.hackerone.com/sites/default/files/2018-01/2018_Hacker_Report.pdf) registered ethical hackers on HackerOne (as of December 2017) and the [over 60,000](https://www.bugcrowd.com/resource/2017-state-of-bug-bounty/) registered security researchers on BugCrowd in addition the the developer and general public audiences.
 
 - How does this skill provide convenience, save time, and improve the lives of security researchers?
-  - Security researchers often work on their own schedule and have flexible hours. Alexa can simplify the process of learning of new programs from various platforms when security researchers have a mess of data and programs open such as packed code, virtual or sandbox environments, text editors, and online network utilities and when using Alexa is simply more convenient.
+  - Security researchers often work on their own schedule and have flexible hours. Alexa can simplify the process of learning of new programs (list sorted by NEWEST first) from various platforms. They can do this from their Echo Spot, Echo Show, Fire TV, Dash Wand, Alexa App, Fire TV, and other Alexa-enabled devices.
+
+## Skill Development Cycle
 
 **What was challenging during the development process?**
 
@@ -69,7 +90,20 @@ For example, if a user asks for *"number one"* that could either mean a HackerOn
 - Coming up with a unique use case for Alexa that meets the needs of security researchers and can be used by anyone interested in cybersecurity and security vulnerabilities
 - Partnering with BugCrowd to see what security researchers want in an Alexa skill
 
-# Features:
+# Features
+
+## Dynamic Content
+*Programs join these platforms and/or go public often and as such we do not manually update information for dynamic aspects of the skill.*
+
+BugCrowd - Since BugCrowd's APIs are not currently available to researchers, we used Cheerio to get data from their website. In just a few hundred milliseconds, users are presented with a list of programs with pictures (Echo Spot and Echo Show only) and can request additonal details about specific programs to get a readout and Alexa card with additional details.
+
+HackerOne - Here we leverage HackerOne's API to get their active programs list. We cache data from their APIs for a faster response time.
+
+NewsAPI - NewsAPI helps us connect users with several news sources. We no longer need to wait for several endpoints just to get a diverse set of sources, instead we can quickly deliver cybersecurity information to the user.
+
+## Supported Phrases
+*Try some of these sample utterances:*
+
 * Learn about BugCrowd and HackerOne
   * Try, *Alexa ask Bug Browser to tell me some facts about BugCrowd.*
   * Try, *Alexa ask Bug Browser to introduce me to BugCrowd.*
@@ -79,14 +113,14 @@ For example, if a user asks for *"number one"* that could either mean a HackerOn
 * Learn how to use BugCrowd
   * Try, *Alexa how do you use BugCrowd?*
   
-* Get bounties from BugCrowd and/or HackerOne
+* Get bounties from BugCrowd and/or HackerOne (Sorted by NEWEST first)
   * Try, *Alexa ask Bug Browser, how do you find bounties?*
   * Try, *Alexa ask Bug Browser, what companies are looking for security researchers?*
   * Try, *Alexa ask Bug Browser, what are some bounties available from BugCrowd?*
   * Try, *Alexa ask Bug Browser to tell me about HackerOne programs*
   * See the Alexa app or interface for the list of programs (iOS, Android, and Fire TV)
    
-* Get more bounties beyond the first set of cards provided
+* Get more bounties beyond the first set of cards provided (Sorted by NEWEST first)
   * Try, *Alexa next page*
   * Try, *Alexa previous page*
   * Try, *Yes* when prompted if you want to hear more programs
@@ -136,6 +170,7 @@ For example, if a user asks for *"number one"* that could either mean a HackerOn
 * Highlight text and automatically switch cards for Display Interface (Awaiting SDK Support)
 * Font color customized (Awaiting SDK Support)
 * Learn about bugs in your own code (ArrayOutOfBounds exception in Java, etc.)
+* Notifications on your watch list of programs (Notifications SDK is Invite-Only for Alexa)
 
 # Built With
 * [Node.js](https://nodejs.org/en/)
