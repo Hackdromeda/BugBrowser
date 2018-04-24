@@ -1189,6 +1189,7 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                 var images = xtralarge;
                 var selectedProgram = sanitizeInput(hackerOnePrograms[index].name);
                 if (selectedProgram != null && hackerOnePrograms[index].url != null) {
+                    this.attributes.lastProgram = selectedProgram;
                     if (hackerOnePrograms[index].meta.minimum_bounty && hackerOnePrograms[index].meta.default_currency == 'usd') {
                         var bounty = 'This program has a minimum bounty of $' + hackerOnePrograms[index].meta.minimum_bounty + '.';
                     } else {
