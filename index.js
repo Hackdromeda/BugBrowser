@@ -1273,7 +1273,9 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
         var accessToken = this.event.context.System.apiAccessToken;
         if (this && this.event && this.event.context && this.event.context.System && this.event.context.System.user && !this.event.context.System.user.permissions) {
             this.emit(':askWithPermissionCard', 'Please grant Bug Browser the permissions to read and write to your list. Then open Bug Browser after you have granted Bug Browser the required permissions.', 'Please grant Bug Browser the permissions to read and write to your list. Then open Bug Browser after you have granted Bug Browser the required permissions.', ['read::alexa:household:list','write::alexa:household:list']);
-        } else {
+        } else if (!this.attributes.lastProgram) {
+            this.emit(':ask', 'You have not selected any programs to add to your list. What else would you like me to do?', 'I was unable to add a program to your list.');
+        }  else {
             alexaLists.init(accessToken).createNewListItem('Bug Bounties', this.attributes.lastProgram, 'active').then(() => {
                 this.emit(':ask', 'Added ' + this.attributes.lastProgram + ' to your Bug Bounties list. What else would you like me to do?', 'I was unable to add a program to your list.');
             }).catch(() => {
