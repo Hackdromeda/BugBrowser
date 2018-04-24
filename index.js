@@ -319,13 +319,21 @@ var newSessionHandlers = {
         this.handler.state = states.SEARCHMODE;
         output = welcomeMessage;
         this.attributes.lastSpeech = welcomeMessage;
-        
-        var accessToken = this.event.context.System.apiAccessToken
-        if (!this.event.context.System.user.permissions) {
-            this.emit(':tellWithPermissionCard', 'Please grant Bug Browser the permissions to read and write to your list.', 'Please grant Bug Browser the permissions to read and write to your list.', ['read::alexa:household:list','write::alexa:household:list']);
+
+        var accessToken = this.event.context.System.apiAccessToken;
+
+        if (this && this.event && this.event.context && this.event.context.System && this.event.context.System.user && !this.event.context.System.user.permissions) {
+            this.emit(':askWithPermissionCard', 'Please grant Bug Browser the permissions to read and write to your list. Then open Bug Browser after you have granted Bug Browser the required permissions.', 'Please grant Bug Browser the permissions to read and write to your list. Then open Bug Browser after you have granted Bug Browser the required permissions.', ['read::alexa:household:list','write::alexa:household:list']);
+        } else {
+            alexaLists.init(accessToken).getList('Bug Browser', 'active').catch((err) => {
+                console.log('List already exists or there is another error.')
+            }).catch((err) => {
+                alexaLists.init(accessToken).createCustomList('Bug Bounties').catch((err) => {
+                    console.log(err);
+                });
+            });
+            
         }
-        alexaLists.init(accessToken).createCustomList('Bug Bounties')
-        //alexaLists.init(accessToken).createNewListItem('Bug Bounties', 'Bounty 1', 'active')
 
         if (this.event.context.System.device.supportedInterfaces.Display) {
 
@@ -439,6 +447,10 @@ var newSessionHandlers = {
     'getHackerOneIntent': function() {
         this.handler.state = states.SEARCHMODE;
         this.emitWithState('getHackerOneIntent');
+    },
+    'listIntent': function() {
+        this.handler.state = states.SEARCHMODE;
+        this.emitWithState('listIntent');
     },
     'getProgramsIntent': function () {
         this.handler.state = states.SEARCHMODE;
@@ -865,6 +877,7 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
     'getBugCrowdIntent': function () {
         var self = this;
         this.attributes.lastAction = "getBugCrowdIntent";
+        
             rp({
               uri: `https://bugcrowd.com/programs/reward?page=` + bugCrowdPage,
               transform: function (body) {
@@ -1085,6 +1098,7 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                     }
                     var selectedProgram = programs[index];
                     if (selectedProgram != null && urls[index] != null) {
+                        this.attributes.lastProgram = selectedProgram;
                         output = programs[index] + " is offering a bounty between " + rewards[index+1].replace(/–/g, 'and') + ". " + numOfVrts + validationTime + payout + ". Additional details are available at bugcrowd.com" + urls[index] + "." + hearMoreMessage;
                         var cardTitle = programs[index];
                         var cardContent = programs[index] + " is offering a bounty between " + rewards[index+1].replace(/–/g, 'and') + ". " + numOfVrts + validationTime + payout + ". Additional details are available at bugcrowd.com" + urls[index] + ".";
@@ -1252,6 +1266,19 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
             console.log(err);
             self.emit(':ask', generalError, HelpMessage);
         });
+    },
+    'listIntent': function() {
+        this.handler.state = states.SEARCHMODE;
+        var accessToken = this.event.context.System.apiAccessToken;
+        if (this && this.event && this.event.context && this.event.context.System && this.event.context.System.user && !this.event.context.System.user.permissions) {
+            this.emit(':askWithPermissionCard', 'Please grant Bug Browser the permissions to read and write to your list. Then open Bug Browser after you have granted Bug Browser the required permissions.', 'Please grant Bug Browser the permissions to read and write to your list. Then open Bug Browser after you have granted Bug Browser the required permissions.', ['read::alexa:household:list','write::alexa:household:list']);
+        } else {
+            alexaLists.init(accessToken).createNewListItem('Bug Bounties', this.attributes.lastProgram, 'active').then(() => {
+                this.emit(':ask', 'Added ' + this.attributes.lastProgram + ' to your Bug Bounties list. What else would you like me to do?', 'I was unable to add a program to your list.');
+            }).catch(() => {
+                this.emit(':ask', 'Bug Browser is unable to add ' + this.attributes.lastProgram + ' to your Bug Bounties list. What else would you like me to do?', 'I was unable to add a program to your list.');
+            })
+        }
     },
     'getProgramsIntent': function () {
         output = "Would you like to hear about the active BugCrowd programs? If so, please say tell me active BugCrowd bounties. If you would like to hear about active HackerOne bounties, please say tell me active HackerOne bounties. What would you like me to do?";
@@ -1726,6 +1753,7 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                         }
                         var selectedProgram = programs[index];
                         if (selectedProgram != null && urls[index] != null) {
+                            this.attributes.lastProgram = selectedProgram;
                             output = programs[index] + " is offering a bounty between " + rewards[index+1].replace(/–/g, 'and') + ". " + numOfVrts + validationTime + payout + ". Additional details are available at bugcrowd.com" + urls[index] + "." + hearMoreMessage;
                             var cardTitle = programs[index];
                             var cardContent = programs[index] + " is offering a bounty between " + rewards[index+1].replace(/–/g, 'and') + ". " + numOfVrts + validationTime + payout + ". Additional details are available at bugcrowd.com" + urls[index] + ".";
@@ -1796,6 +1824,7 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                     var images = xtralarge;
                     var selectedProgram = sanitizeInput(hackerOnePrograms[index].name);
                     if (selectedProgram != null && hackerOnePrograms[index].url != null) {
+                        this.attributes.lastProgram = selectedProgram;
                         if (hackerOnePrograms[index].meta.minimum_bounty && hackerOnePrograms[index].meta.default_currency == 'usd') {
                             var bounty = 'This program has a minimum bounty of $' + hackerOnePrograms[index].meta.minimum_bounty + '.';
                         } else {

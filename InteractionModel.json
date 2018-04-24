@@ -205,6 +205,23 @@
                     ]
                 },
                 {
+                    "name": "listIntent",
+                    "slots": [],
+                    "samples": [
+                        "add to watch list",
+                        "add this to my watch list",
+                        "add this program to my list",
+                        "save this program",
+                        "watch this program",
+                        "add to list",
+                        "add this program to list",
+                        "add to bug bounties list",
+                        "add to bounties list",
+                        "keep track of this",
+                        "keep track of this program"
+                    ]
+                },
+                {
                     "name": "getBugCrowdIntent",
                     "slots": [],
                     "samples": [
