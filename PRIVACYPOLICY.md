@@ -6,4 +6,4 @@ The Privacy Policy has last been updated on April 24, 2018. Bug Browser can coll
 3. Read lists in the Alexa app
 4. Write to lists in the Alexa app
 
-We are committed to protecting the privacy and confidentiality of Bug Browser users' private data. We may have to provide personal information to comply with the policies of the local jurisdiction where Bug Browser is hosted on AWS Lambda (U.S. East Virginia). If you have any questions about our data collection policies and methods, feel free to send us a message on GitHub.
+We are committed to protecting the privacy and confidentiality of Bug Browser users' private data. We may have to provide personal information to comply with the policies of the local jurisdiction where Bug Browser is hosted on AWS Lambda (US East North Virginia). If you have any questions about our data collection policies and methods, feel free to send us a message on GitHub.
