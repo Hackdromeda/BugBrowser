@@ -321,7 +321,6 @@ var newSessionHandlers = {
         this.attributes.lastSpeech = welcomeMessage;
 
         var accessToken = this.event.context.System.apiAccessToken;
-
         if (this && this.event && this.event.context && this.event.context.System && this.event.context.System.user && !this.event.context.System.user.permissions) {
             this.emit(':askWithPermissionCard', 'Please grant Bug Browser the permissions to read and write to your list. Then open Bug Browser after you have granted Bug Browser the required permissions.', 'Please grant Bug Browser the permissions to read and write to your list. Then open Bug Browser after you have granted Bug Browser the required permissions.', ['read::alexa:household:list','write::alexa:household:list']);
         } else {
@@ -479,6 +478,10 @@ var newSessionHandlers = {
     'getHelpIntent': function () {
         this.handler.state = states.SEARCHMODE;
         this.emitWithState('getHelpIntent');
+    },
+    'checkForHacks': function () {
+        this.handler.state = states.SEARCHMODE;
+        this.emitWithState('checkForHacks');
     },
     'ElementSelected': function () {
         this.handler.state = states.SEARCHMODE;
@@ -2230,6 +2233,89 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                 content += (i + 1) + ". " + helpMessages[i].message + ". \n";
             }
             context.emit(':askWithCard', content + generalReprompt, HelpMessage, 'Bug Browser Help', content);
+        }
+    },
+    'checkForHacks': function () {
+        var accessToken = this.event.session.user.accessToken;
+        var self = this;
+        console.log('Access Token=' + accessToken);
+        if(accessToken === null || accessToken === undefined) { 
+            var linkError = "Please use the Alexa app to link your Amazon account to this skill. Login with Amazon is used to access your email and lookup security vulnerabilities that might have affected you. In the meantime, what else would you like me to do?";
+            self.emit(':askWithLinkAccountCard', linkError);
+        } else {
+            rp({
+                uri: `https://api.amazon.com/user/profile?access_token=` + accessToken,
+                transform: function (body) {
+                    return JSON.parse(body);
+                }
+            }).then((profile) => {
+                email = profile.email.split(" ")[0];
+                name = profile.name.split(" ")[0];
+                console.log(name);
+                console.log(email);
+                var map = new Map();
+                map.set(0, name);
+                map.set(1, email)
+                return map;
+            }).then((map) => {
+                var name = map.get(0);
+                var email = map.get(1);
+                rp({
+                    uri: `https://haveibeenpwned.com/api/v2/breachedaccount/` + email,
+                    headers: {
+                        'User-Agent': 'Bug-Browser'
+                    },
+                    transform: function (body) {
+                        return JSON.parse(body);
+                    }
+                }).then((data) => {
+                    if(data.length == 0){
+                        var noneMsg = "Looks like you have browsed the web scot-free! I could not find any vulnerabilities that exposed your email. What else would you like to do?"
+                        console.log(err);
+                        self.emit(':ask', noneMsg, HelpMessage);
+                    }
+                    var hackedSites = [];
+                    var hackedNames = [];
+                    var imageUrls = [];
+                    var descriptions = [];
+                    var breachDates = [];
+                    var hackNum = data.length;
+
+                    for (var i = 0; i < data.length; i++) { //add ternary operater for limit to 25
+                        hackedSites.push(data[i].Domain);
+                        hackedNames.push(data[i].Name);
+                        imageUrls.push("https://haveibeenpwned.com/Content/Images/PwnedLogos/" + data[i].Domain + "." + data[i].LogoType); //add check for null
+                        descriptions.push(data[i].Description);
+                        breachDates.push(data[i].BreachDate);
+                    }
+                    var map = new Map();
+                    map.set(0, hackedSites);
+                    map.set(1, hackedNames);
+                    map.set(2, imageUrls);
+                    map.set(3, descriptions);
+                    map.set(4, breachDates);
+                    map.set(5, hackNum);
+                    return map;
+                }).then((map) => {
+                    var hackedSites = map.get(0);
+                    var hackedNames = map.get(1);
+                    var imageUrls = map.get(2);
+                    var descriptions = map.get(3);
+                    var breachDates = map.get(4);
+                    var hackNum = map.get(5);
+                    
+                    var speechOutput = "Okay, " + name + ". Your email " + email + " has been hacked " + hackNum + " times."; //list out where. add description to card and let them know you sent info to card
+                    self.emit(':ask', speechOutput + generalReprompt, HelpMessage)
+                }).catch(function (err) {
+                    var noneMsg = "Looks like you have browsed the web scot-free! I could not find any vulnerabilities that exposed your email. What else would you like to do?"
+                    console.log(err);
+                    self.emit(':ask', noneMsg, HelpMessage);
+                });
+            }).catch(function (err) {
+                var lookupError = "The lookup tool is unavailable at this time. In the meantime, what else would you like to do?"
+                console.log(err);
+                self.emit(':ask', lookupError, HelpMessage);
+            });
         }
     },
     'AMAZON.CancelIntent': function () {
