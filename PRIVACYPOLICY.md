@@ -18,19 +18,15 @@ We are committed to protecting the privacy and confidentiality of Bug Browser us
 
 The purpose of this skill is to help create a more secure web and help create bug-free code. As such, we do not sell or trade to outside parties your personal information. We also do not transfer this information without your express consent (see account linking below). We do not sell or offer third-party products or services on our skill.
 
-By using our Alexa Skill, you hereby consent to our Privacy Policy, our [License](LICENSE.md), and agree to any applicable Terms and Conditions including those of Alexa and Amazon.
+**By using our Alexa Skill, you hereby consent to our [Privacy Policy](PRIVACYPOLICY.md), our [License](LICENSE.md), our [Terms of Use](TERMSOFUSE.md) and agree to any applicable Terms and Conditions including those of the APIs used, Alexa, and Amazon.**
+
+# Personal Information
+Here is additional information to help you understand how Alexa skills work with an explanation on how we process the data as needed. Information adopted from [here](https://petsymposium.org/2017/papers/hotpets/amazon-alexa-skills-ecosystem-privacy.pdf).
 
 ## COPPA (US)
 Children Online Privacy Protection Act
 
 The Children's Online Privacy Protection Act (COPPA) puts parents in control when it comes to the collection of personal information from children under the age of 13 years old. We do not specifically market to children under the age of 13 years old. Our target audiences are laid out in the [README](README.md).
-
-## Questions
-
-Should you have any questions about our policies or skill, please reach out to use via GitHub messages or our contact information on GitHub.
-
-# Personal Information
-Here is additional information to help you understand how Alexa skills work with an explanation on how we process the data as needed. Information adopted from [here](https://petsymposium.org/2017/papers/hotpets/amazon-alexa-skills-ecosystem-privacy.pdf).
 
 ## Audio availability
 
@@ -53,3 +49,7 @@ Developers can configure their Skill to request access to the address of the use
 Developers can configure their skill to request access to the profile scope of an Amazon user's account through Login with Amazon. When a user unlinks or uninstall the Skill, the developer immediately lose access to their name and email.
 
    * Account linking is used to get your email address and check if your email address has been involved in internet hacks. This uses data from Have I Been Pwned. This information is not sold or traded.
+   
+# Questions
+
+Should you have any questions about our policies or skill, please reach out to use via GitHub messages or our contact information on GitHub.
