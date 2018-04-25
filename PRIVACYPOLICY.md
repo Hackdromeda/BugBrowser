@@ -8,7 +8,7 @@ The Privacy Policy was last updated on April 25, 2018. Bug Browser and its devel
 3. Read, write, and create lists in the Alexa app
 4. Analytics automatically collected by Amazon
 5. Provide information to APIs
-    * [Have I Been Pwned](https://haveibeenpwned.com/API/v2) receives your email address to check for any security vulnerabilites or flaws that exposed your data.
+    * [Have I Been Pwned](https://haveibeenpwned.com/API/v2) receives your email address to check for any security vulnerabilities or flaws that exposed your data.
     * [Alexa List API](https://developer.amazon.com/alexa-skills-kit/shopping-and-to-do-lists) receives the programs you want to save to your Alexa list.
     * [News API](https://newsapi.org/docs) does not receive any personal information.
     * [Bing Web Search API](https://azure.microsoft.com/en-us/services/cognitive-services/bing-web-search-api/) receives your query which may include any personal information you speak.
@@ -21,7 +21,7 @@ The purpose of this skill is to help create a more secure web and help create bu
 **By using our Alexa Skill, you hereby consent to our [Privacy Policy](PRIVACYPOLICY.md), our [License](LICENSE.md), our [Terms of Use](TERMSOFUSE.md) and agree to any applicable Terms and Conditions including those of the APIs used, Alexa, and Amazon.**
 
 # Personal Information
-Here is additional information to help you understand how Alexa skills work with an explanation on how we process the data as needed. Information adopted from [here](https://petsymposium.org/2017/papers/hotpets/amazon-alexa-skills-ecosystem-privacy.pdf).
+Here is additional information to help you understand how Alexa skills work with an explanation of how we process the data as needed. Information adapted from [here](https://petsymposium.org/2017/papers/hotpets/amazon-alexa-skills-ecosystem-privacy.pdf).
 
 ## COPPA (US)
 Children Online Privacy Protection Act
@@ -46,10 +46,10 @@ Developers can configure their Skill to request access to the address of the use
 
 ## Account Linking
 
-Developers can configure their skill to request access to the profile scope of an Amazon user's account through Login with Amazon. When a user unlinks or uninstall the Skill, the developer immediately lose access to their name and email.
+Developers can configure their skill to request access to the profile scope of an Amazon user's account through Login with Amazon. When a user unlinks or uninstalls the Skill, the developer immediately loses access to their name and email.
 
    * Account linking is used to get your email address and check if your email address has been involved in internet hacks. This uses data from Have I Been Pwned. This information is not sold or traded.
    
 # Questions
 
-Should you have any questions about our policies or skill, please reach out to use via GitHub messages or our contact information on GitHub.
+Should you have any questions about our policies or skill, please reach out to us via GitHub messages or our contact information on GitHub.
