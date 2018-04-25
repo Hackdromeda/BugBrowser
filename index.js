@@ -2314,7 +2314,7 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                             if (descriptions[i]) {
                                 speak += ' ' + sanitizeInput(descriptions[i]) + " ";
                             }
-                            listItemBuilder.addItem(makeImage(imageUrls[i]), 'accountBreachListItemToken' + i, makeRichText("<font size='2'>" + hackedNames[i] + "</font>"), makeRichText("<font size='1'>" + "Breache Occurred " + "<i>" + breachDates[i] + "</i>" + "</font>"));
+                            listItemBuilder.addItem(makeImage(imageUrls[i]), 'accountBreachListItemToken' + i, makeRichText("<font size='2'>" + hackedNames[i] + "</font>"), makeRichText("<font size='1'>" + "Breach Occurred " + "<i>" + breachDates[i] + "</i>" + "</font>"));
                         }
                         
 
