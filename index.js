@@ -320,20 +320,6 @@ var newSessionHandlers = {
         output = welcomeMessage;
         this.attributes.lastSpeech = welcomeMessage;
 
-        var accessToken = this.event.context.System.apiAccessToken;
-        if (this && this.event && this.event.context && this.event.context.System && this.event.context.System.user && !this.event.context.System.user.permissions) {
-            this.emit(':askWithPermissionCard', 'Please grant Bug Browser the permissions to read and write to your list. Then open Bug Browser after you have granted Bug Browser the required permissions.', 'Please grant Bug Browser the permissions to read and write to your list. Then open Bug Browser after you have granted Bug Browser the required permissions.', ['read::alexa:household:list','write::alexa:household:list']);
-        } else {
-            alexaLists.init(accessToken).getList('Bug Browser', 'active').catch((err) => {
-                console.log('List already exists or there is another error.')
-            }).catch((err) => {
-                alexaLists.init(accessToken).createCustomList('Bug Bounties').catch((err) => {
-                    console.log(err);
-                });
-            });
-            
-        }
-
         if (this.event.context.System.device.supportedInterfaces.Display) {
 
             var hint = hintOptions[Math.floor(Math.random() * (hintOptions.length))];
@@ -526,7 +512,7 @@ var newSessionHandlers = {
                 const template = builder.setTitle('Bug Browser')
                                         .setToken('cancelIntentToken')
                                         .setBackButtonBehavior('HIDDEN')
-                                        .setBackgroundImage(makeImage('https://s3.amazonaws.com/bugbrowser/images/Security+Vulnerability.jpg'))
+                                        .setBackgroundImage(makeImage('https://s3.amazonaws.com/bugbrowser/images/Security+Vulnerability.png'))
                                         .setTextContent(makeRichText('<font size="3">' + content + '</font>'))
                                         .build();
                 this.response.speak(speakContent + ' Anyways, Bug Browser is going to sleep for now.').renderTemplate(template);                   
@@ -2100,7 +2086,7 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                 const template = builder.setTitle('Bug Browser')
                                         .setToken('cancelIntentToken')
                                         .setBackButtonBehavior('HIDDEN')
-                                        .setBackgroundImage(makeImage('https://s3.amazonaws.com/bugbrowser/images/Security+Vulnerability.jpg'))
+                                        .setBackgroundImage(makeImage('https://s3.amazonaws.com/bugbrowser/images/Security+Vulnerability.png'))
                                         .setTextContent(makeRichText('<font size="3">' + content + '</font>'))
                                         .build();
                 this.response.speak(speakContent + ' Anyways, Bug Browser is going to sleep for now.').renderTemplate(template);                   
@@ -2238,6 +2224,7 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
     'checkForHacks': function () {
         var accessToken = this.event.session.user.accessToken;
         var self = this;
+        var hasDisplay = this.event.context.System.device.supportedInterfaces.Display
         console.log('Access Token=' + accessToken);
         if(accessToken === null || accessToken === undefined) { 
             var linkError = "Please use the Alexa app to link your Amazon account to this skill. Login with Amazon is used to access your email and lookup security vulnerabilities that might have affected you. In the meantime, what else would you like me to do?";
@@ -2303,9 +2290,32 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                     var descriptions = map.get(3);
                     var breachDates = map.get(4);
                     var hackNum = map.get(5);
-                    
-                    var speechOutput = "Okay, " + name + ". Your email " + email + " has been hacked " + hackNum + " times."; //list out where. add description to card and let them know you sent info to card
-                    self.emit(':ask', speechOutput + generalReprompt, HelpMessage)
+
+                    var speak = "Okay, " + name + ". Your email " + email + " has been hacked " + hackNum + " times.";
+
+                    if (hasDisplay) {
+                        const listItemBuilder = new Alexa.templateBuilders.ListItemBuilder();
+                        const listTemplateBuilder = new Alexa.templateBuilders.ListTemplate1Builder();
+                        for (var i = 0; i < hackedSites.length; i++) {
+                            if (descriptions[i]) {
+                                speak += ' ' + sanitizeInput(descriptions[i]) + " ";
+                            }
+                            listItemBuilder.addItem(imageUrls[i], 'accountBreachListItemToken' + i, makeRichText("<font size='2'>" + hackedNames[i] + "</font>"), makeRichText("<font size='1'>" + "Say " + "<i>" + breachDates[i] + "</i>" + "</font>"));
+                        }
+                        
+
+                        const listItems = listItemBuilder.build();
+                        const listTemplate = listTemplateBuilder.setToken('checkedHacksListToken')
+                                                .setTitle('Account Breaches')
+                                                .setListItems(listItems)
+                                                .setBackgroundImage(makeImage('https://s3.amazonaws.com/bugbrowser/images/Security+Vulnerability.png'))
+                                                .build();
+
+                            context.response.speak(speak).renderTemplate(listTemplate).cardRenderer(cardTitle, content, null).listen(speak);
+                            context.emit(':responseReady');
+                    } else {
+                        self.emit(':ask', speak + generalReprompt, HelpMessage, 'Account Security Breaches', speak)
+                    }
                 }).catch(function (err) {
                     var noneMsg = "Looks like you have browsed the web scot-free! I could not find any vulnerabilities that exposed your email. What else would you like to do?"
                     console.log(err);
