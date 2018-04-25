@@ -2268,11 +2268,11 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                     var breachDates = [];
                     var hackNum = data.length;
 
-                    for (var i = 0; i < data.length; i++) { //add ternary operater for limit to 25
+                    for (var i = 0; i < data.length; i++) {
                         hackedSites.push(data[i].Domain);
                         hackedNames.push(data[i].Name);
                         imageUrls.push("https://haveibeenpwned.com/Content/Images/PwnedLogos/" + data[i].Domain + "." + data[i].LogoType); //add check for null
-                        descriptions.push(data[i].Description);
+                        descriptions.push(data[i].Description.replace(/<(.|\n)*?>/g, ''));
                         breachDates.push(data[i].BreachDate);
                     }
                     var map = new Map();
@@ -2291,7 +2291,7 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                     var breachDates = map.get(4);
                     var hackNum = map.get(5);
 
-                    var speak = "Okay, " + name + ". Your email " + email + " has been hacked " + hackNum + " times.";
+                    var speak = "Okay, " + name + ". Your email " + email + " has been hacked " + hackNum + ((hackNum == 1) ? " time.": " times.");
 
                     if (hasDisplay) {
 
@@ -2314,7 +2314,7 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                             if (descriptions[i]) {
                                 speak += ' ' + sanitizeInput(descriptions[i]) + " ";
                             }
-                            listItemBuilder.addItem(makeImage(imageUrls[i]), 'accountBreachListItemToken' + i, makeRichText("<font size='2'>" + hackedNames[i] + "</font>"), makeRichText("<font size='1'>" + "Say " + "<i>" + breachDates[i] + "</i>" + "</font>"));
+                            listItemBuilder.addItem(makeImage(imageUrls[i]), 'accountBreachListItemToken' + i, makeRichText("<font size='2'>" + hackedNames[i] + "</font>"), makeRichText("<font size='1'>" + "Breache Occurred " + "<i>" + breachDates[i] + "</i>" + "</font>"));
                         }
                         
 
