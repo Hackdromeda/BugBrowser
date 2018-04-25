@@ -10,6 +10,7 @@
     "alexa-sdk": "1.0.25",
     "cheerio": "^1.0.0-rc.2",
     "jquery": "3.3.1",
+    "node-bing-api": "^4.0.0",
     "request": "2.85.0",
     "request-promise": "4.2.2"
   }
