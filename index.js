@@ -2294,6 +2294,20 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                     var speak = "Okay, " + name + ". Your email " + email + " has been hacked " + hackNum + " times.";
 
                     if (hasDisplay) {
+
+                        if (hackNum == 0) {
+                            const builder = new Alexa.templateBuilders.BodyTemplate1Builder();
+                            const template = builder.setTitle('Bug Browser')
+                                                    .setToken('checkedHacksListToken')
+                                                    .setBackButtonBehavior('VISIBLE')
+                                                    .setBackgroundImage(makeImage('https://s3.amazonaws.com/bugbrowser/images/Security+Vulnerability.png'))
+                                                    .setTextContent(makeRichText('<font size="3">' + speak + '</font>'))
+                                                    .build();
+                            this.response.speak(speak + ' Anyways, Bug Browser is going to sleep for now.').renderTemplate(template);                   
+                            this.emit(':responseReady');
+                        }
+
+
                         const listItemBuilder = new Alexa.templateBuilders.ListItemBuilder();
                         const listTemplateBuilder = new Alexa.templateBuilders.ListTemplate1Builder();
                         for (var i = 0; i < hackedSites.length; i++) {
