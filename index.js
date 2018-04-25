@@ -2296,7 +2296,7 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                     if (hasDisplay) {
 
                         if (hackNum == 0) {
-                            const builder = new Alexa.templateBuilders.BodyTemplate1Builder();
+                            const builder = new Alexa.templateBuilders.BodyTemplate6Builder();
                             const template = builder.setTitle('Bug Browser')
                                                     .setToken('checkedHacksListToken')
                                                     .setBackButtonBehavior('VISIBLE')
