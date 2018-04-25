@@ -2311,7 +2311,7 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                                                 .setBackgroundImage(makeImage('https://s3.amazonaws.com/bugbrowser/images/Security+Vulnerability.png'))
                                                 .build();
 
-                            context.response.speak(speak).renderTemplate(listTemplate).cardRenderer(cardTitle, content, null).listen(speak);
+                            context.response.speak(speak).renderTemplate(listTemplate).cardRenderer('Account Security Breaches', speak, null).listen(speak);
                             context.emit(':responseReady');
                     } else {
                         self.emit(':ask', speak + generalReprompt, HelpMessage, 'Account Security Breaches', speak)

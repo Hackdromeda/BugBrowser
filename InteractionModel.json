@@ -573,6 +573,16 @@
                         "list http status codes",
                         "all status codes"
                     ]
+                },
+                {
+                    "name": "checkForHacks",
+                    "slots": [],
+                    "samples": [
+                        "check my profile",
+                        "check for security vulnerabilities",
+                        "check for hacks",
+                        "have I been hacked"
+                    ]
                 }
             ],
             "types": []
