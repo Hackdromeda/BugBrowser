@@ -8,6 +8,7 @@ const rp = require('request-promise');
 const Bluebird = require('bluebird');
 const _ = require('lodash')
 const alexaLists = require('@blazingedge/alexa-lists');
+const Bing = require('node-bing-api')({ accKey: "15c950c86e604805889d780301bd262a" });
 
 var states = {
     SEARCHMODE: '_SEARCHMODE'
@@ -468,6 +469,10 @@ var newSessionHandlers = {
     'checkForHacks': function () {
         this.handler.state = states.SEARCHMODE;
         this.emitWithState('checkForHacks');
+    },
+    'bugSearchIntent': function () {
+        this.handler.state = states.SEARCHMODE;
+        this.emitWithState('bugSearchIntent');
     },
     'ElementSelected': function () {
         this.handler.state = states.SEARCHMODE;
@@ -2226,7 +2231,7 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
     'checkForHacks': function () {
         var accessToken = this.event.session.user.accessToken;
         var self = this;
-        var hasDisplay = this.event.context.System.device.supportedInterfaces.Display
+        var hasDisplay = this.event.context.System.device.supportedInterfaces.Display;
         console.log('Access Token=' + accessToken);
         if(accessToken === null || accessToken === undefined) { 
             var linkError = "Please use the Alexa app to link your Amazon account to this skill. Login with Amazon is used to access your email and lookup security vulnerabilities that might have affected you. In the meantime, what else would you like me to do?";
@@ -2346,7 +2351,7 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
 
                     if (hasDisplay) {
 
-                        const builder = new Alexa.templateBuilders.BodyTemplate6Builder();
+                        const builder = new Alexa.templateBuilders.BodyTemplate1Builder();
                         const template = builder.setTitle('Bug Browser')
                                                 .setToken('checkedHacksListToken')
                                                 .setBackButtonBehavior('VISIBLE')
@@ -2366,6 +2371,85 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                 self.emit(':ask', lookupError, HelpMessage);
             });
         }
+    },
+    'bugSearchIntent': function () {
+        this.handler.state = states.SEARCHMODE;
+        var self = this;
+        var hasDisplay = this.event.context.System.device.supportedInterfaces.Display;
+        var query = this.event.request.intent.slots.issue.value;
+
+        Bing.web('Unhandled Promise Exception' +  ' :stackexchange.com', {
+            count: 5
+          }, function(error, res, body){
+        
+            var id = '';
+        
+            for (var i = 0; i < body.webPages.value.length; i++) {
+                if (body.webPages.value[i].url != null && (body.webPages.value[i].url.substring(0, 25) == 'https://stackoverflow.com')) {
+                    var url = body.webPages.value[i].url.substring(36, body.webPages.value[i].url.length);
+                    console.log(url);
+                    var idEndIndex = -1;
+                    for (var j = url.length - 1; j > 0; j--) {
+                        if (url[j] == '/' && url[j - 1] != null && isNaN(url[j - 1]) == false) {
+                            idEndIndex = j - 1;
+                            break;
+                        }
+                    }
+                    id = url.substring(0, idEndIndex + 1);
+                    break;
+                }
+            }
+        
+            var options = {
+                method: 'GET',
+                uri: 'https://api.stackexchange.com/2.2/questions/' + id + '/answers?order=desc&sort=votes&site=stackoverflow&filter=!9Z(-wzu0T',
+                headers: {
+                'Accept-Encoding': 'gzip, deflate'
+                },
+                gzip: true
+            };
+          
+          request(options, function(error, response, body) {
+            body = JSON.parse(body);
+            var possibleResponses = body.items;
+            var response = '';
+            for (var i = 0; i < possibleResponses.length; i++) {
+                if (possibleResponses[i].is_accepted) {
+                    response = possibleResponses[i].body;
+                    break;
+                }
+            }
+        
+            if (response == '') {
+                response = (possibleResponses[1].body ? possibleResponses[1].body : possibleResponses[0].body);
+            }
+        
+            response = response.replace(/<code>(.*?)<\/code>/g, '');
+            response = response.replace(/<(.|\n)*?>/g, '');
+            response = sanitizeInput(response);
+
+            if (!response.length || response.length == '') {
+                response = 'No search results have been found.';
+            }
+            
+            if (hasDisplay) {
+                response = 'Here is a possible solution to your problem from Stack Overflow. ' + response;
+                const builder = new Alexa.templateBuilders.BodyTemplate1Builder();
+                const template = builder.setTitle('Bug Search')
+                                        .setToken('bugSearchIntentToken')
+                                        .setBackButtonBehavior('VISIBLE')
+                                        .setBackgroundImage(makeImage('https://s3.amazonaws.com/bugbrowser/images/Bug-Window-Dark.png'))
+                                        .setTextContent(makeRichText('<font size="3">' + response + '</font>'))
+                                        .build();
+                self.response.speak(response).renderTemplate(template);                  
+                self.emit(':responseReady');
+            } else {
+                self.emit(':askWithCard', response, HelpMessage, 'Bug Search', response);
+            }
+
+          });
+            
+          });
     },
     'AMAZON.CancelIntent': function () {
         this.emit('AMAZON.StopIntent');
