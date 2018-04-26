@@ -2430,7 +2430,7 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
             response = response.replace(/<(.|\n)*?>/g, '');
             response = sanitizeInput(response);
 
-            if (!response.length || response.length == '') {
+            if (!response || response.length == 0 || response.length == '') {
                 response = 'No search results have been found.';
             }
             
