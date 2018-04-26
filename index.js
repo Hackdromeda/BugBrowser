@@ -2378,7 +2378,7 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
         var hasDisplay = this.event.context.System.device.supportedInterfaces.Display;
         var bug = this.event.request.intent.slots.bug.value;
 
-        Bing.web(bug +  ' :stackexchange.com', {
+        Bing.web(bug +  ' site:stackexchange.com', {
             count: 5
           }, function(error, res, body){
         
@@ -2430,7 +2430,7 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
             response = response.replace(/<(.|\n)*?>/g, '');
             response = sanitizeInput(response);
 
-            if (!response || response.length == 0 || response.length == '') {
+            if (response == null || response.length == 0 || response.length == '') {
                 response = 'No search results have been found.';
             }
             
