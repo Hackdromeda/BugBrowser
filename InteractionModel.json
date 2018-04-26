@@ -583,6 +583,19 @@
                         "check for hacks",
                         "have I been hacked"
                     ]
+                },
+                {
+                    "name": "bugSearchIntent",
+                    "slots": [
+                        {
+                            "name": "bug",
+                            "type": "AMAZON.SearchQuery"
+                        }
+                    ],
+                    "samples": [
+                        "find the solution for {bug}",
+                        "tell me about bug {bug}"
+                    ]
                 }
             ],
             "types": []
