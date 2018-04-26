@@ -1265,11 +1265,13 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
         } else if (!this.attributes.lastProgram) {
             this.emit(':ask', 'You have not selected any programs to add to your list. What else would you like me to do?', 'I was unable to add a program to your list.');
         }  else {
-            alexaLists.init(accessToken).createNewListItem('Bug Bounties', this.attributes.lastProgram, 'active').then(() => {
-                this.emit(':ask', 'Added ' + this.attributes.lastProgram + ' to your Bug Bounties list. What else would you like me to do?', 'I was unable to add a program to your list.');
-            }).catch(() => {
-                this.emit(':ask', 'Bug Browser is unable to add ' + this.attributes.lastProgram + ' to your Bug Bounties list. What else would you like me to do?', 'I was unable to add a program to your list.');
-            })
+            alexaLists.init(accessToken).createCustomList('Bug Bounties').catch((error) => { console.log(error) }).then(() => {
+                alexaLists.init(accessToken).createNewListItem('Bug Bounties', this.attributes.lastProgram, 'active').then(() => {
+                    this.emit(':ask', 'Added ' + this.attributes.lastProgram + ' to your Bug Bounties list. What else would you like me to do?', 'I was unable to add a program to your list.');
+                }).catch(() => {
+                    this.emit(':ask', 'Bug Browser is unable to add ' + this.attributes.lastProgram + ' to your Bug Bounties list. What else would you like me to do?', 'I was unable to add a program to your list.');
+                });
+            });
         }
     },
     'getProgramsIntent': function () {
