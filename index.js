@@ -315,6 +315,36 @@ var output = "";
 
 var alexa;
 
+function extractHostname(url) {
+    var hostname;
+    //find & remove protocol (http, ftp, etc.) and get hostname
+    if (url.indexOf("://") > -1) {
+        hostname = url.split('/')[2];
+    }
+    else {
+        hostname = url.split('/')[0];
+    }
+    //find & remove port number
+    hostname = hostname.split(':')[0];
+    //find & remove "?"
+    hostname = hostname.split('?')[0];
+    return hostname;
+}
+
+
+function extractRootDomain(url) {
+    var domain = extractHostname(url);
+    splitArr = domain.split('.'),
+    arrLen = splitArr.length;
+    if (arrLen > 2) {
+        domain = splitArr[arrLen - 2] + '.' + splitArr[arrLen - 1];
+        if (splitArr[arrLen - 1].length == 2 && splitArr[arrLen - 1].length == 2) {
+            domain = splitArr[arrLen - 3] + '.' + domain;
+        }
+    }
+    return domain;
+}
+
 var newSessionHandlers = {
     'LaunchRequest': function () {
         this.handler.state = states.SEARCHMODE;
@@ -2383,25 +2413,26 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
           }, function(error, res, body){
         
             var id = '';
+            var rootDomain = '';
+            var hostName = '';
         
             for (var i = 0; i < body.webPages.value.length; i++) {
-                if (body.webPages.value[i].url != null && (body.webPages.value[i].url.substring(0, 25) == 'https://stackoverflow.com')) {
-                    var url = body.webPages.value[i].url.substring(36, body.webPages.value[i].url.length);
-                    console.log(url);
-                    var idEndIndex = -1;
-                    for (var j = url.length - 1; j > 0; j--) {
-                        if (url[j] == '/' && url[j - 1] != null && isNaN(url[j - 1]) == false) {
-                            idEndIndex = j - 1;
-                            break;
-                        }
-                    }
-                    id = url.substring(0, idEndIndex + 1);
+                console.log('Possible url'+ body.webPages.value[i].url);
+                if (body.webPages.value[i].url != null) {
+                    var possibleIdArray = body.webPages.value[i].url.match(/\/questions\/(\d+)\//);
+                    if (possibleIdArray) {
+                        id = possibleIdArray[1];
+                        rootDomain = extractRootDomain(body.webPages.value[i].url); //unecessary since it keeps .com
+                        hostName = extractHostname(body.webPages.value[i].url);
+                        hostName = hostName.substring(0, hostName.lastIndexOf('.'));
+
+                    }                    
                     break;
                 }
             }
 
-            var url = 'https://api.stackexchange.com/2.2/questions/' + id + '/answers?order=desc&sort=votes&site=stackoverflow&filter=!9Z(-wzu0T';
-        
+            var url = 'https://api.stackexchange.com/2.2/questions/' + id + '/answers?order=desc&sort=votes&site=' + hostName + '&filter=!9Z(-wzu0T';
+            console.log('URL: ' + url);
             var options = {
                 method: 'GET',
                 uri: url,
@@ -2413,12 +2444,15 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
           
           request(options, function(error, response, body) {
             body = JSON.parse(body);
+            console.log(body);
             var possibleResponses = body.items;
+            console.log('Possible Responses: ' + possibleResponses);
             var response = '';
             if (possibleResponses != null) {
                 for (var i = 0; i < possibleResponses.length; i++) {
-                    if (possibleResponses[i] != null && possibleResponses[i].body != null && possibleResponses[i].is_accepted) {
+                    if (possibleResponses[i] != null && possibleResponses[i].body != null) {
                         response = possibleResponses[i].body;
+                        console.log('Response is now' + response);
                         break;
                     }
                 }
@@ -2433,7 +2467,7 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
             }
             
             if (hasDisplay) {
-                response = 'Here is a possible solution to your problem from Stack Overflow. ' + response + ' You can visit ' + url + ' for more information.'; 
+                response = 'Here is a possible solution to your problem. ' + response; 
                 const builder = new Alexa.templateBuilders.BodyTemplate1Builder();
                 const template = builder.setTitle('Bug Search')
                                         .setToken('bugSearchIntentToken')
