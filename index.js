@@ -2416,8 +2416,8 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
             var possibleResponses = body.items;
             var response = '';
             for (var i = 0; i < possibleResponses.length; i++) {
-                if (possibleResponses[i].is_accepted) {
-                    response = possibleResponses[i].body;
+                if (possibleResponses[i].body != null && possibleResponses[i].is_accepted) {
+                    response = possibleResponses[i].body;                   
                     break;
                 }
             }
