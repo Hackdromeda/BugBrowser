@@ -2415,15 +2415,13 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
             body = JSON.parse(body);
             var possibleResponses = body.items;
             var response = '';
-            for (var i = 0; i < possibleResponses.length; i++) {
-                if (possibleResponses[i].body != null && possibleResponses[i].is_accepted) {
-                    response = possibleResponses[i].body;                   
-                    break;
+            if (possibleResponses != null) {
+                for (var i = 0; i < possibleResponses.length; i++) {
+                    if (possibleResponses[i] != null && possibleResponses[i].body != null && possibleResponses[i].is_accepted) {
+                        response = possibleResponses[i].body;
+                        break;
+                    }
                 }
-            }
-        
-            if (response == '') {
-                response = (possibleResponses[1].body ? possibleResponses[1].body : possibleResponses[0].body);
             }
         
             response = response.replace(/<code>(.*?)<\/code>/g, '');
