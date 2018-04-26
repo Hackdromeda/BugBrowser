@@ -2376,7 +2376,7 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
         this.handler.state = states.SEARCHMODE;
         var self = this;
         var hasDisplay = this.event.context.System.device.supportedInterfaces.Display;
-        var query = this.event.request.intent.slots.issue.value;
+        var query = this.event.request.intent.slots.bug.value;
 
         Bing.web('Unhandled Promise Exception' +  ' :stackexchange.com', {
             count: 5
