@@ -2376,9 +2376,9 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
         this.handler.state = states.SEARCHMODE;
         var self = this;
         var hasDisplay = this.event.context.System.device.supportedInterfaces.Display;
-        var query = this.event.request.intent.slots.bug.value;
+        var bug = this.event.request.intent.slots.bug.value;
 
-        Bing.web('Unhandled Promise Exception' +  ' :stackexchange.com', {
+        Bing.web(bug +  ' :stackexchange.com', {
             count: 5
           }, function(error, res, body){
         
@@ -2399,10 +2399,12 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                     break;
                 }
             }
+
+            var url = 'https://api.stackexchange.com/2.2/questions/' + id + '/answers?order=desc&sort=votes&site=stackoverflow&filter=!9Z(-wzu0T';
         
             var options = {
                 method: 'GET',
-                uri: 'https://api.stackexchange.com/2.2/questions/' + id + '/answers?order=desc&sort=votes&site=stackoverflow&filter=!9Z(-wzu0T',
+                uri: url,
                 headers: {
                 'Accept-Encoding': 'gzip, deflate'
                 },
@@ -2433,7 +2435,7 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
             }
             
             if (hasDisplay) {
-                response = 'Here is a possible solution to your problem from Stack Overflow. ' + response;
+                response = 'Here is a possible solution to your problem from Stack Overflow. ' + response + ' You can visit ' + url + ' for more information.'; 
                 const builder = new Alexa.templateBuilders.BodyTemplate1Builder();
                 const template = builder.setTitle('Bug Search')
                                         .setToken('bugSearchIntentToken')
