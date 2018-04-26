@@ -2250,14 +2250,22 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                 rp({
                     uri: `https://haveibeenpwned.com/api/v2/breachedaccount/` + email,
                     headers: {
-                        'User-Agent': 'Bug-Browser'
+                        'User-Agent': 'Bug-Browser',
+                        'Accepts': 'application/json'
                     },
                     transform: function (body) {
+                        if (body )
                         return JSON.parse(body);
                     }
                 }).then((data) => {
-                    if(data.length == 0){
-                        var noneMsg = "Looks like you have browsed the web scot-free! I could not find any vulnerabilities that exposed your email. What else would you like to do?"
+                    if (data.statusCode == 404) {
+                        data.body = [];
+                        data = data.body;
+                    } else {
+                        data = JSON.stringify(data.body);
+                    }
+                    if(!data || data.length == 0 ){
+                        var noneMsg = "Looks like you have browsed the web scot-free! I could not find any vulnerabilities that exposed your email. What else would you like to do?";
                         console.log(err);
                         self.emit(':ask', noneMsg, HelpMessage);
                     }
@@ -2314,7 +2322,7 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                             if (descriptions[i]) {
                                 speak += ' ' + sanitizeInput(descriptions[i]) + " ";
                             }
-                            listItemBuilder.addItem(makeImage(imageUrls[i]), 'accountBreachListItemToken' + i, makeRichText("<font size='2'>" + hackedNames[i] + "</font>"), makeRichText("<font size='1'>" + "Breach Occurred " + "<i>" + breachDates[i] + "</i>" + "</font>"));
+                            listItemBuilder.addItem(makeImage(imageUrls[i]), 'checkedHacksListItemToken' + i, makeRichText("<font size='2'>" + hackedNames[i] + "</font>"), makeRichText("<font size='1'>" + "Breach Occurred " + "<i>" + breachDates[i] + "</i>" + "</font>"));
                         }
                         
 
@@ -2331,8 +2339,23 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                         self.emit(':ask', speak + generalReprompt, HelpMessage, 'Account Security Breaches', speak)
                     }
                 }).catch(function (err) {
-                    var noneMsg = "Looks like you have browsed the web scot-free! I could not find any vulnerabilities that exposed your email. What else would you like to do?"
                     console.log(err);
+                    var noneMsg = "Looks like you have browsed the web scot-free! I could not find any vulnerabilities that exposed your email. What else would you like to do?";
+
+                    if (hasDisplay) {
+
+                        const builder = new Alexa.templateBuilders.BodyTemplate6Builder();
+                        const template = builder.setTitle('Bug Browser')
+                                                .setToken('checkedHacksListToken')
+                                                .setBackButtonBehavior('VISIBLE')
+                                                .setBackgroundImage(makeImage('https://s3.amazonaws.com/bugbrowser/images/Security+Vulnerability.png'))
+                                                .setTextContent(makeRichText('<font size="3">' + noneMsg + '</font>'))
+                                                .build();
+
+                        
+                        self.response.speak(noneMsg + ' Anyways, Bug Browser is going to sleep for now.').renderTemplate(template);                   
+                        self.emit(':responseReady');
+                    }
                     self.emit(':ask', noneMsg, HelpMessage);
                 });
             }).catch(function (err) {
