@@ -2444,7 +2444,7 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                 self.response.speak(response).renderTemplate(template);                  
                 self.emit(':responseReady');
             } else {
-                self.emit(':askWithCard', response, HelpMessage, 'Bug Search', response);
+                self.emit(':askWithCard', response, HelpMessage, 'Bug Search', response, makeImage('https://s3.amazonaws.com/bugbrowser/images/Bug-Bracket.jpg'));
             }
 
           });
