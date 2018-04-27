@@ -5,8 +5,9 @@ Developed in the Bay Area by Avi Shah and Naval Patel
 
 # MISSING from README:
 - Testimonials from **all** tiers of users
+- Add embedded video demonstration and screenshots
 - Explanation of life of security researcher and why this improves their lives **(work at home skill prize explanation)** 
-- Explanation of how we dynamically get data (see section below)
+- Add/update explanation of how we dynamically get data (see section below)
 - Caching system for faster response time (see section below)
 - Challenges: ElementSelected, etc. (see section below)
 - Update Intents
@@ -17,7 +18,6 @@ Developed in the Bay Area by Avi Shah and Naval Patel
 *"For bug bounty hunters, bug hunting is a passion. The Bug Browser Alexa Skill allows a hacker to keep up to date with hacking news, helps them find stuff to hack on, and it can even teach some of the basics of hacking. And this can all come from a device on your countertop. Very cool!"*
 
 -Sam
-
 *Senior Community Manager at BugCrowd*
 
 ## Enable the Skill:
