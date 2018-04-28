@@ -2556,10 +2556,9 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                     else{
                       self.emit(':ask', noneMsgSpeak, HelpMessage);
                     }
-                  } else {
-                      data = JSON.stringify(data.body);
-                  }
-                  var hacked = []
+                }
+                var hacked = []
+                var hackNum = data.length;
 
                   for (var i = 0; i < data.length; i++) {
                       hacked.push({
@@ -2568,6 +2567,7 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                           image: "https://haveibeenpwned.com/Content/Images/PwnedLogos/" + data[i].Name + "." + data[i].LogoType,
                           description: data[i].Description.replace(/<(.|\n)*?>/g, ''),
                           date: data[i].BreachDate,
+                          affected: data[i].PwnCount,
                           sortBreach: new Date((data[i].BreachDate).replace('-', ', '))});
                   }
                   hacked.sort(sortHacksByDateDesc);
@@ -2595,11 +2595,11 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
 
                       const listItemBuilder = new Alexa.templateBuilders.ListItemBuilder();
                       const listTemplateBuilder = new Alexa.templateBuilders.ListTemplate1Builder();
-                      for (var i = 0; i < hacked.length; i++) {
-                          if (hacked[i].description) {
-                              speak += ' ' + sanitizeInput(hacked[i].description) + " ";
+                      for (var i = 0; i < hacks.length; i++) {
+                          if (hacks[i].description) {
+                              speak += sanitizeInput(hacks[i].description) + ". ";
                           }
-                          listItemBuilder.addItem(makeImage(hacked[i].image), 'generalHacksListItemToken' + i, makeRichText("<font size='2'>" + hacked[i].name + "</font>"), makeRichText("<font size='1'>" + "Breach Occurred " + "<i>" + hacked[i].date + "</i>" + "</font>"));
+                          listItemBuilder.addItem(makeImage(hacks[i].image), 'generalHacksListItemToken' + i, makeRichText("<font size='2'>" + hacks[i].name + "</font>"), makeRichText("<font size='1'>" + "Breach Occurred " + "<i>" + hacks[i].date + ". Affected " + hacks[i].affected + " people." + "</i>" + "</font>"));
                       }
 
 
