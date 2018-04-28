@@ -618,7 +618,7 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
         output = overview + " What else would you like to know?";
         this.attributes.lastSpeech = output;
         if (this.event.context.System.device.supportedInterfaces.Display) {
-            output = overview + " If you would like to learn more about bug bounty platforms you can ask me to play the BugCrowd overview video or ask me to teach you how to use BugCrowd. What would you like me to do?"
+            output = overview + " If you would like to learn more about bug bounty platforms you can ask me to play the BugCrowd overview video or ask me to teach you how to use BugCrowd. What would you like me to do?";
             const builder = new Alexa.templateBuilders.BodyTemplate1Builder();
             const template = builder.setTitle(cardTitle)
                                     .setBackgroundImage(makeImage('https://s3.amazonaws.com/bugbrowser/images/Bug-Window-Dark.png'))
@@ -1212,7 +1212,8 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                 allowed = ((parseInt(this.event.request.intent.slots.program.value) + hackerOneMax) < hackerOneTotal);
             }
             else{
-                index = Math.floor(Math.random() * 25) + hackerOneMax - 25;
+                index = Math.floor(Math.random() * 24) + hackerOneMax - 25;
+                allowed = true;
             }
             if (allowed && hackerOnePrograms[index] != null && hackerOnePrograms[index].url != null) {
                 rp({
@@ -2032,15 +2033,40 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
           "title": "Password Security",
           "description": "Alphanumeric Passwords",
           "speakContent": "Avoid using passwords that are easy to guess. A strong password is longer with different types of characters, letters, and numbers. "
+        },
+        {
+          "title": "Email Security",
+          "description": "Send Encrypted Emails",
+          "speakContent": "Use email services such as ProtonMail for secure encrypted email. These services cannot read your emails and as such, do not sell your data. "
+        },
+        {
+          "title": "Computer and Phone Security",
+          "description": "Check for Viruses and Software Updates",
+          "speakContent": "Regularly update your operating system's software to get the latest security patches. Make sure to enable an anti-virus software on your Windows PCs and Android Phones to check files, applications, and links for malicious content. Do not trust or install third party applications unless you know they are from reputable sources. "
+        },
+        {
+          "title": "Block Pop-Ups and Intrusive Advertisements",
+          "description": "Browse the Web without Distraction",
+          "speakContent": "Extensions such as Ad Block Plus and uBlock can stop unwanted popups and intrusive ads from distracting from your web experience. Be aware that your data may be traced by advertisers when browsing the web. Use ad tracking protection when given the option to do so. "
+        },
+        {
+          "title": "Freeze Your Credit Reports",
+          "description": "Prevent Identity Fraud",
+          "speakContent": "A security freeze will prevent potential lenders from accessing your credit report, stopping a thief from opening an account or getting credit, even if they have your personal information from data breaches and other leaks. "
+        },
+        {
+          "title": "Monitor Security Breach News",
+          "description": "Mitigate Impacts of Data Loss",
+          "speakContent": "Cancel your credit cards, freeze your credit reports, and change your passwords if any of this information is leaked or exposed after a hack. You can learn about recent security breaches by saying, tell me about recent breaches. "
         }
       ];
-      var cardTitle = 'Account Security Tips';
-      var speakContent = "Here are some tips to improve your accounts' security in the future. ";
+      var cardTitle = 'Security Tips';
+      var speakContent = "Here are some tips to improve your accounts' and devices' security in the future. ";
       var cardContent = '';
 
       for (var i = 0; i < securityTips.length; i++) {
-        speakContent += 'Tip Number ' + i + ': ' + securityTips[i].title + '. ' + securityTips[i].speakContent;
-        cardContent += 'Tip ' + i + ': ' + securityTips[i].title + '\n' + securityTips[i].speakContent + '\n';
+        speakContent += 'Tip Number ' + (i + 1) + ': ' + securityTips[i].title + '. ' + securityTips[i].speakContent;
+        cardContent += 'Tip ' + (i + 1) + ': ' + securityTips[i].title + '\n' + securityTips[i].speakContent + '\n';
       }
 
       if (this.event.context.System.device.supportedInterfaces.Display) {
@@ -2067,7 +2093,7 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
         var self = this;
         var hasDisplay = this.event.context.System.device.supportedInterfaces.Display;
         rp({
-            uri: `https://hackerone.com/hacktivity.json?sort_type=latest_disclosable_activity_at&filter=type%3Apublic&range=forever&limit=100`,
+            uri: `http://bugbrowsercache.s3-accelerate.amazonaws.com/hacktivityBugReportFinder.json`,
             transform: function (body) {
               return JSON.parse(body);
             }
@@ -2506,11 +2532,11 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
         var hasDisplay = this.event.context.System.device.supportedInterfaces.Display;
         var cardTitle = 'Recent Security Breaches';
               rp({
-                  uri: `https://haveibeenpwned.com/api/v2/breaches`,
+                  uri: `http://bugbrowsercache.s3-accelerate.amazonaws.com/breaches.json`,
                   headers: {
                       'User-Agent': 'Bug-Browser',
-                      'Accept': 'application/vnd.haveibeenpwned.v2+json',
-                      'api-version': '2',
+                      //'Accept': 'application/vnd.haveibeenpwned.v2+json',
+                      //'api-version': '2',
                       'Content-Type': 'application/json'
                   },
                   transform: function (body) {
