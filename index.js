@@ -540,12 +540,10 @@ var newSessionHandlers = {
         this.emitWithState('AMAZON.PreviousIntent');
     },
     'AMAZON.YesIntent': function () {
-        output = HelpMessage;
-        this.emit(':ask', output, HelpMessage);
+        this.emit('getHelpIntent');
     },
     'AMAZON.NoIntent': function () {
-        output = HelpMessage;
-        this.emit(':ask', HelpMessage, HelpMessage);
+        this.emit('getHelpIntent');
     },
     'AMAZON.HelpIntent': function () {
         this.emit('getHelpIntent');
@@ -1687,12 +1685,12 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
             }
             const listItems = listItemBuilder.build();
             const listTemplate = listTemplateBuilder.setToken('listStatusCodesIntentToken')
-                                    .setTitle('HTTP Status Codes')
+                                    .setTitle(cardTitle)
                                     .setListItems(listItems)
                                     .setBackgroundImage(makeImage('https://s3.amazonaws.com/bugbrowser/images/Bug-Window-Dark.png'))
                                     .build();
             this.attributes.lastSpeech = content + generalReprompt;
-            this.response.speak(content + generalReprompt).cardRenderer('HTTP Status Codes', cardContent, null).renderTemplate(listTemplate).listen(HelpMessage);
+            this.response.speak(content + generalReprompt).cardRenderer(cardTitle, cardContent, null).renderTemplate(listTemplate).listen(HelpMessage);
             this.emit(':responseReady');
         } else {
             for (var i = 0; i < statusCodes.length; i++) {
@@ -2280,6 +2278,7 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
     'getNewsIntent': function () {
         this.attributes.lastAction = "getNewsIntent";
         var supportsDisplay = this.event.context.System.device.supportedInterfaces.Display;
+        var cardTitle = "Bug Browser News";
         var content = '';
         var context = this;
         var options1 = {
@@ -2333,18 +2332,18 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                 }
                 const listItems = listItemBuilder.build();
                 const listTemplate = listTemplateBuilder.setToken('getNewsIntentToken')
-                                        .setTitle('Bug Browser News')
+                                        .setTitle(cardTitle)
                                         .setListItems(listItems)
                                         .setBackgroundImage(makeImage('https://s3.amazonaws.com/bugbrowser/images/Circuit.png'))
                                         .build();
 
-                context.response.speak(content + generalReprompt).cardRenderer('Bug Browser News', 'Data provided by NewsAPI: \n\n' + content, null).renderTemplate(listTemplate).listen(HelpMessage);
+                context.response.speak(content + generalReprompt).cardRenderer(cardTitle, 'Data provided by News API: \n\n' + content, null).renderTemplate(listTemplate).listen(HelpMessage);
                 context.emit(':responseReady');
             } else {
                 for (var i = 0; i < articles.length && i < 15; i++) {
                     content += sanitizeInput('\nArticle ' + (i + 1) + ': ' + articles[i].title);
                 }
-                context.emit(':askWithCard', content + generalReprompt, HelpMessage, 'Bug Browser News', content);
+                context.emit(':askWithCard', content + generalReprompt, HelpMessage, cardTitle, 'Data provided by News API: \n\n' + content);
             }
         });
     },
@@ -2724,7 +2723,10 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                     response = 'No search results have been found.';
                 }
                 speak = response + " What else would you like me to do?"
-
+                const imageObj = {
+                    smallImageUrl:'https://s3.amazonaws.com/bugbrowser/images/Bug-Bracket.jpg',
+                    largeImageUrl: 'https://s3.amazonaws.com/bugbrowser/images/Bug-Bracket.jpg'
+                };
                 if (hasDisplay) {
                     const builder = new Alexa.templateBuilders.BodyTemplate1Builder();
                     const template = builder.setTitle(cardTitle)
@@ -2734,11 +2736,11 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                                             .setTextContent(makeRichText('<font size="3">' + response + '</font>'))
                                             .build();
                     self.attributes.lastSpeech = speak;
-                    self.response.speak(speak).renderTemplate(template).listen(HelpMessage);
+                    self.response.speak(speak).renderTemplate(template).renderCard(cardTitle, response, imageObj).listen(HelpMessage);
                     self.emit(':responseReady');
                 } else {
                     self.attributes.lastSpeech = speak;
-                    self.emit(':askWithCard', speak, HelpMessage, cardTitle, response, 'https://s3.amazonaws.com/bugbrowser/images/Bug-Bracket.jpg');
+                    self.emit(':askWithCard', speak, HelpMessage, cardTitle, response, imageObj);
                 }
 
             });
