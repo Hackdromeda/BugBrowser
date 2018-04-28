@@ -2055,7 +2055,7 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                                   .setListItems(listItems)
                                   .setBackgroundImage(makeImage('https://s3.amazonaws.com/bugbrowser/images/Bug-Window-Dark.png'))
                                   .build();
-          this.attributes.lastSpeech = content + generalReprompt;
+          this.attributes.lastSpeech = speakContent + generalReprompt;
           this.response.speak(speakContent + generalReprompt).cardRenderer(cardTitle, cardContent, null).renderTemplate(listTemplate).listen(HelpMessage);
           this.emit(':responseReady');
       } else {
@@ -2597,7 +2597,7 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                                               .setBackgroundImage(makeImage('https://s3.amazonaws.com/bugbrowser/images/Security+Vulnerability.png'))
                                               .build();
 
-                          self.response.speak(speak).renderTemplate(listTemplate).cardRenderer(cardTitle, speak, null).listen(HelpMessage);
+                          self.response.speak(speak).renderTemplate(listTemplate).cardRenderer(cardTitle, cardContent, null).listen(HelpMessage);
                           self.emit(':responseReady');
                   } else {
                       self.emit(':askWithCard', speak, HelpMessage, cardTitle, cardContent, null);
@@ -2674,6 +2674,10 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
             console.log(body);
             var possibleResponses = body.items;
             console.log('Possible Responses: ' + possibleResponses);
+            if(response.statusCode != 200){
+                console.log(error);
+                self.emit(':ask', generalError, HelpMessage);
+            }
             var response = '';
                 if (possibleResponses != null) {
                     for (var i = 0; i < possibleResponses.length; i++) {
@@ -2688,7 +2692,7 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                 response = response.replace(/<code>(.*?)<\/code>/g, '');
                 response = response.replace(/<(.|\n)*?>/g, '');
                 response = sanitizeInput(response);
-                response = 'Here is a possible solution to your problem or inquiry. ' + response;
+                response = 'Here is a possible solution to your problem or inquiry from StackOverflow. ' + response;
 
                 if (response == null || response.length == 0 || response.length == '') {
                     response = 'No search results have been found.';
@@ -2711,10 +2715,6 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                     self.emit(':askWithCard', speak, HelpMessage, cardTitle, response, 'https://s3.amazonaws.com/bugbrowser/images/Bug-Bracket.jpg');
                 }
 
-            
-            }).catch(function (err) {
-                console.log(err);
-                self.emit(':ask', generalError, HelpMessage);
             });
 
           });
