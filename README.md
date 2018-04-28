@@ -1,5 +1,5 @@
 # Bug Browser #
-Bug Browser provides information security, programming, and bug education and reference all in one skill. Bug Browser will teach you how to hack, provide a comprehensive briefing on recent hacks and security vulnerabilities around the world, information about bug bounty programs and bug bounty platforms, the BugCrowd VRT, active HackerOne bounties, and active BugCrowd bounties as well as provide additional information on these bounties.
+**Bug Browser provides information security, programming, and bug education and reference all in one skill. Bug Browser will teach you how to hack, provide a comprehensive briefing on recent hacks and security vulnerabilities around the world, information about bug bounty programs and bug bounty platforms, the BugCrowd VRT, active HackerOne bounties, and active BugCrowd bounties as well as provide additional information on these bounties.**
 
 Developed in the Bay Area by Avi Shah and Naval Patel
 
@@ -27,6 +27,8 @@ Developed in the Bay Area by Avi Shah and Naval Patel
 
 **Where did the idea come from?**
 
+For a Life Hack and Work-at-Home Skill, we did not want to reinvent the calendar/day view, timer/time manager, alarm, and calling features Alexa already supports natively. Instead we choose to address **four major, important, and relevant issues to today: cybersecurity, information security, security vulnerabilities, and bugs.**
+
 We realized that there were very few skills for [security researchers](https://www.amazon.com/s/ref=nb_sb_noss_2?url=search-alias%3Dalexa-skills&field-keywords=Hacker) and [developers](https://www.amazon.com/s/ref=nb_sb_noss_2?url=search-alias%3Dalexa-skills&field-keywords=Developer) after meeting with the principal engineer and the community manager at BugCrowd at Los Altos Hacks III. They challenged us to create a skill that would a) inform them of active bug bounties, b) provide details about the specific bounties, and c) make their lives as security researchers easier in any other way.
 
 **What motivated you?**
@@ -45,25 +47,29 @@ A large part of our days now revolve around devices and being connected to the i
 *Who is this Alexa skill for?*
 
 1. **General Public** - *All customers and clients value their private data. As such, they expect the company entrusted with their data to do everything in their power to protect that data. Now more than ever, breaches of customer data are a common occurance. Users should not, however, become desensitized or numb to such news but rather proactively take action to protect their data.* - Bug Browser can help anyone keep up-to-date on the latest news about security vulnerabilities, hacks, and other cybersecurity issues. 
-  - How does this skill provide convenience, save time, and improve the lives of the general public?
-    - Bug Browser provides focused news on the topic of cybersecurity. In today's fast paced news cycle, not everyone in the public is made aware of hacks and vulnerabilities that afffect them. Users who learn they are affected by a security breach thorugh Bug Browser can then take proactive steps to prevent further losses by changing their password, freezing their credit reports, activating identity protection services, canceling their credit cards, updating their computer or device software, and/or using 2-factor authentication. Bug Browser ultimately can save the general public from the headaches of recovering lost accounts and data, reversing unauthorized transactions, and more.
+
+  - **How does this skill provide convenience, save time, and improve the lives of the general public?**
+    - Bug Browser provides focused news on the topic of cybersecurity and a list of security breaches. In today's fast paced news cycle, not everyone in the public is made aware of hacks and vulnerabilities that afffect them.
+    - Bug Browser can also check for security breaches that may have resulted in a users data being lost by getting a users email from account linking. Users who learn they are affected by a security breach thorugh Bug Browser can then take proactive steps to prevent further losses by changing their password, freezing their credit reports, activating identity protection services, canceling their credit cards, updating their computer or device software, and/or using 2-factor authentication which Bug Browser can teach users about.    - Bug Browser ultimately can save the general public from the headaches of recovering lost accounts and data, reversing unauthorized transactions, and more.
 
 2. **Developers** - *Developers who have experience with code, computers, and other fields of computer science but are not focused on hacking, cybersecurity, or security research as a career or hobby* - Bug Browser can introduce developers to the importance of bug bounties and bug bounty platforms.
-  - How does this skill provide convenience, save time, and improve the lives of developers?
+
+  - **How does this skill provide convenience, save time, and improve the lives of developers?**
     - Bug Browser has overview videos and descriptions to get developers hooked on the lifestyle that is security research. Bug Browser will walk developers through the reasons bug bounty programs exist, how they can join bug bounty platforms, and set them on their way to being a novice hacker. Bug Browser effectively exposes developers to new ways to apply their existing interests and knowledge of computer science including to develop and defeat new security techniques and find strengths and weaknesses in code.
-  - What are HTTP status codes?
-    - HTTP Status codes are standard codes for communicating between network requests. It is crucial to know what these codes mean when analyzing server-client interactions. Bug Browser can list 62 standard HTTP status codes.
+    - Bug Browser also has a list developers can quickly access to understand HTTP Status codes. These status are standard codes for communicating between network requests but there are so many that its hard to remember which means what. It is crucial to know what these codes mean when analyzing server-client interactions. Bug Browser can list 62 standard HTTP status codes with ease.
       - Example: `200  OK`
+    - Bug Browser does not know about all bugs, however. Developers can ask Bug Browser to search for a specific bug they find in their code or programs. Using the power of Bing Cognitive Services Search API and StackExchange API, Bug Browser will return the top answer from a StackOverflow thread.
 
 3. **New and Intermediate Hackers** - *Hackers who are just starting their career or hobby in security research will not have the coding experience to find bugs immediately but have enough of an understanding of code, computers, web development, server-side scripting, hardware, networking, operating systems, etcetera to learn how to hack. These hackers are likely developers looking to make additional money or improve their own skills* - Bug Browser provides tutorials for how to hack for people with basic experience and understanding in the world of computers including application and development of software in C++, C, or Python, as well as experience developing software applications in Linux, macOS, and/or Windows environments. Novice hackers can listen to the descriptions or watch the videos in the background while they work on other tasks.
 
-- How does this skill provide convenience, save time, and improve the lives of novice hackers?
+- **How does this skill provide convenience, save time, and improve the lives of novice hackers?**
   - Bug Browser can describe specific vulnerabilities, how to find security flaws, and explain how to get paid with bug bounties. Whether users are interested in learning about bug bounties, have a background in computer science, or are seasoned security professionals, they can learn something from Bug Browsers library of lessons (powered by [Hacker101](https://github.com/Hacker0x01/hacker101)). 
  
 4. **Active Security Researchers** - *Security researchers do not work your typical 9-to-5 workday. People in this field do not have to have a college diploma or a certification to do it, just a good understanding of programming, computers, and hardware. Security research can be challenging but very rewarding. Ethical hackers protect companies, organizations, and institutions from abuse from malicious hackers. These ethical hackers gain anything from points on the platform to monetary rewards.* - Security researchers can ask about active programs, get more details about these programs, and refer back to the skill for updates and new programs daily. We can reach the [over 166,000](https://www.hackerone.com/sites/default/files/2018-01/2018_Hacker_Report.pdf) registered ethical hackers on HackerOne (as of December 2017) and the [over 80,400](https://bugcrowd.com/programs) registered security researchers on BugCrowd in addition the the developer and general public audiences.
 
-- How does this skill provide convenience, save time, and improve the lives of security researchers?
-  - Security researchers often work on their own schedule and have flexible hours. Alexa can simplify the process of learning of new programs (list sorted by NEWEST first) from various platforms. Once they find a few programs they like, they can ask Alexa to add the programs to their list so they can keep track of the bounties they want to participate in. They can do all of this from their Echo Spot, Echo Show, Fire TV, Dash Wand, Alexa App, Fire TV, and/or other Alexa-enabled devices.
+- **How does this skill provide convenience, save time, and improve the lives of security researchers?**
+  - Security researchers often work on their own schedule and have flexible hours. Alexa can simplify the process of learning of new programs (list sorted by NEWEST first) from various platforms.
+  - Once they find a few programs they like, security researchers can ask Alexa to add the programs to their list so they can keep track of the bounties they want to participate in from **all platforms in one place**. They can do all of this from their Echo Spot, Echo Show, Fire TV, Dash Wand, Alexa App, Fire TV, and/or other Alexa-enabled devices.
 
 ## Skill Development Cycle
 
@@ -71,7 +77,7 @@ A large part of our days now revolve around devices and being connected to the i
 
 Our team faced several major challenges during the development cycle:
 
-**1. Implementing a Graphical User Interface**
+**1. Implementing a Graphical User Interface / Display Interface**
 
 When we started the skill we had not even thought about users who had displays like those on the Echo Spot and Echo Show as well as cards on the Fire TV and Alexa app. One of the goals we set for ourselves was to implement a GUI for Bug Browser and design the best user experience possible. Frequently referring to Amazon's resources and documentation for building user interfaces, we were able to quickly learn the differences between the templates. The next step in the development process was to find the most effective method of building a template. We had trouble implementing the display interfaces initially but soon became experts at using them after learning how to use the standard template builder methods included in the SDK for Lambda. One of the most significant challenges our team had to solve was binding a GUI touch event to an intent or function. After further research and experimentation, we were able to use the ElementSelected function to build a more captivating display experience.
 
@@ -87,12 +93,19 @@ For example, if a user asks for *"number one"* that could either mean a HackerOn
 
 **4. Touch Interactions**
 
-Text here
+To improve user experience we enabled touch interactions using `ElementSelected` for Echo Show and Echo Spot devices. While this could not be tested from the simulator, we had our own touch-enabled Echo devices to test from. **(ADD)**
 
-**5. Reducing Response Time**
+**5. Voice Interactions**
 
-Text here
+To improve user experience we enabled intents such as `AMAZON.RepeatIntent` should a user want to repeat an intent. **(ADD)**
+ 
+**6. Reducing Response Time**
 
+To reduce the response **(ADD)**
+
+**7. Testing**
+
+To ensure a flawless user experience regardless of the user device, we used virtual simulators for the Echo Show, our own Echo Spots, Amazon Apps with Alexa built-in, Dash Wands, and Echo Dots. **(ADD)**
 
 **What are the accomplishments your team is proud of?**
 
@@ -113,58 +126,77 @@ Text here
 
 [News API](https://newsapi.org/docs) - NewsAPI helps us connect users with several news sources. We no longer need to wait for several endpoints just to get a diverse set of sources, instead we can quickly deliver cybersecurity information to the user.
 
-[Have I Been Pwned](https://haveibeenpwned.com/API/v2) - Text here
+[Have I Been Pwned](https://haveibeenpwned.com/API/v2) - Have I Been Pwned helps us list find out about data breaches that have leaked your email and other information as well as about recent security breaches that have affected large amounts of people.
 
-[Bing Web Search API](https://azure.microsoft.com/en-us/services/cognitive-services/bing-web-search-api/) - Text here
+[Bing Cognitive Services and Web Search API](https://azure.microsoft.com/en-us/services/cognitive-services/bing-web-search-api/) - Bing Web Search helps us traverse StackOverflow and process natural language inputs.
+
+[StackExchange API](https://api.stackexchange.com/docs) - StackExchanges's StackOverflow is a popular forum for developers and helps us find information about your bug questions and inquiries.
 
 ## Supported Phrases
 *Try some of these sample utterances:*
 
-* Learn about BugCrowd and HackerOne
+General
+  * Try, *Alexa ask Bug Browser to repeat that* to repeat previous intent
+  * Try, *Alexa page up / page down / scroll right / scroll left / scroll up / scroll down* (Echo Show and Echo Spot)
+  * Try, *Alexa ask Bug Browser to go to sleep*
+  * Try, *Alexa ask Bug Browser, what can you do?* to learn about all the intents the skill supports. Tap or ask to go to the desired intent from the help page
+
+Learn about security breaches and ones that may affect you
+  * Try, *Alexa ask Bug Browser, have I been hacked?* (Account Linking Required)
+  * Try, *Alexa ask Bug Browser to check my profile* (Account Linking Required)
+  * Try, *Alexa ask Bug Browser to tell me about recent breaches*   
+
+Learn about best security practices and how to secure your accounts, devices, and data after a hack
+  * Try, *Alexa ask Bug Browser to give me security tips*
+
+Learn about BugCrowd and HackerOne
   * Try, *Alexa ask Bug Browser to tell me some facts about BugCrowd.*
   * Try, *Alexa ask Bug Browser to introduce me to BugCrowd.*
   * Try, *Alexa ask Bug Browser to tell me what bug bounties and bug bounty platforms are*
   * See the Alexa app or interface for a recap of this information (iOS, Android, and Fire TV)
 
-* Learn how to use BugCrowd
+Learn how to use BugCrowd
   * Try, *Alexa how do you use BugCrowd?*
   
-* Get bounties from BugCrowd and/or HackerOne (Sorted by NEWEST first)
+Get bounties from BugCrowd and/or HackerOne (Sorted by NEWEST first)
   * Try, *Alexa ask Bug Browser, how do you find bounties?*
   * Try, *Alexa ask Bug Browser, what companies are looking for security researchers?*
   * Try, *Alexa ask Bug Browser, what are some bounties available from BugCrowd?*
   * Try, *Alexa ask Bug Browser to tell me about HackerOne programs*
   * See the Alexa app or interface for the list of programs (iOS, Android, and Fire TV)
    
-* Get more bounties beyond the first set of cards provided (Sorted by NEWEST first)
+Get more bounties beyond the first set of cards provided (Sorted by NEWEST first)
   * Try, *Alexa next page*
   * Try, *Alexa previous page*
   * Try, *Yes* when prompted if you want to hear more programs
   
-* Get additional details for bounties from BugCrowd and/or HackerOne
+Get additional details for bounties from BugCrowd and/or HackerOne
   * Try, *Alexa ask Bug Browser to tell me more about program number five* after asking for the list on the desired platform
   * Try, *Alexa ask Bug Browser to tell me more about BugCrowd bounty number five*
   * Try, *Yes* when prompted if you want to learn about more programs
   * See the Alexa app or interface for additional details such as program requirements (iOS, Android, and Fire TV)
   
-* Learn about hacking news using The New York Times and [NewsAPI](https://newsapi.org/)
+Learn about hacking news using The New York Times and [NewsAPI](https://newsapi.org/)
   * Try, *Alexa ask Bug Browser to give me a flash briefing on hacks*
   * Try, *Alexa ask Bug Browser to tell me the latest news on vulnerabilities*
   * Tap on the article for additional details (Echo Spot and Echo Show only)
   * See the Alexa app or interface for additional details (iOS, Android, and Fire TV)
   
-* Learn about the BugCrowd Vulnerability Rating Taxonomy (VRT)
+Learn about the Vulnerability Rating Taxonomy (VRT) and vulnerability priorities as outlined by BugCrowd
   * Try, *Alexa ask Bug Browser to tell me about the VRT*
   * See the Alexa app or interface for additional details (iOS, Android, and Fire TV)
   
-* Learn about BugCrowd through videos (Echo Spot and Echo Show only)
+Learn about BugCrowd through videos (Echo Spot and Echo Show only)
   * Try, *Alexa ask Bug Browser to introduce me to BugCrowd with a video*
 
-* Learn about HTTP status codes
+Learn about HTTP status codes
   * Try, *Alexa ask Bug Browser to list HTTP status codes*
   
-* Learn about cybersecurity through video tutorials (Echo Spot and Echo Show only)
+Learn about cybersecurity through video tutorials (Echo Spot and Echo Show only)
+  * Try, *Alexa ask Bug Browser to teach me how to hack*
   * Try, *Alexa ask Bug Browser to play the lesson introduction video*
+  * Try, *Alexa ask Bug Browser to play lesson {number}*
+    * Try, *Alexa ask Bug Browser to play lesson five*
   * Try, *Alexa ask Bug Browser to teach me Same-Origin Policy*
   * Try, *Alexa ask Bug Browser to teach me about types of XSS*
   * Try, *Alexa ask Bug Browser to teach me about directory traversal*
@@ -207,14 +239,6 @@ This project is licensed under the MIT License. See the [LICENSE](LICENSE.md) fo
 ## Privacy Policy
 See the [PRIVACY POLICY](PRIVACYPOLICY.md) for details.
 
-## Image Credits
-https://www.bugcrowd.com/wp-content/uploads/2018/03/1803-Bugcrowd-BB-Blog-Twitter.png
-
-https://assets.bugcrowdusercontent.com/packs/images/tracker/logo/vrt-logo-ba20b1de556f194607f690788f072798.svg
-
-https://pngtree.com/freebackground/motherboard-line-science-and-technology-business-background-blu-ray-abstract_389364.html
-
-https://www.stevens.edu/sites/stevens_edu/files/Mission_0.jpg
-
-https://betanews.com/wp-content/uploads/2015/06/Security-e1436347233484.jpg
+## Credits and Contributors
+See [CREDITS](CREDITS.md) for details.
 
