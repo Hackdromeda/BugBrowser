@@ -1,14 +1,17 @@
 # Bug Browser #
-Bug Browser is your one-stop skill for everything cybersecurity. Bug Browser will teach you how to hack, provide a comprehensive briefing on recent hacks and security vulnerabilities around the world, information about bug bounty programs and bug bounty platforms, the BugCrowd VRT, active HackerOne bounties, and active BugCrowd bounties as well as provide additional information on these bounties.
+Bug Browser provides information security, programming, and bug education and reference all in one skill. Bug Browser will teach you how to hack, provide a comprehensive briefing on recent hacks and security vulnerabilities around the world, information about bug bounty programs and bug bounty platforms, the BugCrowd VRT, active HackerOne bounties, and active BugCrowd bounties as well as provide additional information on these bounties.
 
 Developed in the Bay Area by Avi Shah and Naval Patel
 
 # MISSING from README:
 - Testimonials from **all** tiers of users
+- Add embedded video demonstration and screenshots
 - Explanation of life of security researcher and why this improves their lives **(work at home skill prize explanation)** 
-- Explanation of how we dynamically get data (see section below)
+- Add/update explanation of how we dynamically get data (see section below)
 - Caching system for faster response time (see section below)
 - Challenges: ElementSelected, etc. (see section below)
+- Update Intents
+- Replace "Text here" or filler text
 
 ## Testimonials
 
@@ -26,9 +29,9 @@ Developed in the Bay Area by Avi Shah and Naval Patel
 
 We realized that there were very few skills for [security researchers](https://www.amazon.com/s/ref=nb_sb_noss_2?url=search-alias%3Dalexa-skills&field-keywords=Hacker) and [developers](https://www.amazon.com/s/ref=nb_sb_noss_2?url=search-alias%3Dalexa-skills&field-keywords=Developer) after meeting with the principal engineer and the community manager at BugCrowd at Los Altos Hacks III. They challenged us to create a skill that would a) inform them of active bug bounties, b) provide details about the specific bounties, and c) make their lives as security researchers easier in any other way.
 
-What motivated you?
+**What motivated you?**
 
-We wanted to tap the [over 166,000](https://www.hackerone.com/sites/default/files/2018-01/2018_Hacker_Report.pdf) registered ethical hackers on HackerOne (as of December 2017) and the [over 60,000](https://www.bugcrowd.com/resource/2017-state-of-bug-bounty/) registered security researchers on BugCrowd and hundreds of thousands of developers who do not have many skills meant to help them with their work from home or programming passions. We also wanted to make the skill applicable to the general public.
+We wanted to tap the [over 166,000](https://www.hackerone.com/sites/default/files/2018-01/2018_Hacker_Report.pdf) registered ethical hackers on HackerOne (as of December 2017) and the [over 80,400](https://bugcrowd.com/programs) registered security researchers on BugCrowd and hundreds of thousands of developers who do not have many skills meant to help them with their work from home or programming passions. We also wanted to make the skill applicable to the general public.
 
 These are the crowdsourced heroes who help keep our data safe. **One thing we hate the most** is losing our precious data to black hat hackers or cyber criminals as a result of undiscovered security vulnerabilities. Companies such as Facebook could have benefitted from larger exposure to their existing bug bounty programs or new bug bounty programs. **This is where our skill comes in, it gives larger exposure to public bug bounty programs with an emphasis on new ones.**
 
@@ -57,10 +60,10 @@ A large part of our days now revolve around devices and being connected to the i
 - How does this skill provide convenience, save time, and improve the lives of novice hackers?
   - Bug Browser can describe specific vulnerabilities, how to find security flaws, and explain how to get paid with bug bounties. Whether users are interested in learning about bug bounties, have a background in computer science, or are seasoned security professionals, they can learn something from Bug Browsers library of lessons (powered by [Hacker101](https://github.com/Hacker0x01/hacker101)). 
  
-4. **Active Security Researchers** - *Security researchers do not work your typical 9-to-5 workday. People in this field do not have to have a college diploma or a certification to do it, just a good understanding of programming, computers, and hardware. Security research can be challenging but very rewarding. Ethical hackers protect companies, organizations, and institutions from abuse from malicious hackers. These ethical hackers gain anything from points on the platform to monetary rewards.* - Security researchers can ask about active programs, get more details about these programs, and refer back to the skill for updates and new programs daily. We can reach the [over 166,000](https://www.hackerone.com/sites/default/files/2018-01/2018_Hacker_Report.pdf) registered ethical hackers on HackerOne (as of December 2017) and the [over 60,000](https://www.bugcrowd.com/resource/2017-state-of-bug-bounty/) registered security researchers on BugCrowd in addition the the developer and general public audiences.
+4. **Active Security Researchers** - *Security researchers do not work your typical 9-to-5 workday. People in this field do not have to have a college diploma or a certification to do it, just a good understanding of programming, computers, and hardware. Security research can be challenging but very rewarding. Ethical hackers protect companies, organizations, and institutions from abuse from malicious hackers. These ethical hackers gain anything from points on the platform to monetary rewards.* - Security researchers can ask about active programs, get more details about these programs, and refer back to the skill for updates and new programs daily. We can reach the [over 166,000](https://www.hackerone.com/sites/default/files/2018-01/2018_Hacker_Report.pdf) registered ethical hackers on HackerOne (as of December 2017) and the [over 80,400](https://bugcrowd.com/programs) registered security researchers on BugCrowd in addition the the developer and general public audiences.
 
 - How does this skill provide convenience, save time, and improve the lives of security researchers?
-  - Security researchers often work on their own schedule and have flexible hours. Alexa can simplify the process of learning of new programs (list sorted by NEWEST first) from various platforms. They can do this from their Echo Spot, Echo Show, Fire TV, Dash Wand, Alexa App, Fire TV, and other Alexa-enabled devices.
+  - Security researchers often work on their own schedule and have flexible hours. Alexa can simplify the process of learning of new programs (list sorted by NEWEST first) from various platforms. Once they find a few programs they like, they can ask Alexa to add the programs to their list so they can keep track of the bounties they want to participate in. They can do all of this from their Echo Spot, Echo Show, Fire TV, Dash Wand, Alexa App, Fire TV, and/or other Alexa-enabled devices.
 
 ## Skill Development Cycle
 
@@ -82,6 +85,15 @@ Alexa is a smart, conversational AI that, just like any human being, needs conte
 
 For example, if a user asks for *"number one"* that could either mean a HackerOne program, a BugCrowd program, or a lesson number. Session-level attributes help us know what the user wants without forcing them to be more specific.
 
+**4. Touch Interactions**
+
+Text here
+
+**5. Reducing Response Time**
+
+Text here
+
+
 **What are the accomplishments your team is proud of?**
 
 - Bug Browser is our first display interface skill entering production
@@ -93,13 +105,17 @@ For example, if a user asks for *"number one"* that could either mean a HackerOn
 # Features
 
 ## Dynamic Content
-*Programs join these platforms and/or go public often and as such we do not manually update information for dynamic aspects of the skill.*
+*Programs join these platforms and/or go public often and news and/or answers for topics infinitely change and as such we do not manually update information for dynamic aspects of the skill.*
 
-BugCrowd - Since BugCrowd's APIs are not currently available to researchers, we used Cheerio to get data from their website. In just a few hundred milliseconds, users are presented with a list of programs with pictures (Echo Spot and Echo Show only) and can request additonal details about specific programs to get a readout and Alexa card with additional details.
+[BugCrowd](https://docs.bugcrowd.com/reference) - Since BugCrowd's APIs are not currently available to researchers, we used Cheerio to get data from their website. In just a few hundred milliseconds, users are presented with a list of programs with pictures (Echo Spot and Echo Show only) and can request additonal details about specific programs to get a readout and Alexa card with additional details.
 
-HackerOne - Here we leverage HackerOne's API to get their active programs list. We cache data from their APIs for a faster response time.
+[HackerOne](https://api.hackerone.com/docs/v1) - Here we leverage HackerOne's API to get their active programs list. We cache data from their APIs for a faster response time.
 
-NewsAPI - NewsAPI helps us connect users with several news sources. We no longer need to wait for several endpoints just to get a diverse set of sources, instead we can quickly deliver cybersecurity information to the user.
+[News API](https://newsapi.org/docs) - NewsAPI helps us connect users with several news sources. We no longer need to wait for several endpoints just to get a diverse set of sources, instead we can quickly deliver cybersecurity information to the user.
+
+[Have I Been Pwned](https://haveibeenpwned.com/API/v2) - Text here
+
+[Bing Web Search API](https://azure.microsoft.com/en-us/services/cognitive-services/bing-web-search-api/) - Text here
 
 ## Supported Phrases
 *Try some of these sample utterances:*
@@ -180,7 +196,7 @@ NewsAPI - NewsAPI helps us connect users with several news sources. We no longer
   * [bluebird](https://www.npmjs.com/package/bluebird)
 * [jQuery](https://www.npmjs.com/package/jquery)
 * Lambda
-and [over 20 more dependancies](https://github.com/as0218PUSD/BugBrowser/network/dependencies)
+and [over 30 more dependancies](https://github.com/as0218PUSD/BugBrowser/network/dependencies)
 
 # Legal
 We are developers, not legal experts. If you own any of the images or content we use and would like it removed for any reason, feel free to open an issue through the Alexa App or on GitHub. We will promptly act on your request. This skill is not affiliated with or endorsed by HackerOne, BugCrowd, or any of its affiliates. All product names, logos, and brands are property of their respective owners. All company, product and service names used in this website are for identification purposes only. Use of these names, logos, and brands does not imply endorsement.
