@@ -379,7 +379,6 @@ var newSessionHandlers = {
 
             renderTemplate.call(this, content);
         } else {
-            this.handler.state = states.SEARCHMODE;
             output = welcomeMessage;
             this.emit(':ask', output, welcomeReprompt);
         }
