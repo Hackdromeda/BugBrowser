@@ -2405,7 +2405,7 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                   if (data.statusCode == 404 || data.length == 0) {
                     var noneMsgSpeak = "Looks like you have browsed the web scot-free! I could not find any vulnerabilities that exposed your email " + email + "." + "What else would you like to do?";
                     var noneMsgRender = "Looks like you have browsed the web scot-free! I could not find any vulnerabilities that exposed your email " + email + ".";
-
+                  }
                     if (hasDisplay) {
 
                         const builder = new Alexa.templateBuilders.BodyTemplate1Builder();
@@ -2628,7 +2628,6 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                     self.emit(':ask', noneMsgSpeak, HelpMessage);
                   }
             });
-        }
     },
     'bugSearchIntent': function () {
         this.handler.state = states.SEARCHMODE;
