@@ -53,7 +53,6 @@
                         "tell me more about bugcrowd program number {program}",
                         "show bugcrowd {program}",
                         "show bug crowd {program}",
-                        "select bug crowd {program}",
                         "tell me more about bug crowd {program}",
                         "tell me more about bug crowd number {program}",
                         "what is bug crowd number {program}",
@@ -130,6 +129,8 @@
                     "name": "getNewsIntent",
                     "slots": [],
                     "samples": [
+                        "flash briefing",
+                        "cybersecurity news",
                         "give me a flash briefing on hacks",
                         "tell me hacking news",
                         "what is the latest news",
@@ -261,6 +262,7 @@
                     "name": "getVRTIntent",
                     "slots": [],
                     "samples": [
+                        "what are the priorities of security vulnerabilities",
                         "get the VRT",
                         "open the VRT",
                         "about the VRT",
@@ -600,6 +602,7 @@
                     "name": "checkForHacks",
                     "slots": [],
                     "samples": [
+                        "security check",
                         "check my profile",
                         "check for security vulnerabilities",
                         "check for hacks",
@@ -610,6 +613,9 @@
                     "name": "learnSecurityMeasures",
                     "slots": [],
                     "samples": [
+                        "security recommendations",
+                        "security measure",
+                        "security tips",
                         "teach me security measures I should take",
                         "give me security tips",
                         "I have been hacked"
@@ -632,9 +638,26 @@
                     "name": "generalHacks",
                     "slots": [],
                     "samples": [
+                        "list of recent breaches",
+                        "list of recent hacks",
+                        "recent security vulnerabilities",
+                        "recent data breaches",
+                        "recent hacks",
                         "security breaches",
                         "name some breaches",
                         "tell me about recent breaches"
+                    ]
+                },
+                {
+                    "name": "getHelpIntent",
+                    "slots": [],
+                    "samples": [
+                        "how do I use bug browser",
+                        "how do I use this skill",
+                        "what can you help me with",
+                        "what can you do",
+                        "what can you do for me",
+                        "how can you help me"
                     ]
                 }
             ],

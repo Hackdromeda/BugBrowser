@@ -18,9 +18,9 @@ var appName = "Bug Browser";
 
 var numberOfResults = 5;
 
-var welcomeMessage = "Welcome to " + appName + ". You can ask me for a flash briefing on recent hacks and security vulnerabilities around the world, lessons about hacking, information about bug bounty platforms, the VRT, active HackerOne bounties, and active BugCrowd bounties. What will it be?";
+var welcomeMessage = "Welcome to " + appName + ". You can ask me to check if you have been hacked, for a cybersecurity news flash briefing, a list of recent breaches, security tips, lessons about hacking, active HackerOne bounties, and active BugCrowd bounties. You can also learn about more commands by saying help. What will it be?";
 
-var welcomeReprompt = "You can ask me for a flash briefing on recent hacks and security vulnerabilities around the world, lessons about hacking, information about bug bounty platforms, active HackerOne bounties, active BugCrowd programs, or ask for help. What will it be?";
+var welcomeReprompt = "You can ask me for the latest hacking news, a list of recent hacks, a security check, security recommendations, lessons about hacking, active HackerOne bounties, active BugCrowd programs, or ask for help. What will it be?";
 
 var overview = "Bug bounty platforms such as BugCrowd and HackerOne connect organizations to a global crowd of trusted security researchers. Bug Bounty programs allow the developers to discover and resolve bugs before the general public is aware of them, preventing incidents of widespread abuse.";
 
@@ -85,7 +85,7 @@ var helpMessages = [
                         intent:"getHackerOneIntent"
                     },
                     {
-                        message:"What is the vulnerability rating taxonomy",
+                        message:"What are the priorities of security vulnerabilities",
                         description:"Learn about the BugCrowd VRT",
                         intent:"getVRTIntent"
                     },
@@ -105,7 +105,7 @@ var helpMessages = [
                         intent:"getOverview"
                     },
                     {
-                        message:"Have I been hacked",
+                        message:"Have I been hacked?",
                         description:"See if your email and other data has been leaked",
                         intent:"checkForHacks"
                     },
@@ -113,6 +113,11 @@ var helpMessages = [
                         message:"Tell me about recent breaches",
                         description:"Learn about recent security breaches",
                         intent:"generalHacks"
+                    },
+                    {
+                        message:"I have been hacked!",
+                        description:"Get security tips",
+                        intent:"learnSecurityMeasures"
                     }
                 ];
 
