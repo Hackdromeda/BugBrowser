@@ -2086,7 +2086,7 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
               for (var i = 0; i < data.reports.length; i++) {
                 reportUrls.push('https://hackerone.com' + data.reports[i].url);
               }
-              var selectedReportUrl = reportUrls[(Math.floor(Math.random() * reportUrls.length)];
+              var selectedReportUrl = reportUrls[(Math.floor(Math.random() * reportUrls.length))];
               rp({
                   uri: selectedReportUrl,
                   transform: function (body) {
@@ -2398,13 +2398,13 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                         'Accepts': 'application/json'
                     },
                     transform: function (body) {
-                        if (body )
+                        if (body)
                         return JSON.parse(body);
                     }
                 }).then((data) => {
                   if (data.statusCode == 404 || data.length == 0) {
-                    var noneMsgSpeak = "Looks like you have browsed the web scot-free! I could not find any vulnerabilities that exposed your email " + email "." + "What else would you like to do?";
-                    var noneMsgRender = "Looks like you have browsed the web scot-free! I could not find any vulnerabilities that exposed your email " + email ".";
+                    var noneMsgSpeak = "Looks like you have browsed the web scot-free! I could not find any vulnerabilities that exposed your email " + email + "." + "What else would you like to do?";
+                    var noneMsgRender = "Looks like you have browsed the web scot-free! I could not find any vulnerabilities that exposed your email " + email + ".";
 
                     if (hasDisplay) {
 
@@ -2481,8 +2481,8 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                     }
                 }).catch(function (err) {
                     console.log(err);
-                    var noneMsgSpeak = "Looks like you have browsed the web scot-free! I could not find any vulnerabilities that exposed your email " + email "." + "What else would you like to do?";
-                    var noneMsgRender = "Looks like you have browsed the web scot-free! I could not find any vulnerabilities that exposed your email " + email ".";
+                    var noneMsgSpeak = "Looks like you have browsed the web scot-free! I could not find any vulnerabilities that exposed your email " + email + "." + "What else would you like to do?";
+                    var noneMsgRender = "Looks like you have browsed the web scot-free! I could not find any vulnerabilities that exposed your email " + email + ".";
 
                     if (hasDisplay) {
 
