@@ -103,6 +103,16 @@ var helpMessages = [
                         message:"Tell me about bug bounty platforms",
                         description:"Learn about bug bounties and bug bounty platforms",
                         intent:"getOverview"
+                    },
+                    {
+                        message:"Have I been hacked",
+                        description:"See if your email and other data has been leaked",
+                        intent:"checkForHacks"
+                    },
+                    {
+                        message:"Tell me about recent breaches",
+                        description:"Learn about recent security breaches",
+                        intent:"generalHacks"
                     }
                 ];
 
@@ -2634,8 +2644,9 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
         var self = this;
         var hasDisplay = this.event.context.System.device.supportedInterfaces.Display;
         var bug = this.event.request.intent.slots.bug.value;
+        var searchUrl = "stackoverflow.com";
 
-        Bing.web(bug +  ' site:stackexchange.com', {
+        Bing.web(bug +  ' site:' + searchUrl, {
             count: 5
           }, function(error, res, body){
 
