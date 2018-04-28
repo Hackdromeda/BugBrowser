@@ -1,6 +1,7 @@
 const AWS = require('aws-sdk');
 const https = require('https');
 const rp = require('request-promise');
+const Bluebird = require('bluebird');
 const s3 = new AWS.S3();
 
 function writeToS3(bucket, key, data){
@@ -24,15 +25,28 @@ function writeToS3(bucket, key, data){
 }
 
 exports.handler = function(event, context, callback) {
-      rp({
-        uri: `https://hackerone.com/hacktivity.json`,
+    var options1 = {
+      uri: `https://hackerone.com/hacktivity.json`,
         transform: function (body) {
           return body;
         }
-      }).then((data) => {
-        writeToS3('bugbrowsercache', 'hacktivity.json', data);
-        callback(null); //callback(response.StatusCode);
-      }).catch((error) => {
-        console.log(error);
-      });
+    };
+    var options2 = {
+      uri: `https://hackerone.com/hacktivity.json?sort_type=latest_disclosable_activity_at&filter=type%3Apublic&range=forever&limit=100`,
+        transform: function (body) {
+          return body;
+        }
+    };
+
+    var request1 = rp(options1);
+    var request2 = rp(options2);
+
+    Bluebird.all([request1, request2])
+            .spread(function (response1, response2) {
+              writeToS3('bugbrowsercache', 'hacktivity.json', response1);
+              writeToS3('bugbrowsercache', 'hacktivityBugReportFinder.json', response2);
+            }).then(() => {
+              callback(null);
+            });
+
 }
