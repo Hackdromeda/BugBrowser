@@ -2039,7 +2039,7 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
       var cardContent = '';
 
       for (var i = 0; i < securityTips.length; i++) {
-        speakContent += 'Tip Number' + i + ': ' + securityTips[i].title + '. ' + securityTips[i].speakContent;
+        speakContent += 'Tip Number ' + i + ': ' + securityTips[i].title + '. ' + securityTips[i].speakContent;
         cardContent += 'Tip ' + i + ': ' + securityTips[i].title + '\n' + securityTips[i].speakContent + '\n';
       }
 
@@ -2645,7 +2645,7 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
 
             for (var i = 0; i < body.webPages.value.length; i++) {
                 console.log('Possible url ' + body.webPages.value[i].url);
-                if (body.webPages.value[i].url != null) {
+                if (body.webPages.value[i].url != null && !body.webPages.value[i].url.includes("tagged")) {
                     var possibleIdArray = body.webPages.value[i].url.match(/\/questions\/(\d+)\//);
                     if (possibleIdArray) {
                         id = possibleIdArray[1];
@@ -2782,6 +2782,7 @@ function isSimulator() {
 }
 
 function sanitizeInput(s) {
+    s = s.replace('&amp;', 'and')
     s = s.replace('http://', '');
     s = s.replace('https://', '');
     s = s.replace(/&/g, 'and');
