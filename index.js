@@ -8,15 +8,13 @@ const rp = require('request-promise');
 const Bluebird = require('bluebird');
 const _ = require('lodash')
 const alexaLists = require('@blazingedge/alexa-lists');
-const Bing = require('node-bing-api')({ accKey: "15c950c86e604805889d780301bd262a" });
+const Bing = require('node-bing-api')({ accKey: process.env.BING_KEY });
 
 var states = {
     SEARCHMODE: '_SEARCHMODE'
 };
 
 var appName = "Bug Browser";
-
-var newsKey = "54c1f13414d24544a837a4bdccbf5d21";
 
 var numberOfResults = 5;
 
@@ -362,7 +360,7 @@ var newSessionHandlers = {
                 "speechText" : output,
                 "speechTextReprompt" : welcomeReprompt,
                 "templateToken": "launchRequestTemplate",
-                "bodyTemplateContent": "Welcome to Bug Browser", 
+                "bodyTemplateContent": "Welcome to Bug Browser",
                 "cardContent": null,
                 "backgroundImage": 'https://s3.amazonaws.com/bugbrowser/images/WebIconv2Dark.png',
                 "askOrTell" : ":ask",
@@ -500,9 +498,21 @@ var newSessionHandlers = {
         this.handler.state = states.SEARCHMODE;
         this.emitWithState('checkForHacks');
     },
+    'generalHacks': function () {
+        this.handler.state = states.SEARCHMODE;
+        this.emitWithState('generalHacks');
+    },
+    'learnSecurityMeasures': function() {
+      this.handler.state = states.SEARCHMODE;
+      this.emitWithState('learnSecurityMeasures');
+    },
     'bugSearchIntent': function () {
         this.handler.state = states.SEARCHMODE;
         this.emitWithState('bugSearchIntent');
+    },
+    'readReportIntent': function () {
+        this.handler.state = states.SEARCHMODE;
+        this.emitWithState('readReportIntent');
     },
     'ElementSelected': function () {
         this.handler.state = states.SEARCHMODE;
@@ -550,7 +560,7 @@ var newSessionHandlers = {
                                         .setBackgroundImage(makeImage('https://s3.amazonaws.com/bugbrowser/images/Security+Vulnerability.png'))
                                         .setTextContent(makeRichText('<font size="3">' + content + '</font>'))
                                         .build();
-                this.response.speak(speakContent + ' Anyways, Bug Browser is going to sleep for now.').renderTemplate(template);                   
+                this.response.speak(speakContent + ' Anyways, Bug Browser is going to sleep for now.').renderTemplate(template);
                 this.emit(':responseReady');
             }).catch(function (err) {
                 console.log(err);
@@ -901,7 +911,7 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
     'getBugCrowdIntent': function () {
         var self = this;
         this.attributes.lastAction = "getBugCrowdIntent";
-        
+
             rp({
               uri: `https://bugcrowd.com/programs/reward?page=` + bugCrowdPage,
               transform: function (body) {
@@ -941,7 +951,7 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                 var read = "";
                 var retrieveError = "I was unable to retrieve any active programs. Please try again later.";
                 if (programs.length > 0) {
-                    
+
                     read = "Here are the active programs at BugCrowd from page " + bugCrowdPage + " of " + bugCrowdTotal + ": ";
                     for (var counter = 0; counter < programs.length; counter++) {
                         output += (counter + 1) + ". " + programs[counter] + "\n\n";
@@ -999,7 +1009,7 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
               var read = "";
               var retrieveError = "I was unable to retrieve any active programs. Please try again later.";
               if (hackerOnePrograms.length > 0) {
-                  
+
                   read = "Here are the active programs from HackerOne from page " + Math.floor(hackerOneMax/25) + " of " + Math.floor(hackerOneTotal/25) + ": ";
                   for (var counter = hackerOneMax - 25; counter < (hackerOnePrograms.length <= hackerOneMax ? hackerOnePrograms.length: hackerOneMax); counter++) {
                       output += (counter + 1 - hackerOneMax + 25) + ". " + hackerOnePrograms[counter].name + "\n\n";
@@ -1106,14 +1116,14 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                     }
                     else{
                         var numOfVrts = "";
-                    }                       
+                    }
                     if (information[1]) {
                         information[1] = information[1].replace('day  ', 'day. ').replace('days  ', 'days. ').replace('hour   ', 'hour. ').replace('hours   ', 'hours. ').replace('week   ', 'week. ').replace('weeks   ', 'weeks. ').replace('month   ', 'month. ').replace('months   ', 'months. ') + '. ';
                         var validationTime = 'Expect v' + information[1].substring(1, information[1].length);
                     }
                     else{
                         var validationTime = "";
-                    }                    
+                    }
                     if (information[2]) {
                         var payout = "This program has a " + information[2].substring(0);
                     }
@@ -1142,7 +1152,7 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                                                 .setImage(makeImage(imageObj.largeImageUrl))
                                                 .build();
                             this.attributes.lastSpeech = output;
-                            this.response.speak(output).listen(hearMoreMessage.substring(1)).cardRenderer(cardTitle, cardContent, imageObj).renderTemplate(template);                   
+                            this.response.speak(output).listen(hearMoreMessage.substring(1)).cardRenderer(cardTitle, cardContent, imageObj).renderTemplate(template);
                             this.emit(':responseReady');
                         } else {
                             this.attributes.lastSpeech = output;
@@ -1162,7 +1172,7 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
             else {
                 this.emit(':ask', noProgramErrorMessage + moreInfoProgram, noProgramErrorMessage + moreInfoProgram);
             }
-            
+
         }).catch(function (err) {
             console.log(err);
             self.emit(':ask', generalError, HelpMessage);
@@ -1268,7 +1278,7 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                                             .setTextContent(makeRichText('<font size="1">' + bounty + ' ' + (hackerOnePrograms[index].about ? sanitizeInput(hackerOnePrograms[index].about.replace(/\n/g,' ')): cardContent) + '</font>'))
                                             .setImage(makeImage(images[0] ? images[0]: imageObj.smallImageUrl))
                                             .build();
-                        this.response.speak(speak).listen(hearMoreMessage.substring(1)).cardRenderer(cardTitle, cardContent, imageObj).renderTemplate(template);                   
+                        this.response.speak(speak).listen(hearMoreMessage.substring(1)).cardRenderer(cardTitle, cardContent, imageObj).renderTemplate(template);
                         this.emit(':responseReady');
                     } else {
                         this.emit(':askWithCard', speak, hearMoreMessage.substring(1), cardTitle, cardContent, imageObj);
@@ -1359,7 +1369,7 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                 var read = "";
                 var retrieveError = "I was unable to retrieve any vulnerability information. Please try again later.";
                 if (selectedVrt) {
-                    
+
                     read = "The VRT, or Vulnerability Rating Taxonomy, outlines Bugcrowd’s baseline priority ratings for vulnerabilities. Most companies reward bugs classified between Priority 1 (P1) and Priority 4 (P4). Priority 5 (P5) is the lowest designation and is given to non-exploitable weaknesses. ";
 
                     output += (selectedVrt.name + ":" + "\n" + "\n");
@@ -1398,9 +1408,9 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                         this.response.speak(read).cardRenderer(cardTitle, output, vrtObj).renderTemplate(listTemplate).listen(HelpMessage);
                         this.emit(':responseReady');
                     } else {
-                        this.emit(':askWithCard', read, HelpMessage, cardTitle, output, vrtObj); 
+                        this.emit(':askWithCard', read, HelpMessage, cardTitle, output, vrtObj);
                     }
-                }                           
+                }
                 else {
                     this.attributes.lastSpeech = retrieveError;
                     this.emit(':tell', retrieveError);
@@ -1692,7 +1702,7 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
             this.emit(':askWithCard', content + generalReprompt, HelpMessage, cardTitle, cardContent)
         }
     },
-    "ElementSelected": function() {
+    'ElementSelected': function() {
         this.attributes.lastAction = "ElementSelected";
         var context = this;
         var self = this;
@@ -1759,21 +1769,21 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                         $('.stat').each(function(i, elem) {
                           information.push($(this).text().trim().replace(/\s/g,' '));
                         });
-    
+
                         if (information[0]) {
                             information[0] = information[0].replace(/ +(?= )/g,'') + ' to security researchers in total. ';
                             var numOfVrts = information[0];
                         }
                         else{
                             var numOfVrts = "";
-                        }                       
+                        }
                         if (information[1]) {
                             information[1] = information[1].replace('day  ', 'day.').replace('days  ', 'days.') + '. ';
                             var validationTime = 'Expect v' + information[1].substring(1, information[1].length);
                         }
                         else{
                             var validationTime = "";
-                        }                    
+                        }
                         if (information[2]) {
                             var payout = "This program has a " + information[2].substring(0);
                         }
@@ -1790,7 +1800,6 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                                 smallImageUrl: images[index],
                                 largeImageUrl: images[index]
                             };
-                                console.log('Ready to build new body template 2!');
                                 const builder = new Alexa.templateBuilders.BodyTemplate2Builder();
                                 const template = builder.setTitle(cardTitle)
                                                     .setToken('getMoreInfoBugCrowdIntentToken')
@@ -1800,7 +1809,6 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                                                     .setImage(makeImage(imageObj.largeImageUrl))
                                                     .build();
                                 this.response.speak(output).listen(hearMoreMessage.substring(1)).cardRenderer(cardTitle, cardContent, imageObj).renderTemplate(template);
-                                console.log('Should be rendered!');                 
                                 this.emit(':responseReady');
                         }
                         else {
@@ -1811,7 +1819,7 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                         console.log(err);
                         self.emit(':ask', generalError, HelpMessage);
                     });
-                
+
                 }).catch(function (err) {
                     console.log(err);
                     self.emit(':ask', generalError, HelpMessage);
@@ -1829,13 +1837,13 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
               }).then((data) => {
                 var hackerOnePrograms = [];
                 hackerOneTotal = parseInt(data.total); // Subtract 1 for index limit
-    
+
                 for (var i = 0; i < data.results.length; i++) {
                     hackerOnePrograms.push(data.results[i]);
                 }
-    
+
               return hackerOnePrograms;
-    
+
             }).then((hackerOnePrograms) => {
                 if (hackerOnePrograms[index].url != null) {
                     rp({
@@ -1893,12 +1901,12 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                         }
                         var speak = output + " See your Alexa app for the specific program requirements for " + cardTitle + "." + hearMoreMessage; // speak includes question.
                         this.attributes.lastSpeech = speak;
-    
+
                         const imageObj = {
                             smallImageUrl: hackerOnePrograms[index].profile_picture,
                             largeImageUrl: images[0] ? images[0]: hackerOnePrograms[index].profile_picture
                         };
-    
+
                         if (this.event.context.System.device.supportedInterfaces.Display) {
                             const builder = new Alexa.templateBuilders.BodyTemplate2Builder();
                             const template = builder.setTitle(cardTitle)
@@ -1908,7 +1916,7 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                                                 .setTextContent(makeRichText('<font size="1">' + bounty + ' ' + (hackerOnePrograms[index].about ? sanitizeInput(hackerOnePrograms[index].about.replace(/\n/g,' ')): cardContent) + '</font>'))
                                                 .setImage(makeImage(images[0] ? images[0]: imageObj.smallImageUrl))
                                                 .build();
-                            this.response.speak(speak).listen(hearMoreMessage.substring(1)).cardRenderer(cardTitle, cardContent, imageObj).renderTemplate(template);                   
+                            this.response.speak(speak).listen(hearMoreMessage.substring(1)).cardRenderer(cardTitle, cardContent, imageObj).renderTemplate(template);
                             this.emit(':responseReady');
                         } else {
                             this.emit(':askWithCard', speak, hearMoreMessage.substring(1), cardTitle, cardContent, imageObj);
@@ -1942,7 +1950,7 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
             console.log ('Help Token Detected ' + selectedToken);
             this.emit(helpMessages[selectedToken].intent);
         }
-        else if((this.event.request.token).substring(0, 15) == "lessonItemToken"){ 
+        else if((this.event.request.token).substring(0, 15) == "lessonItemToken"){
             var selectedToken = (this.event.request.token).substring(15);
             console.log ('Lesson Token Detected ' + selectedToken);
             this.emit(lessons[selectedToken].name);
@@ -1951,43 +1959,42 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
             var index = parseInt(this.event.request.token.replace(/[^0-9]/g, ''), 13);
             var content = '';
         var options1 = {
-            uri: 'https://newsapi.org/v2/everything?sources=' + newsSources + '&apiKey=268d120f43684696b93f40d62a17dcd1&q=' + "security hacks",
+            uri: 'https://newsapi.org/v2/everything?sources=' + newsSources + '&apiKey=' + process.env.NEWS_KEY + '&q=' + "security hacks",
             transform: function (body) {
             return JSON.parse(body);
             }
        }
        var options2 = {
-            uri: 'https://newsapi.org/v2/everything?sources=' + newsSources + '&apiKey=268d120f43684696b93f40d62a17dcd1&q=' + "security vulnerability",
+            uri: 'https://newsapi.org/v2/everything?sources=' + newsSources + '&apiKey=' + process.env.NEWS_KEY + '&q=' + "security vulnerability",
             transform: function (body) {
             return JSON.parse(body);
             }
         }
         var options3 = {
-            uri: 'https://newsapi.org/v2/everything?sources=' + newsSources + '&apiKey=268d120f43684696b93f40d62a17dcd1&q=' + "bug bounty",
+            uri: 'https://newsapi.org/v2/everything?sources=' + newsSources + '&apiKey=' + process.env.NEWS_KEY + '&q=' + "bug bounty",
             transform: function (body) {
             return JSON.parse(body);
             }
        }
        var options4 = {
-            uri: 'https://newsapi.org/v2/everything?sources=' + newsSources + '&apiKey=268d120f43684696b93f40d62a17dcd1&q=' + "security researcher",
+            uri: 'https://newsapi.org/v2/everything?sources=' + newsSources + '&apiKey=' + process.env.NEWS_KEY + '&q=' + "security researcher",
             transform: function (body) {
             return JSON.parse(body);
             }
        }
        var options5 = {
-            uri: 'https://newsapi.org/v2/everything?sources=' + newsSources + '&apiKey=268d120f43684696b93f40d62a17dcd1&q=' + "cybersecurity",
+            uri: 'https://newsapi.org/v2/everything?sources=' + newsSources + '&apiKey=' + process.env.NEWS_KEY + '&q=' + "cybersecurity",
             transform: function (body) {
             return JSON.parse(body);
             }
         }
 
-       
        var request1 = rp(options1);
        var request2 = rp(options2);
        var request3 = rp(options3);
        var request4 = rp(options4);
        var request5 = rp(options5);
-       
+
        Bluebird.all([request1, request2, request3, request4, request5])
            .spread(function (response1, response2, response3, response4, response5) {
                var articles = [];
@@ -2002,7 +2009,7 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                                     .setImage(makeImage(articles[index].urlToImage ? articles[index].urlToImage: 'https://s3.amazonaws.com/bugbrowser/images/HackerNewsLogo.jpeg'))
                                     .setTextContent(makeRichText("<font size='1'>" + content + "</font>"))
                                     .build();
-                context.response.speak(articles[index].title + ': ' + content).listen(hearMoreMessage).cardRenderer(articles[index].title, articles[index].description, articles[index].urlToImage).renderTemplate(template);                   
+                context.response.speak(articles[index].title + ': ' + content).listen(hearMoreMessage).cardRenderer(articles[index].title, articles[index].description, articles[index].urlToImage).renderTemplate(template);
                 context.emit(':responseReady');
                 } else {
                     context.emit(':askWithCard', articles[index].title + ': ' + content, hearMoreMessage, articles[index].title, articles[index].description, makeImage(articles[index].urlToImage ? articles[index].urlToImage : 'https://s3.amazonaws.com/bugbrowser/images/Circuit.png'));
@@ -2017,12 +2024,114 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
             this.emit('Unhandled');
         }
     },
-    'AMAZON.RepeatIntent': function () { 
+    'learnSecurityMeasures': function() {
+      this.attributes.lastAction = 'learnSecurityMeasures';
+      const securityTips = [
+        {
+          "title": "DNS Protection",
+          "description": "1.1.1.1",
+          "speakContent": "You can switch to a fast and secure DNS service, such as Cloudflare's 1.1.1.1 DNS service. "
+        },
+        {
+          "title": "Account Security",
+          "description": "Two Factor Authentication",
+          "speakContent": "Nowadays, one password may not be enough. If the service you are using supports two factor authentication, your account information is much more likely to be secure. "
+        },
+        {
+          "title": "Password Security",
+          "description": "Alphanumeric Passwords",
+          "speakContent": "Avoid using passwords that are easy to guess. A strong password is longer with different types of characters, letters, and numbers. "
+        }
+      ];
+      var cardTitle = 'Account Security Tips';
+      var speakContent = "Here are some tips to improve your accounts' security in the future. ";
+      var cardContent = '';
+
+      if (this.event.context.System.device.supportedInterfaces.Display) {
+          const listItemBuilder = new Alexa.templateBuilders.ListItemBuilder();
+          const listTemplateBuilder = new Alexa.templateBuilders.ListTemplate1Builder();
+          for (var i = 0; i < securityTips.length; i++) {
+                  speakContent += 'Tip  ' + i + ': ' + securityTips[i].title + '; ' + securityTips[i].speakContent;
+                  cardContent += 'Tip ' + i + ': ' + securityTips[i].title + '\n' + securityTips[i].speakContent + '\n';
+                  listItemBuilder.addItem(null, 'learnSecurityMeasuresToken' + i, makePlainText(securityTips[i].title), makePlainText(statusCodes[i].description));
+          }
+          const listItems = listItemBuilder.build();
+          const listTemplate = listTemplateBuilder.setToken('learnSecurityMeasuresToken')
+                                  .setTitle('Account Security Tips')
+                                  .setListItems(listItems)
+                                  .setBackgroundImage(makeImage('https://s3.amazonaws.com/bugbrowser/images/Bug-Window-Dark.png'))
+                                  .build();
+          this.attributes.lastSpeech = content + generalReprompt;
+          this.response.speak(content + generalReprompt).cardRenderer('HTTP Status Codes', cardContent, null).renderTemplate(listTemplate).listen(HelpMessage);
+          this.emit(':responseReady');
+      } else {
+          for (var i = 0; i < securityTips.length; i++) {
+            speakContent += 'Tip  ' + i + ': ' + securityTips[i].title + '; ' + securityTips[i].speakContent;
+            cardContent += 'Tip ' + i + ': ' + securityTips[i].title + '\n' + securityTips[i].speakContent + '\n';
+          }
+          this.emit(':askWithCard', content + generalReprompt, HelpMessage, cardTitle, cardContent)
+      }
+    },
+    'readReportIntent': function () {
+        this.attributes.lastAction = 'readReportIntent';
+        var self = this;
+        var hasDisplay = this.event.context.System.device.supportedInterfaces.Display;
+        rp({
+            uri: `https://hackerone.com/hacktivity.json?sort_type=latest_disclosable_activity_at&filter=type%3Apublic&range=forever&limit=100`,
+            transform: function (body) {
+              return JSON.parse(body);
+            }
+          }).then((data) => {
+              var reportUrls = [];
+              for (var i = 0; i < data.reports.length; i++) {
+                reportUrls.push('https://hackerone.com' + data.reports[i].url);
+              }
+              var selectedReportUrl = reportUrls[(Math.floor(Math.random() * reportUrls.length)];
+              rp({
+                  uri: selectedReportUrl,
+                  transform: function (body) {
+                    return cheerio.load(body);
+                  }
+                }).then(($) => {
+                    var cardTitle = 'Recent Disclosure';
+                    var title = $('meta[property="og:title"]').attr('content');
+                    var imageUrl = $('meta[property="og:image"]').attr('content');
+                    var description = $('meta[property="og:description"]').attr('content');
+                    var speak = 'A bug report is a security researchers description of a potential security vulnerability in a particular product or service. Here is a bug report titled:' + title + "." + "In summary it says, " + description + " You can read more at " + selectedReportUrl + ". What else would you like to know? You can also ask me to find another report by saying repeat that.";
+                    const imageObj = {
+                        smallImageUrl: imageUrl,
+                        largeImageUrl: imageUrl
+                    };
+                    var cardContent = "'A bug report is a security researchers description of a potential security vulnerability in a particular product or service. \n\n Title: " + title + "\n Description: " + description + " \n\n Read more: " + selectedReportUrl;
+
+                  if (hasDisplay) {
+                    const builder = new Alexa.templateBuilders.BodyTemplate2Builder();
+                    const template = builder.setTitle(cardTitle)
+                                            .setBackButtonBehavior('VISIBLE')
+                                            .setBackgroundImage(makeImage('https://s3.amazonaws.com/bugbrowser/images/Security+Vulnerability.png'))
+                                            .setTextContent(makeRichText('<font size="3">' + description + '</font>'))
+                                            .setImage(makeImage(imageUrl))
+                                            .build();
+                    this.response.speak().renderTemplate(template).cardRenderer(cardTitle, cardContent, imageObj).listen(HelpMessage);
+                    this.emit(':responseReady');
+                  } else {
+                    this.emit(':askWithCard', speak, HelpMessage, cardTitle, cardContent, imageObj);
+                  }
+            }).catch(function (err) {
+                console.log(err);
+                self.emit(':ask', generalError, HelpMessage);
+            });
+        }).catch(function (err) {
+            console.log(err);
+            self.emit(':ask', generalError, HelpMessage);
+        });
+    },
+    'AMAZON.RepeatIntent': function () {
         if(this.attributes.lastAction != null){
             this.emit(this.attributes.lastAction);
         }
         else if(this.attributes.lastSpeech != null){
-            this.emit('ask', this.attributes.lastSpeech, HelpMessage); 
+            this.emit('ask', this.attributes.lastSpeech, HelpMessage);
         }
         else{
             console.log ("Bug Browser could not find speech to repeat.")
@@ -2126,7 +2235,7 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                                         .setBackgroundImage(makeImage('https://s3.amazonaws.com/bugbrowser/images/Security+Vulnerability.png'))
                                         .setTextContent(makeRichText('<font size="3">' + content + '</font>'))
                                         .build();
-                this.response.speak(speakContent + ' Anyways, Bug Browser is going to sleep for now.').renderTemplate(template);                   
+                this.response.speak(speakContent + ' Anyways, Bug Browser is going to sleep for now.').renderTemplate(template);
                 this.emit(':responseReady');
             }).catch(function (err) {
                 console.log(err);
@@ -2146,7 +2255,7 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
             }).catch(function (err) {
                 console.log(err);
                 self.emit(':tell', 'Bug Browser is going to sleep for now.');
-            }); 
+            });
         }
     },
     'AMAZON.HelpIntent': function () {
@@ -2158,43 +2267,43 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
         var content = '';
         var context = this;
         var options1 = {
-            uri: 'https://newsapi.org/v2/everything?sources=' + newsSources + '&apiKey=268d120f43684696b93f40d62a17dcd1&q=' + "security hacks",
+            uri: 'https://newsapi.org/v2/everything?sources=' + newsSources + '&apiKey=' + process.env.NEWS_KEY + '&q=' + "security hacks",
             transform: function (body) {
             return JSON.parse(body);
             }
        }
        var options2 = {
-            uri: 'https://newsapi.org/v2/everything?sources=' + newsSources + '&apiKey=268d120f43684696b93f40d62a17dcd1&q=' + "security vulnerability",
+            uri: 'https://newsapi.org/v2/everything?sources=' + newsSources + '&apiKey=' + process.env.NEWS_KEY + '&q=' + "security vulnerability",
             transform: function (body) {
             return JSON.parse(body);
             }
         }
         var options3 = {
-            uri: 'https://newsapi.org/v2/everything?sources=' + newsSources + '&apiKey=268d120f43684696b93f40d62a17dcd1&q=' + "bug bounty",
+            uri: 'https://newsapi.org/v2/everything?sources=' + newsSources + '&apiKey=' + process.env.NEWS_KEY + '&q=' + "bug bounty",
             transform: function (body) {
             return JSON.parse(body);
             }
        }
        var options4 = {
-            uri: 'https://newsapi.org/v2/everything?sources=' + newsSources + '&apiKey=268d120f43684696b93f40d62a17dcd1&q=' + "security researcher",
+            uri: 'https://newsapi.org/v2/everything?sources=' + newsSources + '&apiKey=' + process.env.NEWS_KEY + '&q=' + "security researcher",
             transform: function (body) {
             return JSON.parse(body);
             }
        }
        var options5 = {
-            uri: 'https://newsapi.org/v2/everything?sources=' + newsSources + '&apiKey=268d120f43684696b93f40d62a17dcd1&q=' + "cybersecurity",
+            uri: 'https://newsapi.org/v2/everything?sources=' + newsSources + '&apiKey=' + process.env.NEWS_KEY + '&q=' + "cybersecurity",
             transform: function (body) {
             return JSON.parse(body);
             }
         }
 
-       
+
        var request1 = rp(options1);
        var request2 = rp(options2);
        var request3 = rp(options3);
        var request4 = rp(options4);
        var request5 = rp(options5);
-       
+
        Bluebird.all([request1, request2, request3, request4, request5])
            .spread(function (response1, response2, response3, response4, response5) {
                var articles = [];
@@ -2259,11 +2368,11 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
         }
     },
     'checkForHacks': function () {
+        this.attributes.lastAction = "checkForHacks";
         var accessToken = this.event.session.user.accessToken;
         var self = this;
         var hasDisplay = this.event.context.System.device.supportedInterfaces.Display;
-        console.log('Access Token=' + accessToken);
-        if(accessToken === null || accessToken === undefined) { 
+        if(accessToken === null || accessToken === undefined) {
             var linkError = "Please use the Alexa app to link your Amazon account to this skill. Login with Amazon is used to access your email and lookup security vulnerabilities that might have affected you. In the meantime, what else would you like me to do?";
             self.emit(':askWithLinkAccountCard', linkError);
         } else {
@@ -2275,8 +2384,6 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
             }).then((profile) => {
                 email = profile.email.split(" ")[0];
                 name = profile.name.split(" ")[0];
-                console.log(name);
-                console.log(email);
                 var map = new Map();
                 map.set(0, name);
                 map.set(1, email)
@@ -2295,16 +2402,26 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                         return JSON.parse(body);
                     }
                 }).then((data) => {
-                    if (data.statusCode == 404) {
-                        data.body = [];
-                        data = data.body;
-                    } else {
-                        data = JSON.stringify(data.body);
+                  if (data.statusCode == 404 || data.length == 0) {
+                    var noneMsgSpeak = "Looks like you have browsed the web scot-free! I could not find any vulnerabilities that exposed your email " + email "." + "What else would you like to do?";
+                    var noneMsgRender = "Looks like you have browsed the web scot-free! I could not find any vulnerabilities that exposed your email " + email ".";
+
+                    if (hasDisplay) {
+
+                        const builder = new Alexa.templateBuilders.BodyTemplate1Builder();
+                        const template = builder.setTitle('Bug Browser')
+                                                .setToken('checkedHacksListToken')
+                                                .setBackButtonBehavior('VISIBLE')
+                                                .setBackgroundImage(makeImage('https://s3.amazonaws.com/bugbrowser/images/Security+Vulnerability.png'))
+                                                .setTextContent(makeRichText('<font size="3">' + noneMsgRender + '</font>'))
+                                                .build();
+
+
+                        self.response.speak(noneMsgSpeak).renderTemplate(template).listen(HelpMessage);
+                        self.emit(':responseReady');
                     }
-                    if(!data || data.length == 0 ){
-                        var noneMsg = "Looks like you have browsed the web scot-free! I could not find any vulnerabilities that exposed your email. What else would you like to do?";
-                        console.log(err);
-                        self.emit(':ask', noneMsg, HelpMessage);
+                    else{
+                      self.emit(':ask', noneMsgSpeak, HelpMessage);
                     }
                     var hackedSites = [];
                     var hackedNames = [];
@@ -2316,7 +2433,7 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                     for (var i = 0; i < data.length; i++) {
                         hackedSites.push(data[i].Domain);
                         hackedNames.push(data[i].Name);
-                        imageUrls.push("https://haveibeenpwned.com/Content/Images/PwnedLogos/" + data[i].Domain + "." + data[i].LogoType); //add check for null
+                        imageUrls.push("https://haveibeenpwned.com/Content/Images/PwnedLogos/" + data[i].Name + "." + data[i].LogoType); //add check for null
                         descriptions.push(data[i].Description.replace(/<(.|\n)*?>/g, ''));
                         breachDates.push(data[i].BreachDate);
                     }
@@ -2340,19 +2457,6 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
 
                     if (hasDisplay) {
 
-                        if (hackNum == 0) {
-                            const builder = new Alexa.templateBuilders.BodyTemplate6Builder();
-                            const template = builder.setTitle('Bug Browser')
-                                                    .setToken('checkedHacksListToken')
-                                                    .setBackButtonBehavior('VISIBLE')
-                                                    .setBackgroundImage(makeImage('https://s3.amazonaws.com/bugbrowser/images/Security+Vulnerability.png'))
-                                                    .setTextContent(makeRichText('<font size="3">' + speak + '</font>'))
-                                                    .build();
-                            this.response.speak(speak + ' Anyways, Bug Browser is going to sleep for now.').renderTemplate(template);                   
-                            this.emit(':responseReady');
-                        }
-
-
                         const listItemBuilder = new Alexa.templateBuilders.ListItemBuilder();
                         const listTemplateBuilder = new Alexa.templateBuilders.ListTemplate1Builder();
                         for (var i = 0; i < hackedSites.length; i++) {
@@ -2361,7 +2465,7 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                             }
                             listItemBuilder.addItem(makeImage(imageUrls[i]), 'checkedHacksListItemToken' + i, makeRichText("<font size='2'>" + hackedNames[i] + "</font>"), makeRichText("<font size='1'>" + "Breach Occurred " + "<i>" + breachDates[i] + "</i>" + "</font>"));
                         }
-                        
+
 
                         const listItems = listItemBuilder.build();
                         const listTemplate = listTemplateBuilder.setToken('checkedHacksListToken')
@@ -2377,7 +2481,8 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                     }
                 }).catch(function (err) {
                     console.log(err);
-                    var noneMsg = "Looks like you have browsed the web scot-free! I could not find any vulnerabilities that exposed your email. What else would you like to do?";
+                    var noneMsgSpeak = "Looks like you have browsed the web scot-free! I could not find any vulnerabilities that exposed your email " + email "." + "What else would you like to do?";
+                    var noneMsgRender = "Looks like you have browsed the web scot-free! I could not find any vulnerabilities that exposed your email " + email ".";
 
                     if (hasDisplay) {
 
@@ -2386,19 +2491,142 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                                                 .setToken('checkedHacksListToken')
                                                 .setBackButtonBehavior('VISIBLE')
                                                 .setBackgroundImage(makeImage('https://s3.amazonaws.com/bugbrowser/images/Security+Vulnerability.png'))
-                                                .setTextContent(makeRichText('<font size="3">' + noneMsg + '</font>'))
+                                                .setTextContent(makeRichText('<font size="3">' + noneMsgRender + '</font>'))
                                                 .build();
 
-                        
-                        self.response.speak(noneMsg + ' Anyways, Bug Browser is going to sleep for now.').renderTemplate(template);                   
+
+                        self.response.speak(noneMsgSpeak).renderTemplate(template).listen(HelpMessage);
                         self.emit(':responseReady');
                     }
-                    self.emit(':ask', noneMsg, HelpMessage);
+                    else{
+                      self.emit(':ask', noneMsgSpeak, HelpMessage);
+                    }
                 });
             }).catch(function (err) {
                 var lookupError = "The lookup tool is unavailable at this time. In the meantime, what else would you like to do?"
                 console.log(err);
                 self.emit(':ask', lookupError, HelpMessage);
+            });
+        }
+    },
+    'generalHacks': function () {
+        this.attributes.lastAction = "generalHacks";
+        var self = this;
+        var hasDisplay = this.event.context.System.device.supportedInterfaces.Display;
+        var cardTitle = 'Recent Security Breaches';
+              rp({
+                  uri: `https://haveibeenpwned.com/api/v2/breaches`,
+                  headers: {
+                      'User-Agent': 'Bug-Browser',
+                      'Accepts': 'application/json'
+                  },
+                  transform: function (body) {
+                      if (body )
+                      return JSON.parse(body);
+                  }
+              }).then((data) => {
+                  if (data.statusCode == 404 || data.length == 0) {
+                    var noneMsgSpeak = "There are no recent hacks. What else would you like to do?";
+                    var noneMsgRender = "There are no recent hacks.";
+
+                    if (hasDisplay) {
+
+                        const builder = new Alexa.templateBuilders.BodyTemplate1Builder();
+                        const template = builder.setTitle('Bug Browser')
+                                                .setToken('checkedHacksListToken')
+                                                .setBackButtonBehavior('VISIBLE')
+                                                .setBackgroundImage(makeImage('https://s3.amazonaws.com/bugbrowser/images/Security+Vulnerability.png'))
+                                                .setTextContent(makeRichText('<font size="3">' + noneMsgRender + '</font>'))
+                                                .build();
+
+
+                        self.response.speak(noneMsgSpeak).renderTemplate(template).listen(HelpMessage);
+                        self.emit(':responseReady');
+                    }
+                    else{
+                      self.emit(':ask', noneMsgSpeak, HelpMessage);
+                    }
+                  } else {
+                      data = JSON.stringify(data.body);
+                  }
+                  var hacked = []
+
+                  for (var i = 0; i < data.length; i++) {
+                      hacked.push({
+                          site: data[i].Domain,
+                          name: data[i].Name,
+                          image: "https://haveibeenpwned.com/Content/Images/PwnedLogos/" + data[i].Name + "." + data[i].LogoType,
+                          description: data[i].Description.replace(/<(.|\n)*?>/g, ''),
+                          date: data[i].BreachDate,
+                          sortBreach: new Date((data[i].BreachDate).replace('-', ', '))});
+                  }
+                  hacked.sort(sortHacksByDateDesc);
+                  var map = new Map();
+                  map.set(0, hacked);
+                  map.set(1, hackNum);
+                  return map;
+              }).then((map) => {
+                  var hacks = map.get(0);
+                  var hackNum = map.get(1);
+                  var recent = []
+                  var d = new Date();
+                  d.setMonth(d.getMonth() - 6);
+                  for (var i = 0; i < hacks.length; i++) {
+                      if(d < hacks[i].sortBreach){
+                          recent.push(hacks[i]);
+                          console.log(recent[i])
+                      }
+                  }
+
+                  var plurality = ((hackNum == 1) ? "Here is 1 recent hack": "Here are " + hackNum + " recent hacks");
+                  var speak = plurality + " of the over " + hackNum + " major hacks in history.";
+
+                  if (hasDisplay) {
+
+                      const listItemBuilder = new Alexa.templateBuilders.ListItemBuilder();
+                      const listTemplateBuilder = new Alexa.templateBuilders.ListTemplate1Builder();
+                      for (var i = 0; i < hacked.length; i++) {
+                          if (hacked[i].description) {
+                              speak += ' ' + sanitizeInput(hacked[i].description) + " ";
+                          }
+                          listItemBuilder.addItem(makeImage(hacked[i].image), 'generalHacksListItemToken' + i, makeRichText("<font size='2'>" + hacked[i].name + "</font>"), makeRichText("<font size='1'>" + "Breach Occurred " + "<i>" + hacked[i].date + "</i>" + "</font>"));
+                      }
+
+
+                      const listItems = listItemBuilder.build();
+                      const listTemplate = listTemplateBuilder.setToken('generalHacksListToken')
+                                              .setTitle(cardTitle)
+                                              .setListItems(listItems)
+                                              .setBackgroundImage(makeImage('https://s3.amazonaws.com/bugbrowser/images/Security+Vulnerability.png'))
+                                              .build();
+
+                          self.response.speak(speak).renderTemplate(listTemplate).cardRenderer(cardTitle, speak, makeImage('https://s3.amazonaws.com/bugbrowser/images/Security+Vulnerability.png')).listen(speak);
+                          self.emit(':responseReady');
+                  } else {
+                      self.emit(':ask', speak + generalReprompt, HelpMessage, cardTitle, speak)
+                  }
+              }).catch(function (err) {
+                  console.log(err);
+                  var noneMsgSpeak = "There are no recent hacks. What else would you like to do?";
+                  var noneMsgRender = "There are no recent hacks.";
+
+                  if (hasDisplay) {
+
+                      const builder = new Alexa.templateBuilders.BodyTemplate1Builder();
+                      const template = builder.setTitle('Bug Browser')
+                                              .setToken('checkedHacksListToken')
+                                              .setBackButtonBehavior('VISIBLE')
+                                              .setBackgroundImage(makeImage('https://s3.amazonaws.com/bugbrowser/images/Security+Vulnerability.png'))
+                                              .setTextContent(makeRichText('<font size="3">' + noneMsgRender + '</font>'))
+                                              .build();
+
+
+                      self.response.speak(noneMsgSpeak).renderTemplate(template).listen(HelpMessage);
+                      self.emit(':responseReady');
+                  }
+                  else{
+                    self.emit(':ask', noneMsgSpeak, HelpMessage);
+                  }
             });
         }
     },
@@ -2411,11 +2639,11 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
         Bing.web(bug +  ' site:stackexchange.com', {
             count: 5
           }, function(error, res, body){
-        
+
             var id = '';
             var rootDomain = '';
             var hostName = '';
-        
+
             for (var i = 0; i < body.webPages.value.length; i++) {
                 console.log('Possible url'+ body.webPages.value[i].url);
                 if (body.webPages.value[i].url != null) {
@@ -2426,7 +2654,7 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                         hostName = extractHostname(body.webPages.value[i].url);
                         hostName = hostName.substring(0, hostName.lastIndexOf('.'));
 
-                    }                    
+                    }
                     break;
                 }
             }
@@ -2441,7 +2669,7 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                 },
                 gzip: true
             };
-          
+
           request(options, function(error, response, body) {
             body = JSON.parse(body);
             console.log(body);
@@ -2457,7 +2685,7 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                     }
                 }
             }
-        
+
             response = response.replace(/<code>(.*?)<\/code>/g, '');
             response = response.replace(/<(.|\n)*?>/g, '');
             response = sanitizeInput(response);
@@ -2465,9 +2693,9 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
             if (response == null || response.length == 0 || response.length == '') {
                 response = 'No search results have been found.';
             }
-            
+
             if (hasDisplay) {
-                response = 'Here is a possible solution to your problem. ' + response; 
+                response = 'Here is a possible solution to your problem. ' + response;
                 const builder = new Alexa.templateBuilders.BodyTemplate1Builder();
                 const template = builder.setTitle('Bug Search')
                                         .setToken('bugSearchIntentToken')
@@ -2475,14 +2703,14 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                                         .setBackgroundImage(makeImage('https://s3.amazonaws.com/bugbrowser/images/Bug-Window-Dark.png'))
                                         .setTextContent(makeRichText('<font size="3">' + response + '</font>'))
                                         .build();
-                self.response.speak(response).renderTemplate(template);                  
+                self.response.speak(response).renderTemplate(template);
                 self.emit(':responseReady');
             } else {
                 self.emit(':askWithCard', response, HelpMessage, 'Bug Search', response, 'https://s3.amazonaws.com/bugbrowser/images/Bug-Bracket.jpg');
             }
 
           });
-            
+
           });
     },
     'AMAZON.CancelIntent': function () {
@@ -2503,6 +2731,12 @@ exports.handler = function (event, context, callback) {
     alexa = Alexa.handler(event, context);
     alexa.registerHandlers(newSessionHandlers, startSearchHandlers);
     alexa.execute();
+};
+
+sortHacksByDateDesc = function (date1, date2) {
+    if (date1.sortBreach > date2.sortBreach) return -1;
+    if (date1.sortBreach < date2.sortBreach) return 1;
+    return 0;
 };
 
 String.prototype.trunc =
@@ -2538,7 +2772,7 @@ function sanitizeInput(s) {
 
     return s;
 }
-  
+
 function renderTemplate (content) {
     //https://developer.amazon.com/public/solutions/alexa/alexa-skills-kit/docs/display-interface-reference#display-template-reference
 
@@ -2661,13 +2895,13 @@ function renderTemplate (content) {
                     },
                     "sessionAttributes": {}
                 }
-            }  
-              this.context.succeed(response);         
+            }
+              this.context.succeed(response);
              break;
-  
+
          default:
             this.response.speak(goodbyeMessage);
             this.emit(':responseReady');
      }
-  
+
   }
