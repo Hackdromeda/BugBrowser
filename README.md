@@ -113,58 +113,77 @@ Text here
 
 [News API](https://newsapi.org/docs) - NewsAPI helps us connect users with several news sources. We no longer need to wait for several endpoints just to get a diverse set of sources, instead we can quickly deliver cybersecurity information to the user.
 
-[Have I Been Pwned](https://haveibeenpwned.com/API/v2) - Text here
+[Have I Been Pwned](https://haveibeenpwned.com/API/v2) - Have I Been Pwned helps us list find out about data breaches that have leaked your email and other information as well as about recent security breaches that have affected large amounts of people.
 
-[Bing Web Search API](https://azure.microsoft.com/en-us/services/cognitive-services/bing-web-search-api/) - Text here
+[Bing Cognitive Services and Web Search API](https://azure.microsoft.com/en-us/services/cognitive-services/bing-web-search-api/) - Bing Web Search helps us traverse StackOverflow and process natural language inputs.
+
+[StackExchange API](https://api.stackexchange.com/docs) - StackExchanges's StackOverflow is a popular forum for developers and helps us find information about your bug questions and inquiries.
 
 ## Supported Phrases
 *Try some of these sample utterances:*
 
-* Learn about BugCrowd and HackerOne
+General
+  * Try, *Alexa ask Bug Browser to repeat that* to repeat previous intent
+  * Try, *Alexa page up / page down / scroll right / scroll left / scroll up / scroll down* (Echo Show and Echo Spot)
+  * Try, *Alexa ask Bug Browser to go to sleep*
+  * Try, *Alexa ask Bug Browser, what can you do?* to learn about all the intents the skill supports. Tap or ask to go to the desired intent from the help page
+
+Learn about security breaches and ones that may affect you
+  * Try, *Alexa ask Bug Browser, have I been hacked?* (Account Linking Required)
+  * Try, *Alexa ask Bug Browser to check my profile* (Account Linking Required)
+  * Try, *Alexa ask Bug Browser to tell me about recent breaches*   
+
+Learn about best security practices and how to secure your accounts, devices, and data after a hack
+  * Try, *Alexa ask Bug Browser to give me security tips*
+
+Learn about BugCrowd and HackerOne
   * Try, *Alexa ask Bug Browser to tell me some facts about BugCrowd.*
   * Try, *Alexa ask Bug Browser to introduce me to BugCrowd.*
   * Try, *Alexa ask Bug Browser to tell me what bug bounties and bug bounty platforms are*
   * See the Alexa app or interface for a recap of this information (iOS, Android, and Fire TV)
 
-* Learn how to use BugCrowd
+Learn how to use BugCrowd
   * Try, *Alexa how do you use BugCrowd?*
   
-* Get bounties from BugCrowd and/or HackerOne (Sorted by NEWEST first)
+Get bounties from BugCrowd and/or HackerOne (Sorted by NEWEST first)
   * Try, *Alexa ask Bug Browser, how do you find bounties?*
   * Try, *Alexa ask Bug Browser, what companies are looking for security researchers?*
   * Try, *Alexa ask Bug Browser, what are some bounties available from BugCrowd?*
   * Try, *Alexa ask Bug Browser to tell me about HackerOne programs*
   * See the Alexa app or interface for the list of programs (iOS, Android, and Fire TV)
    
-* Get more bounties beyond the first set of cards provided (Sorted by NEWEST first)
+Get more bounties beyond the first set of cards provided (Sorted by NEWEST first)
   * Try, *Alexa next page*
   * Try, *Alexa previous page*
   * Try, *Yes* when prompted if you want to hear more programs
   
-* Get additional details for bounties from BugCrowd and/or HackerOne
+Get additional details for bounties from BugCrowd and/or HackerOne
   * Try, *Alexa ask Bug Browser to tell me more about program number five* after asking for the list on the desired platform
   * Try, *Alexa ask Bug Browser to tell me more about BugCrowd bounty number five*
   * Try, *Yes* when prompted if you want to learn about more programs
   * See the Alexa app or interface for additional details such as program requirements (iOS, Android, and Fire TV)
   
-* Learn about hacking news using The New York Times and [NewsAPI](https://newsapi.org/)
+Learn about hacking news using The New York Times and [NewsAPI](https://newsapi.org/)
   * Try, *Alexa ask Bug Browser to give me a flash briefing on hacks*
   * Try, *Alexa ask Bug Browser to tell me the latest news on vulnerabilities*
   * Tap on the article for additional details (Echo Spot and Echo Show only)
   * See the Alexa app or interface for additional details (iOS, Android, and Fire TV)
   
-* Learn about the BugCrowd Vulnerability Rating Taxonomy (VRT)
+Learn about the Vulnerability Rating Taxonomy (VRT) and vulnerability priorities as outlined by BugCrowd
   * Try, *Alexa ask Bug Browser to tell me about the VRT*
   * See the Alexa app or interface for additional details (iOS, Android, and Fire TV)
   
-* Learn about BugCrowd through videos (Echo Spot and Echo Show only)
+Learn about BugCrowd through videos (Echo Spot and Echo Show only)
   * Try, *Alexa ask Bug Browser to introduce me to BugCrowd with a video*
 
-* Learn about HTTP status codes
+Learn about HTTP status codes
   * Try, *Alexa ask Bug Browser to list HTTP status codes*
   
-* Learn about cybersecurity through video tutorials (Echo Spot and Echo Show only)
+Learn about cybersecurity through video tutorials (Echo Spot and Echo Show only)
+  * Try, *Alexa ask Bug Browser to teach me how to hack*
   * Try, *Alexa ask Bug Browser to play the lesson introduction video*
+  * Try, *Alexa ask Bug Browser to play lesson {number}*
+    * Try, *Alexa ask Bug Browser to play lesson five*
   * Try, *Alexa ask Bug Browser to teach me Same-Origin Policy*
   * Try, *Alexa ask Bug Browser to teach me about types of XSS*
   * Try, *Alexa ask Bug Browser to teach me about directory traversal*
