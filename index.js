@@ -1216,7 +1216,6 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
             else{
                 index = Math.floor(Math.random() * 25) + hackerOneMax - 25;
             }
-            console.log("Index is allowed? " + allowed + " because it's value is")
             if (allowed && hackerOnePrograms[index] != null && hackerOnePrograms[index].url != null) {
                 rp({
                     uri: `https://hackerone.com` + hackerOnePrograms[index].url,
@@ -1249,22 +1248,15 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
 
                     if (periodIndex != -1) {
                         splitIndex = periodIndex;
-                        console.log('Split Index set to periodIndex:' + splitIndex);
                     } else if (exclamationIndex != - 1) {
                         splitIndex = exclamationIndex;
-                        console.log('Split Index set to exclamationIndex:' + splitIndex);
                     } else if (questionIndex != - 1) {
                         splitIndex = questionIndex;
-                        console.log('Split Index set to questionIndex:' + splitIndex);
                     } else {
                         splitIndex = ((cardContent.substring(0, splitIndex + 1) <= 1600) ? (splitIndex): (cardContent.substring(0, 1600).lastIndexOf('.') + 1));
-                        console.log('Split Index set equal to or below 1600:' + splitIndex);
                     }
 
-                    console.log('Final Split Index: ' + splitIndex);
-                    console.log('cardContent before substring');
                     cardContent = cardContent.substring(0, splitIndex + 1) + " That's not all! You can find more at " + "hackerone.com" + hackerOnePrograms[index].url + ".";
-                    console.log('Final cardContent: ' + cardContent);
                     if(hackerOnePrograms[index].about == null || hackerOnePrograms[index].about == ""){
                         output = bounty + cardContent;
                     }
@@ -1754,7 +1746,6 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                 map.set(2, urls);
                 map.set(3, images);
                 map.set(4, bugCrowdPagination)
-                console.log('Map ready for EventSelected!');
                 return map;
               }).then((map) => {
                 var programs = map.get(0);
@@ -1887,22 +1878,15 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
 
                         if (periodIndex != -1) {
                             splitIndex = periodIndex;
-                            console.log('Split Index set to periodIndex:' + splitIndex);
                         } else if (exclamationIndex != - 1) {
                             splitIndex = exclamationIndex;
-                            console.log('Split Index set to exclamationIndex:' + splitIndex);
                         } else if (questionIndex != - 1) {
                             splitIndex = questionIndex;
-                            console.log('Split Index set to questionIndex:' + splitIndex);
                         } else {
                             splitIndex = ((cardContent.substring(0, splitIndex + 1) <= 1600) ? (splitIndex): (cardContent.substring(0, 1600).lastIndexOf('.') + 1));
-                            console.log('Split Index set equal to or below 1600:' + splitIndex);
                         }
 
-                        console.log('Final Split Index: ' + splitIndex);
-                        console.log('cardContent before substring');
                         cardContent = cardContent.substring(0, splitIndex + 1) + " That's not all! You can find more at " + "hackerone.com" + hackerOnePrograms[index].url + ".";
-                        console.log('Final cardContent: ' + cardContent);
                     if(hackerOnePrograms[index].about == null || hackerOnePrograms[index].about == ""){
                             output = bounty + cardContent;
                         }
@@ -2600,7 +2584,7 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                           if (recent[i].description) {
                               speak += sanitizeInput(recent[i].description) + " ";
                           }
-                          listItemBuilder.addItem(makeImage(recent[i].image), 'generalHacksListItemToken' + i, makeRichText("<font size='2'>" + recent[i].name + "</font>"), makeRichText("<font size='1'>" + "Breach Occurred " + "<i>" + recent[i].date + ". Affected " + recent[i].affected + " people." + "</i>" + "</font>"));
+                          listItemBuilder.addItem(makeImage(recent[i].image), 'generalHacksListItemToken' + i, makeRichText("<font size='2'>" + recent[i].name + "</font>"), makeRichText("<font size='1'>" + "Breach Occurred " + "<i>" + recent[i].date + ". </i> Affected <i>" + recent[i].affected + " people." + "</i>" + "</font>"));
                       }
 
 
@@ -2656,7 +2640,7 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
             var hostName = '';
 
             for (var i = 0; i < body.webPages.value.length; i++) {
-                console.log('Possible url'+ body.webPages.value[i].url);
+                console.log('Possible url ' + body.webPages.value[i].url);
                 if (body.webPages.value[i].url != null) {
                     var possibleIdArray = body.webPages.value[i].url.match(/\/questions\/(\d+)\//);
                     if (possibleIdArray) {
