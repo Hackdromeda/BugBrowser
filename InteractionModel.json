@@ -145,6 +145,7 @@
                     "name": "getOverview",
                     "slots": [],
                     "samples": [
+                        "tell me what bug bounties and bug bounty platforms are",
                         "Tell me what Bug Bounty Platforms are",
                         "What are bug bounties and bug bounty platforms",
                         "what is a bug bounty platform",
@@ -192,11 +193,10 @@
                     "name": "getProgramsIntent",
                     "slots": [],
                     "samples": [
+                        " how do you find bounties",
                         "how can I earn money",
                         "what companies are looking for security researchers",
                         "how do I earn money",
-                        "what are some bounties available",
-                        "active bounties",
                         "tell me the top active programs",
                         "who should I hack",
                         "What companies should I hack",
@@ -205,26 +205,18 @@
                     ]
                 },
                 {
-                    "name": "listIntent",
-                    "slots": [],
-                    "samples": [
-                        "add to watch list",
-                        "add this to my watch list",
-                        "add this program to my list",
-                        "save this program",
-                        "watch this program",
-                        "add to list",
-                        "add this program to list",
-                        "add to bug bounties list",
-                        "add to bounties list",
-                        "keep track of this",
-                        "keep track of this program"
-                    ]
-                },
-                {
                     "name": "getBugCrowdIntent",
                     "slots": [],
                     "samples": [
+                        "bug crowd bounties",
+                        "bugcrowd bounties",
+                        "bug crowd programs",
+                        "bugcrowd programs",
+                        "tell me about the active bugcrowd bounties",
+                        "give me bugcrowd programs",
+                        "give me bugcrowd bounties",
+                        "give me bug crowd bounties",
+                        "give me bug crowd programs",
                         "open bug crowd bounties",
                         "open bugcrowd bounties",
                         "show bugcrowd bounties",
@@ -248,7 +240,10 @@
                     "name": "getHackerOneIntent",
                     "slots": [],
                     "samples": [
-                        "active Hacker one programs",
+                        "hackerone bounties",
+                        "give me hacker one bounties",
+                        "give me hackerone programs",
+                        "active hacker one programs",
                         "Hacker one programs",
                         "Hacker One bounties",
                         "tell me about Hacker One programs",
@@ -266,6 +261,12 @@
                     "name": "getVRTIntent",
                     "slots": [],
                     "samples": [
+                        "get the VRT",
+                        "open the VRT",
+                        "about the VRT",
+                        "Give me information about the VRT",
+                        "Give me the VRT",
+                        "Tell me the VRT",
                         "Tell me about the Vulnerability Rating Taxonomy",
                         "Tell me about the VRT",
                         "Read an entry from the Vulnerability Rating Taxonomy",
@@ -575,6 +576,27 @@
                     ]
                 },
                 {
+                    "name": "listIntent",
+                    "slots": [],
+                    "samples": [
+                        "add to watch list",
+                        "add this to my watch list",
+                        "add this program to my list",
+                        "save this program",
+                        "watch this program",
+                        "add to list",
+                        "add this program to list",
+                        "add to bug bounties list",
+                        "add to bounties list",
+                        "keep track of this",
+                        "keep track of this program"
+                    ]
+                },
+                {
+                    "name": "AMAZON.RepeatIntent",
+                    "samples": []
+                },
+                {
                     "name": "checkForHacks",
                     "slots": [],
                     "samples": [
@@ -582,6 +604,15 @@
                         "check for security vulnerabilities",
                         "check for hacks",
                         "have I been hacked"
+                    ]
+                },
+                {
+                    "name": "learnSecurityMeasures",
+                    "slots": [],
+                    "samples": [
+                        "teach me security measures I should take",
+                        "give me security tips",
+                        "I have been hacked"
                     ]
                 },
                 {
@@ -595,6 +626,15 @@
                     "samples": [
                         "find the solution for {bug}",
                         "tell me about bug {bug}"
+                    ]
+                },
+                {
+                    "name": "generalHacks",
+                    "slots": [],
+                    "samples": [
+                        "security breaches",
+                        "name some breaches",
+                        "tell me about recent breaches"
                     ]
                 }
             ],

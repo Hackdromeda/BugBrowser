@@ -2445,7 +2445,7 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                         hackedNames.push(data[i].Name);
                         imageUrls.push("https://haveibeenpwned.com/Content/Images/PwnedLogos/" + data[i].Name + "." + data[i].LogoType); //add check for null
                         descriptions.push(data[i].Description.replace(/<(.|\n)*?>/g, ''));
-                        breachDates.push(data[i].BreachDate);
+                        breachDates.push(formatDateUS(new Date((data[i].BreachDate).replace('-', ', '))));
                     }
                     var map = new Map();
                     map.set(0, hackedSites);
@@ -2568,7 +2568,9 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                           description: data[i].Description.replace(/<(.|\n)*?>/g, ''),
                           date: data[i].BreachDate,
                           affected: data[i].PwnCount,
-                          sortBreach: new Date((data[i].BreachDate).replace('-', ', '))});
+                          dateUS: formatDateUS(new Date((data[i].BreachDate).replace('-', ', '))),
+                          sortBreach: new Date((data[i].BreachDate).replace('-', ', '))
+                        });
                   }
                   hacked.sort(sortHacksByDateDesc);
                   var map = new Map();
@@ -2584,22 +2586,21 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                   for (var i = 0; i < hacks.length; i++) {
                       if(d < hacks[i].sortBreach){
                           recent.push(hacks[i]);
-                          console.log(recent[i])
                       }
                   }
 
-                  var plurality = ((hackNum == 1) ? "Here is 1 recent hack": "Here are " + hackNum + " recent hacks");
-                  var speak = plurality + " of the over " + hackNum + " major hacks in history.";
+                  var plurality = ((hackNum == 1) ? "Here is 1 recent hack": "Here are " + recent.length + " recent hacks");
+                  var speak = plurality + " of the over " + hackNum + " major hacks in history. ";
 
                   if (hasDisplay) {
 
                       const listItemBuilder = new Alexa.templateBuilders.ListItemBuilder();
                       const listTemplateBuilder = new Alexa.templateBuilders.ListTemplate1Builder();
-                      for (var i = 0; i < hacks.length; i++) {
-                          if (hacks[i].description) {
-                              speak += sanitizeInput(hacks[i].description) + ". ";
+                      for (var i = 0; i < recent.length; i++) {
+                          if (recent[i].description) {
+                              speak += sanitizeInput(recent[i].description) + " ";
                           }
-                          listItemBuilder.addItem(makeImage(hacks[i].image), 'generalHacksListItemToken' + i, makeRichText("<font size='2'>" + hacks[i].name + "</font>"), makeRichText("<font size='1'>" + "Breach Occurred " + "<i>" + hacks[i].date + ". Affected " + hacks[i].affected + " people." + "</i>" + "</font>"));
+                          listItemBuilder.addItem(makeImage(recent[i].image), 'generalHacksListItemToken' + i, makeRichText("<font size='2'>" + recent[i].name + "</font>"), makeRichText("<font size='1'>" + "Breach Occurred " + "<i>" + recent[i].date + ". Affected " + recent[i].affected + " people." + "</i>" + "</font>"));
                       }
 
 
@@ -2748,6 +2749,21 @@ sortHacksByDateDesc = function (date1, date2) {
     if (date1.sortBreach < date2.sortBreach) return 1;
     return 0;
 };
+
+function formatDateUS(date) {
+    var monthNames = [
+      "January", "February", "March",
+      "April", "May", "June", "July",
+      "August", "September", "October",
+      "November", "December"
+    ];
+  
+    var day = date.getDate();
+    var monthIndex = date.getMonth();
+    var year = date.getFullYear();
+  
+    return  monthNames[monthIndex] + ' ' + day + ', ' + year;
+  }
 
 String.prototype.trunc =
       function (n) {
