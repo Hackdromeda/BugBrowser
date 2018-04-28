@@ -37,14 +37,22 @@ exports.handler = function(event, context, callback) {
           return body;
         }
     };
+    var options3 = {
+      uri: `https://haveibeenpwned.com/api/v2/breaches`,
+        transform: function (body) {
+          return body;
+        }
+    };
 
     var request1 = rp(options1);
     var request2 = rp(options2);
+    var request3 = rp(options3);
 
-    Bluebird.all([request1, request2])
-            .spread(function (response1, response2) {
+    Bluebird.all([request1, request2, request3])
+            .spread(function (response1, response2, response3) {
               writeToS3('bugbrowsercache', 'hacktivity.json', response1);
               writeToS3('bugbrowsercache', 'hacktivityBugReportFinder.json', response2);
+              writeToS3('bugbrowsercache', 'breaches.json', response3);
             }).then(() => {
               callback(null);
             });
