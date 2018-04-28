@@ -2121,11 +2121,11 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
             this.emit(this.attributes.lastAction);
         }
         else if(this.attributes.lastSpeech != null){
-            this.emit('ask', this.attributes.lastSpeech, HelpMessage);
+            this.emit(':ask', this.attributes.lastSpeech, HelpMessage);
         }
         else{
             console.log ("Bug Browser could not find speech to repeat.")
-            this.emit('ask', HelpMessage, HelpMessage)
+            this.emit(':ask', HelpMessage, HelpMessage)
         }
     },
     'AMAZON.NextIntent': function () {
