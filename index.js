@@ -2006,7 +2006,7 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                 const template = builder.setTitle(articles[index].title)
                                     .setToken('getMoreInfoNewsToken')
                                     .setBackButtonBehavior('VISIBLE')
-                                    .setBackgroundImage(makeImage('https://s3.amazonaws.com/bugbrowser/images/Circuit.png'))
+                                    .setBackgroundImage(makeImage('https://s3.amazonaws.com/bugbrowser/images/Security.png'))
                                     .setImage(makeImage(articles[index].urlToImage ? articles[index].urlToImage: 'https://s3.amazonaws.com/bugbrowser/images/HackerNewsLogo.jpeg'))
                                     .setTextContent(makeRichText("<font size='1'>" + content + "</font>"))
                                     .build();
@@ -2345,7 +2345,7 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                 const listTemplate = listTemplateBuilder.setToken('getNewsIntentToken')
                                         .setTitle(cardTitle)
                                         .setListItems(listItems)
-                                        .setBackgroundImage(makeImage('https://s3.amazonaws.com/bugbrowser/images/Circuit.png'))
+                                        .setBackgroundImage(makeImage('https://s3.amazonaws.com/bugbrowser/images/Security.png'))
                                         .build();
 
                 context.response.speak(content + generalReprompt).cardRenderer(cardTitle, 'Data provided by News API: \n\n' + content, null).renderTemplate(listTemplate).listen(HelpMessage);
