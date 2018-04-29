@@ -16,6 +16,8 @@ Developed in the Bay Area by Avi Shah and Naval Patel
 *[Amazon User](https://www.amazon.com/gp/customer-reviews/R19TNP45UHJ2LU/)*
 
 ## Enable the Skill:
+*Bug Browser supports English*
+
 [Amazon US Skill](https://www.amazon.com/dp/B07BPVH1S5/)
 
 [Amazon UK Skill](https://www.amazon.com/coming-soon) - coming soon!
@@ -30,7 +32,7 @@ Developed in the Bay Area by Avi Shah and Naval Patel
 
 **Where did the idea come from?**
 
-For a Life Hack and Work-at-Home Skill, we did not want to reinvent the calendar/day view, timer/time manager, alarm, and calling features Alexa already supports natively. Instead we choose to address **four major, important, and relevant issues to today: cybersecurity, information security, security vulnerabilities, and bugs.**
+For a Life Hack and Work-at-Home Skill, we did not want to reinvent the calendar/day view, timer/time manager, alarm, and calling features Alexa already supports natively. Instead we choose to address **four major, important, and relevant issues to today *(more on relevance in mission)*: cybersecurity, information security, security vulnerabilities, and bugs.**
 
 We realized that there were very few skills for [security researchers](https://www.amazon.com/s/ref=nb_sb_noss_2?url=search-alias%3Dalexa-skills&field-keywords=Hacker) and [developers](https://www.amazon.com/s/ref=nb_sb_noss_2?url=search-alias%3Dalexa-skills&field-keywords=Developer) after meeting with the principal engineer and the community manager at BugCrowd at Los Altos Hacks III. They challenged us to create a skill that would a) inform them of active bug bounties, b) provide details about the specific bounties, and c) make their lives as security researchers easier in any other way.
 
@@ -38,7 +40,7 @@ We realized that there were very few skills for [security researchers](https://w
 
 We wanted to tap the [over 166,000](https://www.hackerone.com/sites/default/files/2018-01/2018_Hacker_Report.pdf) registered ethical hackers on HackerOne (as of December 2017) and the [over 80,400](https://bugcrowd.com/programs) registered security researchers on BugCrowd and hundreds of thousands of developers who do not have many skills meant to help them with their work from home or programming passions. We also wanted to make the skill applicable to the general public.
 
-These are the crowdsourced heroes who help keep our data safe. **One thing we hate the most** is losing our precious data to black hat hackers or cyber criminals as a result of undiscovered security vulnerabilities. Companies such as Facebook could have benefitted from larger exposure to their existing bug bounty programs or new bug bounty programs. **This is where our skill comes in, it gives larger exposure to public bug bounty programs with an emphasis on new ones.**
+These are the crowdsourced heroes who help keep our data safe. **One thing we hate the most** is losing our precious data to black hat hackers or cyber criminals as a result of undiscovered security vulnerabilities. Companies such as Facebook could have benefitted from larger exposure to their existing bug bounty programs or new bug bounty programs. **This is one of the places where our skill comes in, it gives larger exposure to public bug bounty programs with an emphasis on new ones (sorted to front).**
 
 ## Mission
 
@@ -158,15 +160,15 @@ Learn about security breaches and ones that may affect you
 
 Learn about best security practices and how to secure your accounts, devices, and data after a hack
   * Try, *Alexa ask Bug Browser to give me security tips*
+  * Try, *Alexa ask Bug Browser for security recommendations*
 
 Learn about BugCrowd and HackerOne
   * Try, *Alexa ask Bug Browser to tell me some facts about BugCrowd.*
   * Try, *Alexa ask Bug Browser to introduce me to BugCrowd.*
   * Try, *Alexa ask Bug Browser to tell me what bug bounties and bug bounty platforms are*
   * See the Alexa app or interface for a recap of this information (iOS, Android, and Fire TV)
-
-Learn how to use BugCrowd
-  * Try, *Alexa how do you use BugCrowd?*
+  * Try, *Alexa how do you use BugCrowd?* (Echo Spot and Echo Show only)
+  * Try, *Alexa ask Bug Browser to introduce me to BugCrowd with a video* to learn about BugCrowd through videos (Echo Spot and Echo Show only)
 
 Get bounties from BugCrowd and/or HackerOne (Sorted by NEWEST first)
   * Try, *Alexa ask Bug Browser, how do you find bounties?*
@@ -188,18 +190,19 @@ Get additional details for bounties from BugCrowd and/or HackerOne
   * Try, *Yes* when prompted if you want to learn about more programs
   * See the Alexa app or interface for additional details such as program requirements (iOS, Android, and Fire TV)
 
+Learn about recent vulnerability disclosure from HackerOne
+  * Try, *Alexa ask Bug Browser for recent disclosure*
+  * Try, *Alexa ask Bug Browser for an example bug report*
+
 Learn about hacking news from several sources using [News API](https://newsapi.org/)
   * Try, *Alexa ask Bug Browser to give me a flash briefing on hacks*
   * Try, *Alexa ask Bug Browser to tell me the latest news on vulnerabilities*
   * Tap on the article for additional details (Echo Spot and Echo Show only)
-  * See the Alexa app or interface for additional details (iOS, Android, and Fire TV)
+  * See the Alexa app or interface for article titles (iOS, Android, and Fire TV)
 
 Learn about the Vulnerability Rating Taxonomy (VRT) and vulnerability priorities as outlined by BugCrowd
   * Try, *Alexa ask Bug Browser to tell me about the VRT*
   * See the Alexa app or interface for additional details (iOS, Android, and Fire TV)
-
-Learn about BugCrowd through videos (Echo Spot and Echo Show only)
-  * Try, *Alexa ask Bug Browser to introduce me to BugCrowd with a video*
 
 Learn about HTTP status codes
   * Try, *Alexa ask Bug Browser to list HTTP status codes*
@@ -231,6 +234,7 @@ Learn about cybersecurity through video tutorials (Echo Spot and Echo Show only)
 * Font color customized (Awaiting SDK Support)
 * Notifications on your watch list of programs (Notifications SDK is Invite-Only for Alexa)
 * Remove message on enabling that account linking is required as it is only needed for one intent (Awaiting platform support)
+* We, the developers of Bug Browser, support open source software and will be open sourcing the entire project under the MIT license on GitHub after the conclusion of the Alexa Life Hacks challenge.
 
 # Built With
 * [Node.js](https://nodejs.org/en/)
