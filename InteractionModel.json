@@ -630,6 +630,8 @@
                         }
                     ],
                     "samples": [
+                        "what is bug {bug}",
+                        "search for bug {bug}",
                         "find the solution for {bug}",
                         "tell me about bug {bug}"
                     ]
@@ -658,6 +660,16 @@
                         "what can you do",
                         "what can you do for me",
                         "how can you help me"
+                    ]
+                },
+                {
+                    "name": "readReportIntent",
+                    "slots": [],
+                    "samples": [
+                        "bug report example",
+                        "read me a bug report",
+                        "recent disclosure",
+                        "read me recent disclosure"
                     ]
                 }
             ],
