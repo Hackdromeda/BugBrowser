@@ -20,13 +20,15 @@ Developed in the Bay Area by Avi Shah and Naval Patel
 
 [Amazon US Skill](https://www.amazon.com/dp/B07BPVH1S5/)
 
-[Amazon UK Skill](https://www.amazon.com/coming-soon) - coming soon!
+[Amazon UK Skill](https://www.amazon.co.uk/dp/B07BPVH1S5/) - coming soon!
 
-[Amazon Canada Skill](https://www.amazon.com/coming-soon) - coming soon!
+[Amazon Canada Skill](https://www.amazon.ca/dp/B07BPVH1S5/) - coming soon!
 
-[Amazon Australia Skill](https://www.amazon.com/coming-soon) - coming soon!
+[Amazon Australia Skill](https://www.amazon.com.au/dp/B07BPVH1S5/) - coming soon!
 
-[Amazon India Skill](https://www.amazon.com/coming-soon) - coming soon!
+[Amazon India Skill](https://www.amazon.co.in/dp/B07BPVH1S5/) - coming soon!
+
+[Enable on any international device set to an English locale](https://skills-store.amazon.com/deeplink/dp/B07BPVH1S5)
 
 ## Inspiration
 
