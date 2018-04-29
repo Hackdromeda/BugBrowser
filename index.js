@@ -2112,6 +2112,7 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                 reportUrls.push('https://hackerone.com' + data.reports[i].url);
               }
               var selectedReportUrl = reportUrls[(Math.floor(Math.random() * reportUrls.length))];
+              console.log("Report: " + selectedReportUrl)
               rp({
                   uri: selectedReportUrl,
                   transform: function (body) {
@@ -2121,14 +2122,14 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                     var cardTitle = 'Recent Disclosure';
                     var title = $('meta[property="og:title"]').attr('content');
                     var imageUrl = $('meta[property="og:image"]').attr('content');
-                    var description = $('meta[property="og:description"]').attr('content');
+                    var description = sanitizeInput($('meta[name="og:description"]').attr('content'));
                     var speak = 'A bug report is a security researchers description of a potential security vulnerability in a particular product or service. Here is a bug report titled:' + title + "." + "In summary it says, " + description + " You can read more at " + selectedReportUrl + ". What else would you like to know? You can also ask me to find another report by saying repeat that.";
                     const imageObj = {
                         smallImageUrl: imageUrl,
                         largeImageUrl: imageUrl
                     };
-                    var cardContent = "'A bug report is a security researchers description of a potential security vulnerability in a particular product or service. \n\n Title: " + title + "\n Description: " + description + " \n\n Read more: " + selectedReportUrl;
-
+                    var cardContent = "A bug report is a security researchers description of a potential security vulnerability in a particular product or service. \n\n Title: " + title + "\n Description: " + description + " \n\n Read more: " + selectedReportUrl;
+                    console.log(speak);
                   if (hasDisplay) {
                     const builder = new Alexa.templateBuilders.BodyTemplate2Builder();
                     const template = builder.setTitle(cardTitle)
@@ -2137,7 +2138,7 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                                             .setTextContent(makeRichText('<font size="3">' + description + '</font>'))
                                             .setImage(makeImage(imageUrl))
                                             .build();
-                    this.response.speak().renderTemplate(template).cardRenderer(cardTitle, cardContent, imageObj).listen(HelpMessage);
+                    this.response.speak(speak).renderTemplate(template).cardRenderer(cardTitle, cardContent, imageObj).listen(HelpMessage);
                     this.emit(':responseReady');
                   } else {
                     this.emit(':askWithCard', speak, HelpMessage, cardTitle, cardContent, imageObj);
@@ -2821,7 +2822,21 @@ function isSimulator() {
 }
 
 function sanitizeInput(s) {
-    s = s.replace('&amp;', 'and')
+    s = s.replace('&lt;', 'less than');
+    s = s.replace('&gt;', 'greater than')
+    s = s.replace('&#60;', 'less than');
+    s = s.replace('&#62;', 'greater than')
+    s = s.replace('&#34;', '');
+    s = s.replace('&quot;', '');
+    s = s.replace('&apos;', '');   
+    s = s.replace('&#39;', '');
+    s = s.replace('&#162;', 'cents');
+    s = s.replace('&#169;', 'copyright');
+    s = s.replace('&copy;', 'copyright');
+    s = s.replace('&reg;', 'registered trademark');
+    s = s.replace('&#174;', 'registered trademark');
+    s = s.replace('&#162;', 'cents');
+    s = s.replace('&amp;', 'and');
     s = s.replace('http://', '');
     s = s.replace('https://', '');
     s = s.replace(/&/g, 'and');
