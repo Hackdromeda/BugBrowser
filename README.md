@@ -3,11 +3,6 @@
 
 Developed in the Bay Area by Avi Shah and Naval Patel
 
-# MISSING from README:
-- Testimonials from **all** tiers of users
-- Add embedded video demonstration and screenshots
-- Updated explanation of life of security researcher and why this improves their lives and why this deserves Work At Home prize:
-
 ## Testimonials
 
 *"For bug bounty hunters, bug hunting is a passion. The Bug Browser Alexa Skill allows a hacker to keep up to date with hacking news, helps them find stuff to hack on, and it can even teach some of the basics of hacking. And this can all come from a device on your countertop. Very cool!"*
@@ -15,10 +10,21 @@ Developed in the Bay Area by Avi Shah and Naval Patel
 -Sam
 *Senior Community Manager at BugCrowd*
 
+*"Bug Browser is great. It lets me know if my data has been leaked as a result of data breaches as well as providing general cybersecurity information and news."*
+
+-Rasim
+*[Amazon User](https://www.amazon.com/gp/customer-reviews/R19TNP45UHJ2LU/)*
+
 ## Enable the Skill:
 [Amazon US Skill](https://www.amazon.com/dp/B07BPVH1S5/)
+
 [Amazon UK Skill](https://www.amazon.com/coming-soon) - coming soon!
+
 [Amazon Canada Skill](https://www.amazon.com/coming-soon) - coming soon!
+
+[Amazon Australia Skill](https://www.amazon.com/coming-soon) - coming soon!
+
+[Amazon India Skill](https://www.amazon.com/coming-soon) - coming soon!
 
 ## Inspiration
 
