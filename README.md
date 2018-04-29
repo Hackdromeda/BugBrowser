@@ -196,6 +196,7 @@ Get additional details for bounties from BugCrowd and/or HackerOne
   * Try, *Alexa ask Bug Browser to tell me more about BugCrowd bounty {number}*
     * Try, *Alexa ask Bug Browser to tell me more about BugCrowd bounty number seven*
   * Try, *Yes* when prompted if you want to learn about more programs
+  * Try, *Alexa ask Bug Browser to add this to my list* after getting additional details on the program to save programs to a custom list on your Alexa app
   * See the Alexa app or interface for additional details such as program requirements (iOS, Android, and Fire TV)
 
 Learn about recent vulnerability disclosure from HackerOne
