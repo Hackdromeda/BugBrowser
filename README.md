@@ -7,8 +7,6 @@ Developed in the Bay Area by Avi Shah and Naval Patel
 - Testimonials from **all** tiers of users
 - Add embedded video demonstration and screenshots
 - Updated explanation of life of security researcher and why this improves their lives and why this deserves Work At Home prize:
-- Update Intents w/ Explanation
-- Replace "Text here" or filler text
 
 ## Testimonials
 
