@@ -75,6 +75,8 @@ var hintOptions = ["tell me hacking news",
                    "I have been hacked!",
                    "give me security tips",
                    "tell me about bug null pointer exception",
+                   "tell me about recent breaches",
+                   "tell me about recent hacks",
                    "surprise me"
                 ];
 var helpMessages = [
@@ -2745,7 +2747,7 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                                             .setTextContent(makeRichText('<font size="3">' + response + '</font>'))
                                             .build();
                     self.attributes.lastSpeech = speak;
-                    self.response.speak(speak).renderTemplate(template).renderCard(cardTitle, response, imageObj).listen(HelpMessage);
+                    self.response.speak(speak).renderTemplate(template).cardRenderer(cardTitle, response, imageObj).listen(HelpMessage);
                     self.emit(':responseReady');
                 } else {
                     self.attributes.lastSpeech = speak;
