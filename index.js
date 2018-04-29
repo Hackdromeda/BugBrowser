@@ -60,18 +60,22 @@ var newsSources = "hacker-news,wired,the-verge,techcrunch";
 
 var newsQueries = ["security hacks", "security vulnerability", "bug bounty", "security researcher", "cybersecurity"]
 
-var hintOptions = ["Tell me hacking news",
-                   "Give me a flash briefing on hacks",
-                   "Tell me some facts about BugCrowd",
-                   "Introduce me to BugCrowd",
-                   "What companies are looking for security researchers?",
-                   "Tell me the top active programs",
-                   "Tell me about the Vulnerability Rating Taxonomy",
-                   "Tell me about the VRT",
-                   "Introduce me to BugCrowd with a video",
-                   "Play BugCrowd overview video",
-                   "How do you find bounties?",
-                   "Surprise me"
+var hintOptions = ["tell me hacking news",
+                   "give me a flash briefing on hacks",
+                   "tell me some facts about BugCrowd",
+                   "introduce me to BugCrowd",
+                   "what companies are looking for security researchers?",
+                   "tell me the top active programs",
+                   "tell me about the Vulnerability Rating Taxonomy",
+                   "tell me about the VRT",
+                   "introduce me to BugCrowd with a video",
+                   "play BugCrowd overview video",
+                   "how do you find bounties?",
+                   "have I been hacked?",
+                   "I have been hacked!",
+                   "give me security tips",
+                   "tell me about bug null pointer exception",
+                   "surprise me"
                 ];
 var helpMessages = [
                     {
@@ -85,14 +89,9 @@ var helpMessages = [
                         intent:"getHackerOneIntent"
                     },
                     {
-                        message:"What are the priorities of security vulnerabilities",
+                        message:"What are the priorities of security vulnerabilities?",
                         description:"Learn about the BugCrowd VRT",
                         intent:"getVRTIntent"
-                    },
-                    {
-                        message:"Tell me the latest news on vulnerabilities",
-                        description:"Get news about security vulnerabilities",
-                        intent:"getNewsIntent"
                     },
                     {
                         message:"Tell me the latest news on vulnerabilities",
@@ -118,6 +117,11 @@ var helpMessages = [
                         message:"I have been hacked!",
                         description:"Get security tips",
                         intent:"learnSecurityMeasures"
+                    },
+                    {
+                        message:"List HTTP Status Codes",
+                        description:"Understand errors displayed by websites and servers",
+                        intent:"listStatusCodesIntent"
                     }
                 ];
 
