@@ -122,9 +122,11 @@ To ensure a flawless user experience regardless of the user device, we used virt
 
 [BugCrowd](https://docs.bugcrowd.com/reference) - Since BugCrowd's APIs are not currently available to researchers, we used Cheerio to get data from their website. In just a few hundred milliseconds, users are presented with a list of programs with pictures (Echo Spot and Echo Show only) and can request additonal details about specific programs to get a readout and Alexa card with additional details.
 
+  * [BugCrowd VRT](https://github.com/bugcrowd/vulnerability-rating-taxonomy) - This open source taxonomy prioritizes security vulnerabilites so hackers know what to look for and what companies generally pay for.
+
 [HackerOne](https://api.hackerone.com/docs/v1) - Here we leverage HackerOne's API to get their active programs list. We cache data from their APIs for a faster response time.
 
-[News API](https://newsapi.org/docs) - NewsAPI helps us connect users with several news sources. We no longer need to wait for several endpoints just to get a diverse set of sources, instead we can quickly deliver cybersecurity information to the user.
+[News API](https://newsapi.org/docs) - News API helps us connect users with several news sources. We no longer need to wait for several endpoints just to get a diverse set of sources, instead we can quickly deliver cybersecurity information to the user.
 
 [Have I Been Pwned](https://haveibeenpwned.com/API/v2) - Have I Been Pwned helps us list find out about data breaches that have leaked your email and other information as well as about recent security breaches that have affected large amounts of people.
 
@@ -171,12 +173,14 @@ Get more bounties beyond the first set of cards provided (Sorted by NEWEST first
   * Try, *Yes* when prompted if you want to hear more programs
   
 Get additional details for bounties from BugCrowd and/or HackerOne
-  * Try, *Alexa ask Bug Browser to tell me more about program number five* after asking for the list on the desired platform
-  * Try, *Alexa ask Bug Browser to tell me more about BugCrowd bounty number five*
+  * Try, *Alexa ask Bug Browser to tell me more about program {number}* after asking for the list on the desired platform
+     * Try, *Alexa ask Bug Browser to tell me more about program number five*
+  * Try, *Alexa ask Bug Browser to tell me more about BugCrowd bounty {number}*
+    * Try, *Alexa ask Bug Browser to tell me more about BugCrowd bounty number seven*
   * Try, *Yes* when prompted if you want to learn about more programs
   * See the Alexa app or interface for additional details such as program requirements (iOS, Android, and Fire TV)
   
-Learn about hacking news using The New York Times and [NewsAPI](https://newsapi.org/)
+Learn about hacking news from several sources using [News API](https://newsapi.org/)
   * Try, *Alexa ask Bug Browser to give me a flash briefing on hacks*
   * Try, *Alexa ask Bug Browser to tell me the latest news on vulnerabilities*
   * Tap on the article for additional details (Echo Spot and Echo Show only)
