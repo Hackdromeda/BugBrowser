@@ -106,7 +106,13 @@ To improve user experience we enabled intents such as `AMAZON.RepeatIntent` shou
 
 **6. Reducing Response Time**
 
-Bug Browser consumes several APIs in order to provide users with accurate and reliable information. One of the challenges that came with developing an API consuming application was ensuring that Bug Browser was responsive and usable without making the user wait too long for a response. One of the ways we achieved this goal was using using [bluebird](https://www.npmjs.com/package/bluebird) to run several API calls in parallel. In order to mitigate the latency when consuming APIs, we heavily employed the use of an advanced caching system that uses AWS Lambda and S3 storage. We developed new accelerated Lambda functions specifically designed for caching with S3 storage. These functions periodically retrieve data from the APIs Bug Browser uses and stores them in S3 objects (JSON format) in an S3 bucket. The advantages of developing a cache system with AWS Lambda, AWS S3 Object Storage, and AWS S3 Transfer Acceleration are very noticeable because the latency for some API responses have dropped from as much as over 4900ms to just under 200ms. User experience was one of our primary concerns and we made sure to do our best to make Bug Browser feel great for everyday use.
+Bug Browser consumes several APIs in order to provide users with accurate and reliable information. One of the challenges that came with developing an API consuming application was ensuring that Bug Browser was responsive and usable without making the user wait too long for a response. One of the ways we achieved this goal was using using [bluebird](https://www.npmjs.com/package/bluebird) to run several API calls in parallel. In order to mitigate the latency when consuming APIs, we heavily employed the use of an advanced caching system that uses AWS Lambda and S3 storage. We developed new accelerated Lambda functions specifically designed for caching with S3 storage. These functions periodically retrieve data from the APIs Bug Browser uses and stores them in S3 objects (JSON format) in an S3 bucket. The advantages of developing a cache system with AWS Lambda, AWS S3 Object Storage, and AWS S3 Transfer Acceleration are very noticeable because the latency for some API responses have dropped from as much as over 4900ms to just under 200ms. User experience was one of our primary concerns and we made sure to do our best to make Bug Browser feel great for everyday use. 
+
+We are reducing the response times even further by deploying Bug Browser on AWS Lambda in the following regions:
+- Asia Pacific (Tokyo)
+- EU (Ireland)
+- US East (N. Virginia)
+- US West (Oregon)
 
 **7. Testing**
 
