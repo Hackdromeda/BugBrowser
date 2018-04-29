@@ -1,5 +1,5 @@
 # Bug Browser #
-**Bug Browser provides information security, programming, and bug education and reference all in one skill. Bug Browser will teach you how to hack, provide a comprehensive briefing on recent hacks and security vulnerabilities around the world, information about bug bounty programs and bug bounty platforms, the BugCrowd VRT, active HackerOne bounties, and active BugCrowd bounties as well as provide additional information on these bounties.**
+**Bug Browser provides information security, programming, and bug education and reference all in one skill. Bug Browser will teach you how to hack, tell you what a specific bug is, check if you have been hacked, provide a comprehensive briefing on cybersecurity around the world, a list of recent breaches, security tips, information about bug bounty programs and bug bounty platforms, the BugCrowd VRT, active HackerOne programs, and active BugCrowd bounties as well as provide additional information on these bounties.**
 
 Developed in the Bay Area by Avi Shah and Naval Patel
 
