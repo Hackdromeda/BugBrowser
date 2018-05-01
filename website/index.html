@@ -22,22 +22,151 @@
     <meta name="msapplication-TileColor" content="#ffffff">
     <meta name="msapplication-TileImage" content="/images/ms-icon-144x144.png">
     <meta name="theme-color" content="#ffffff">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
+    <style>
+    </style>
 
     <title>Bug Browser</title>
   </head>
   <body style="background-color:#263238">
-    <nav class="navbar" style="background-color:#CFD8DC">
+    <nav class="navbar navbar-expand-lg navbar-light" style="background-color:#CFD8DC">
         <a class="navbar-brand" style="color:#212121;" href="#">Bug Browser</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+          <div class="navbar-nav">
+            <a class="nav-item nav-link active" href="#">Home <span class="sr-only">(current)</span></a>
+            <a class="nav-item nav-link" href="https://www.amazon.com/Bug-Browser/dp/B07BPVH1S5/">Enable Skill</a>
+            <a class="nav-item nav-link" href="/privacy">Privacy</a>
+            <a class="nav-item nav-link" href="/terms">Terms</a>
+            <a class="nav-item nav-link" href="/license">License</a>
+          </div>
+        </div>
     </nav>
     <div class="jumbotron jumbotron-fluid">
         <div class="container">
           <h1 class="display-5">Bug Browser for Amazon Alexa</h1>
-          <p>Everything information security, cybersecurity, bugs, and programming!</p>
+          <p>Bug Browser provides information security, programming, and bug news, education, and reference all in one skill. Bug Browser will teach you how to hack, tell you what a specific bug is, check if you have been hacked, provide a comprehensive briefing on cybersecurity around the world, a list of recent breaches, security tips, information about bug bounty programs and bug bounty platforms, the BugCrowd VRT, active HackerOne programs, and active BugCrowd bounties as well as provide additional information on these bounties.</p>
           <p>Developed in the Bay Area by Avi Shah and Naval Patel.</p>
           <a href="https://www.amazon.com/Bug-Browser/dp/B07BPVH1S5/"><img border="0" alt="Enable Bug Browser Skill on Amazon Alexa" src="images/Amazon_Alexa_Enabled_RGB_WHT.svg" width="200"></a>
           <br></br>
           <p><i>Amazon, Alexa and all related logos are trademarks of Amazon.com, Inc. or its affiliates.</i></p>
+          <br>
+          <h2 id="testimonials">Testimonials</h2>
+          <p><em>&quot;For bug bounty hunters, bug hunting is a passion. The Bug Browser Alexa Skill allows a hacker to keep up to date with hacking news, helps them find stuff to hack on, and it can even teach some of the basics of hacking. And this can all come from a device on your countertop. Very cool!&quot;</em></p>
+          <p>-Sam
+          <em>Senior Community Manager at BugCrowd</em></p>
+          <p><em>&quot;Bug Browser is great. It lets me know if my data has been leaked as a result of data breaches as well as providing general cybersecurity information and news.&quot;</em></p>
+          <p>-Rasim
+          <em><a href="https://www.amazon.com/gp/customer-reviews/R19TNP45UHJ2LU/">Amazon User</a></em></p>
+          <h2 id="supported-phrases">Supported Phrases</h2>
+          <p><em>Try some of these sample utterances:</em></p>
+          <p>General</p>
+          <ul>
+          <li>Try, <em>Alexa ask Bug Browser to repeat that</em> to repeat previous intent</li>
+          <li>Try, <em>Alexa page up / page down / scroll right / scroll left / scroll up / scroll down</em> (Echo Show and Echo Spot)</li>
+          <li>Try, <em>Alexa ask Bug Browser to go to sleep</em></li>
+          <li>Try, <em>Alexa ask Bug Browser, what can you do?</em> to learn about all the intents the skill supports. Tap or ask to go to the desired intent from the help page</li>
+          </ul>
+          <p>Learn about bugs including those in your own code (powered by StackOverflow answers)</p>
+          <ul>
+          <li>Try, <em>Alexa ask Bug Browser to search for bug ArrayOutOfBounds exception</em>  </li>
+          <li>Try, <em>Alexa ask Bug Browser to search for bug NullPointerException exception</em>  </li>
+          <li>Try, <em>Alexa ask Bug Browser to search for how to loop through an array in Java</em>  </li>
+          </ul>
+          <p>Learn about security breaches and ones that may affect you</p>
+          <ul>
+          <li>Try, <em>Alexa ask Bug Browser, have I been hacked?</em> (Account Linking Required)</li>
+          <li>Try, <em>Alexa ask Bug Browser to check my profile</em> (Account Linking Required)</li>
+          <li>Try, <em>Alexa ask Bug Browser to tell me about recent breaches</em>   </li>
+          </ul>
+          <p>Learn about best security practices and how to secure your accounts, devices, and data after a hack</p>
+          <ul>
+          <li>Try, <em>Alexa ask Bug Browser to give me security tips</em></li>
+          <li>Try, <em>Alexa ask Bug Browser for security recommendations</em></li>
+          </ul>
+          <p>Learn about BugCrowd and HackerOne</p>
+          <ul>
+          <li>Try, <em>Alexa ask Bug Browser to tell me some facts about BugCrowd.</em></li>
+          <li>Try, <em>Alexa ask Bug Browser to introduce me to BugCrowd.</em></li>
+          <li>Try, <em>Alexa ask Bug Browser to tell me what bug bounties and bug bounty platforms are</em></li>
+          <li>See the Alexa app or interface for a recap of this information (iOS, Android, and Fire TV)</li>
+          <li>Try, <em>Alexa how do you use BugCrowd?</em> (Echo Spot and Echo Show only)</li>
+          <li>Try, <em>Alexa ask Bug Browser to introduce me to BugCrowd with a video</em> to learn about BugCrowd through videos (Echo Spot and Echo Show only)</li>
+          </ul>
+          <p>Get bounties from BugCrowd and/or HackerOne (Sorted by NEWEST first)</p>
+          <ul>
+          <li>Try, <em>Alexa ask Bug Browser, how do you find bounties?</em></li>
+          <li>Try, <em>Alexa ask Bug Browser, what companies are looking for security researchers?</em></li>
+          <li>Try, <em>Alexa ask Bug Browser, what are some bounties available from BugCrowd?</em></li>
+          <li>Try, <em>Alexa ask Bug Browser to tell me about HackerOne programs</em></li>
+          <li>See the Alexa app or interface for the list of programs (iOS, Android, and Fire TV)</li>
+          </ul>
+          <p>Get more bounties beyond the first set of cards provided (Sorted by NEWEST first)</p>
+          <ul>
+          <li>Try, <em>Alexa next page</em></li>
+          <li>Try, <em>Alexa previous page</em></li>
+          <li>Try, <em>Yes</em> when prompted if you want to hear more programs</li>
+          </ul>
+          <p>Get additional details for bounties from BugCrowd and/or HackerOne</p>
+          <ul>
+          <li>Try, <em>Alexa ask Bug Browser to tell me more about program {number}</em> after asking for the list on the desired platform<ul>
+          <li>Try, <em>Alexa ask Bug Browser to tell me more about program number five</em></li>
+          </ul>
+          </li>
+          <li>Try, <em>Alexa ask Bug Browser to tell me more about BugCrowd bounty {number}</em><ul>
+          <li>Try, <em>Alexa ask Bug Browser to tell me more about BugCrowd bounty number seven</em></li>
+          </ul>
+          </li>
+          <li>Try, <em>Yes</em> when prompted if you want to learn about more programs</li>
+          <li>Try, <em>Alexa ask Bug Browser to add this to my list</em> after getting additional details on the program to save programs to a custom list on your Alexa app</li>
+          <li>See the Alexa app or interface for additional details such as program requirements (iOS, Android, and Fire TV)</li>
+          </ul>
+          <p>Learn about recent vulnerability disclosure from HackerOne</p>
+          <ul>
+          <li>Try, <em>Alexa ask Bug Browser for recent disclosure</em></li>
+          <li>Try, <em>Alexa ask Bug Browser for an example bug report</em></li>
+          </ul>
+          <p>Learn about hacking news from several sources using <a href="https://newsapi.org/">News API</a></p>
+          <ul>
+          <li>Try, <em>Alexa ask Bug Browser to give me a flash briefing on hacks</em></li>
+          <li>Try, <em>Alexa ask Bug Browser to tell me the latest news on vulnerabilities</em></li>
+          <li>Tap on the article for additional details (Echo Spot and Echo Show only)</li>
+          <li>See the Alexa app or interface for article titles (iOS, Android, and Fire TV)</li>
+          </ul>
+          <p>Learn about the Vulnerability Rating Taxonomy (VRT) and vulnerability priorities as outlined by BugCrowd</p>
+          <ul>
+          <li>Try, <em>Alexa ask Bug Browser to tell me about the VRT</em></li>
+          <li>See the Alexa app or interface for additional details (iOS, Android, and Fire TV)</li>
+          </ul>
+          <p>Learn about HTTP status codes</p>
+          <ul>
+          <li>Try, <em>Alexa ask Bug Browser to list HTTP status codes</em></li>
+          </ul>
+          <p>Learn about cybersecurity through video tutorials (Echo Spot and Echo Show only)</p>
+          <ul>
+          <li>Try, <em>Alexa ask Bug Browser to teach me how to hack</em></li>
+          <li>Try, <em>Alexa ask Bug Browser to play the lesson introduction video</em></li>
+          <li>Try, <em>Alexa ask Bug Browser to play lesson {number}</em><ul>
+          <li>Try, <em>Alexa ask Bug Browser to play lesson five</em></li>
+          </ul>
+          </li>
+          <li>Try, <em>Alexa ask Bug Browser to teach me Same-Origin Policy</em></li>
+          <li>Try, <em>Alexa ask Bug Browser to teach me about types of XSS</em></li>
+          <li>Try, <em>Alexa ask Bug Browser to teach me about directory traversal</em></li>
+          <li>Try, <em>Alexa ask Bug Browser to teach me about session fixation</em></li>
+          <li>Try, <em>Alexa ask Bug Browser to teach me about clickjacking</em></li>
+          <li>Try, <em>Alexa ask Bug Browser to teach me about remote file inclusion</em></li>
+          <li>Try, <em>Alexa ask Bug Browser to teach me about how multipart POSTs work</em></li>
+          <li>Try, <em>Alexa ask Bug Browser to teach me about null terminators</em></li>
+          <li>Try, <em>Alexa ask Bug Browser to teach me about unchecked redirects</em></li>
+          <li>Try, <em>Alexa ask Bug Browser to teach me about methods of storing passwords</em></li>
+          <li>Try, <em>Alexa ask Bug Browser to teach me about block cipher modes</em></li>
+          <li>Try, <em>Alexa ask Bug Browser to teach me about stream cipher key reuse</em></li>
+          <li>Try, <em>Alexa ask Bug Browser to teach me about ECB mode</em></li>
+          </ul>
+
         </div>
     </div>
 
