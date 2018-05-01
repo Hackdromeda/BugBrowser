@@ -262,6 +262,13 @@
                     "name": "getVRTIntent",
                     "slots": [],
                     "samples": [
+                        "what is the V R T",
+                        "show the V R T",
+                        "open the V R T",
+                        "get the V R T",
+                        "tell me more about the V R T",
+                        "tell me about the V R T",
+                        "tell me more about the VRT",
                         "what are the priorities of security vulnerabilities",
                         "get the VRT",
                         "open the VRT",
@@ -630,6 +637,9 @@
                         }
                     ],
                     "samples": [
+                        "find something on {bug}",
+                        "search {bug}",
+                        "search for {bug}",
                         "what is bug {bug}",
                         "search for bug {bug}",
                         "find the solution for {bug}",
