@@ -2028,7 +2028,8 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
         }
         else{
             console.log ('Unhandled Token Detected');
-            this.emit('Unhandled');
+            output = "I do not have any additional information on this topic. " + HelpMessage;
+            this.emit(':ask', output, HelpMessage);
         }
     },
     'learnSecurityMeasures': function() {
