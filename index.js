@@ -1315,15 +1315,19 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
     'listIntent': function() {
         var accessToken = this.event.context.System.apiAccessToken;
         if (this && this.event && this.event.context && this.event.context.System && this.event.context.System.user && !this.event.context.System.user.permissions) {
-            this.emit(':askWithPermissionCard', 'Please grant Bug Browser the permissions to read and write to your list. Then open Bug Browser after you have granted Bug Browser the required permissions.', 'Please grant Bug Browser the permissions to read and write to your list. Then open Bug Browser after you have granted Bug Browser the required permissions.', ['read::alexa:household:list','write::alexa:household:list']);
+            var speak = "Please grant Bug Browser the permissions to read and write to your list. Then open Bug Browser after you have granted Bug Browser the required permissions. In the meantime what else would you like me to do?";
+            this.emit(':askWithPermissionCard', speak, speak, ['read::alexa:household:list','write::alexa:household:list']);
         } else if (!this.attributes.lastProgram) {
-            this.emit(':ask', 'You have not selected any programs to add to your list. What else would you like me to do?', 'I was unable to add a program to your list.');
+            var speak = "You have not selected any program to add to your list. What else would you like me to do?";
+            this.emit(':ask', speak, speak);
         }  else {
             alexaLists.init(accessToken).createCustomList('Bug Bounties').catch((error) => { console.log(error) }).then(() => {
                 alexaLists.init(accessToken).createNewListItem('Bug Bounties', this.attributes.lastProgram, 'active').then(() => {
-                    this.emit(':ask', 'Added ' + this.attributes.lastProgram + ' to your Bug Bounties list. What else would you like me to do?', 'I was unable to add a program to your list.');
+                    var speak = 'I added ' + this.attributes.lastProgram + ' to your Bug Bounties list. What else would you like me to do?';
+                    this.emit(':ask', speak, speak);
                 }).catch(() => {
-                    this.emit(':ask', 'Bug Browser is unable to add ' + this.attributes.lastProgram + ' to your Bug Bounties list. What else would you like me to do?', 'I was unable to add a program to your list.');
+                    var speak = 'Bug Browser is unable to add ' + this.attributes.lastProgram + ' to your Bug Bounties list. What else would you like me to do?';
+                    this.emit(':ask', speak, speak);
                 });
             });
         }
@@ -1957,6 +1961,7 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
             this.emit(lessons[selectedToken].name);
         }
         else if((this.event.request.token).substring(0, 13) == "newsItemToken") {
+            this.attributes.lastAction = "getNewsIntent";
             var index = parseInt(this.event.request.token.replace(/[^0-9]/g, ''), 13);
             var content = '';
         var options1 = {
@@ -2001,6 +2006,7 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                var articles = [];
                articles = articles.concat(response1.articles, response2.articles, response3.articles, response4.articles, response5.articles);
                content += sanitizeInput(articles[index].description);
+               var question = " You can use the back button or ask for the news to return to the news articles. What else would you like me to do?";
                if (supportsDisplay) {
                 const builder = new Alexa.templateBuilders.BodyTemplate2Builder();
                 const template = builder.setTitle(articles[index].title)
@@ -2010,10 +2016,10 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                                     .setImage(makeImage(articles[index].urlToImage ? articles[index].urlToImage: 'https://s3.amazonaws.com/bugbrowser/images/HackerNewsLogo.jpeg'))
                                     .setTextContent(makeRichText("<font size='1'>" + content + "</font>"))
                                     .build();
-                context.response.speak(articles[index].title + ': ' + content).listen(hearMoreMessage).cardRenderer(articles[index].title, articles[index].description, articles[index].urlToImage).renderTemplate(template);
+                context.response.speak(articles[index].title + ': ' + content + question).listen(HelpMessage).cardRenderer(articles[index].title, articles[index].description, articles[index].urlToImage).renderTemplate(template);
                 context.emit(':responseReady');
                 } else {
-                    context.emit(':askWithCard', articles[index].title + ': ' + content, hearMoreMessage, articles[index].title, articles[index].description, makeImage(articles[index].urlToImage ? articles[index].urlToImage : 'https://s3.amazonaws.com/bugbrowser/images/Circuit.png'));
+                    context.emit(':askWithCard', articles[index].title + ': ' + content + question, HelpMessage, articles[index].title, articles[index].description, makeImage(articles[index].urlToImage ? articles[index].urlToImage : 'https://s3.amazonaws.com/bugbrowser/images/Circuit.png'));
                 }
             }).catch(function (err) {
                 console.log(err);
@@ -2160,8 +2166,7 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
             this.emit(':ask', this.attributes.lastSpeech, HelpMessage);
         }
         else{
-            console.log ("Bug Browser could not find speech to repeat.")
-            this.emit(':ask', HelpMessage, HelpMessage)
+            this.emit(':ask', "Bug Browser could not find speech to repeat. " + HelpMessage, HelpMessage)
         }
     },
     'AMAZON.NextIntent': function () {
@@ -2493,7 +2498,7 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                             }
                             listItemBuilder.addItem(makeImage(imageUrls[i]), 'checkedHacksListItemToken' + i, makeRichText("<font size='2'>" + hackedNames[i] + "</font>"), makeRichText("<font size='1'>" + "Breach Occurred " + "<i>" + breachDates[i] + "</i>" + "</font>"));
                         }
-
+                        speak += " What else would you like me to do? You can say help to learn how I can help you.";
 
                         const listItems = listItemBuilder.build();
                         const listTemplate = listTemplateBuilder.setToken('checkedHacksListToken')
@@ -2531,7 +2536,7 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                     }
                 });
             }).catch(function (err) {
-                var lookupError = "The lookup tool is unavailable at this time. In the meantime, what else would you like to do?"
+                var lookupError = "The lookup tool is unavailable at this time. In the meantime, what else would you like to do?";
                 console.log(err);
                 self.emit(':ask', lookupError, HelpMessage);
             });
@@ -2734,7 +2739,7 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                 if (response == null || response.length == 0 || response.length == '') {
                     response = 'No search results have been found.';
                 }
-                speak = response + " What else would you like me to do?"
+                speak = response + " What else would you like me to do?";
                 const imageObj = {
                     smallImageUrl:'https://s3.amazonaws.com/bugbrowser/images/Bug-Bracket.jpg',
                     largeImageUrl: 'https://s3.amazonaws.com/bugbrowser/images/Bug-Bracket.jpg'
@@ -2823,9 +2828,9 @@ function isSimulator() {
 
 function sanitizeInput(s) {
     s = s.replace('&lt;', 'less than');
-    s = s.replace('&gt;', 'greater than')
+    s = s.replace('&gt;', 'greater than');
     s = s.replace('&#60;', 'less than');
-    s = s.replace('&#62;', 'greater than')
+    s = s.replace('&#62;', 'greater than');
     s = s.replace('&#34;', '');
     s = s.replace('&quot;', '');
     s = s.replace('&apos;', '');   
