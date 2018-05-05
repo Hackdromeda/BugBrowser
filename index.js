@@ -1434,7 +1434,7 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
             });
     },
     'listStatusCodesIntent': function () {
-        this.attributes.lastAction = "listStatusCodesIntent"
+        this.attributes.lastAction = "listStatusCodesIntent";
         const statusCodes = [
             {
                 "code": 100,
@@ -1716,7 +1716,6 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
         }
     },
     'ElementSelected': function() {
-        this.attributes.lastAction = "ElementSelected";
         var context = this;
         var self = this;
         var supportsDisplay = this.event.context.System.device.supportedInterfaces.Display;
