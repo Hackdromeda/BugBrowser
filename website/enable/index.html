@@ -30,7 +30,7 @@
     <meta name="theme-color" content="#ffffff">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
 
-    <title>Bug Browser - License</title>
+    <title>Bug Browser - Enable Skill</title>
   </head>
   <body style="background-color:#263238">
     <nav class="navbar navbar-expand-lg navbar-light" style="background-color:#CFD8DC">
@@ -41,18 +41,27 @@
         <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
           <div class="navbar-nav">
             <a class="nav-item nav-link" href="/">Home</a>
-            <a class="nav-item nav-link" href="/enable">Enable Skill</a>
+            <a class="nav-item nav-link active" href="/enable">Enable Skill <span class="sr-only">(current)</span></a>
             <a class="nav-item nav-link" href="/privacy">Privacy</a>
             <a class="nav-item nav-link" href="/terms">Terms</a>
-            <a class="nav-item nav-link active" href="/license">License <span class="sr-only">(current)</span></a>
+            <a class="nav-item nav-link" href="/license">License</a>
           </div>
         </div>
       </nav>
     <div class="jumbotron jumbotron-fluid">
         <div class="container">
-          <h3 id="license">
-            Redirecting to GitHub Bug Browser repository after <span id="countdown">10</span> seconds
+          <h3 id="enable">
+            Redirecting to Bug Browser Skill page in <span id="countdown">10</span> seconds
           </h3>
+          <br>
+          <h3 id="click-to-enable-now">OR enable now!</h3>
+          <br>
+          <h4 id="-amazon-us-skill"><a class="btn btn-primary" role="button" href="https://www.amazon.com/dp/B07BPVH1S5/">Amazon US Skill</a></h4>
+          <h4 id="-amazon-uk-skill"><a class="btn btn-primary" role="button" href="https://www.amazon.co.uk/dp/B07BPVH1S5/">Amazon UK Skill</a></h4>
+          <h4 id="-amazon-canada-skill"><a class="btn btn-primary" role="button" href="https://www.amazon.ca/dp/B07BPVH1S5/">Amazon Canada Skill</a></h4>
+          <h4 id="-amazon-australia-skill"><a class="btn btn-primary" role="button" href="https://www.amazon.com.au/dp/B07BPVH1S5/">Amazon Australia Skill</a></h4>
+          <h4 id="-amazon-india-skill"><a class="btn btn-primary" role="button" href="https://www.amazon.co.in/dp/B07BPVH1S5/">Amazon India Skill</a></h4>
+
           <!-- JavaScript part -->
           <script type="text/javascript">
               
@@ -63,7 +72,7 @@
                   seconds = seconds - 1;
                   if (seconds < 0) {
                       // Chnage your redirection link here
-                      window.location = "https://github.com/as0218PUSD/BugBrowser/blob/master/LICENSE.md";
+                      window.location = "https://skills-store.amazon.com/deeplink/dp/B07BPVH1S5";
                   } else {
                       // Update remaining seconds
                       document.getElementById("countdown").innerHTML = seconds;
