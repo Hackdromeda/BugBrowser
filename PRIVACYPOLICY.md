@@ -1,5 +1,5 @@
 # Privacy Policy
-The Privacy Policy was last updated on April 25, 2018. Bug Browser and its developers may without notice to you and at its sole discretion, amend this policy. Please review this policy from time to time. 
+The Privacy Policy was last updated on May 6, 2018. Bug Browser and its developers may without notice to you and at its sole discretion, amend this policy. Please review this policy from time to time. 
 
 **Bug Browser can collect the following information and/or perform the following actions:**
 
@@ -14,7 +14,7 @@ The Privacy Policy was last updated on April 25, 2018. Bug Browser and its devel
     * [Bing Web Search API](https://azure.microsoft.com/en-us/services/cognitive-services/bing-web-search-api/) receives your query which may include any personal information you speak.
     * [StackExchange API](https://api.stackexchange.com/docs) does not receive any personal information.
 
-We are committed to protecting the privacy and confidentiality of Bug Browser users' private data. We may have to provide personal information to comply with the policies of the local jurisdiction where Bug Browser is hosted on AWS Lambda (US East North Virginia). If you have any questions about our data collection policies and methods, feel free to send us a message on GitHub.
+We are committed to protecting the privacy and confidentiality of Bug Browser users' private data. We may have to provide personal information to comply with the policies of the local jurisdiction where Bug Browser is hosted on AWS Lambda. You are connected to AWS Lambda based on your region. Bug Browser is hosted in the following regions: Asia Pacific (Tokyo), EU (Ireland), US East (N. Virginia), and US West (Oregon). If you have any questions about our data collection policies and methods, please use the contact information below.
 
 The purpose of this skill is to help create a more secure web and help create bug-free code. As such, we do not sell or trade to outside parties your personal information. We also do not transfer this information without your express consent (see account linking below). We do not sell or offer third-party products or services on our skill.
 
@@ -52,4 +52,4 @@ Developers can configure their skill to request access to the profile scope of a
    
 # Questions
 
-Should you have any questions about our policies or skill, please reach out to us via GitHub messages or our contact information on GitHub.
+Should you have any questions about our policies or skill, please reach out to us via GitHub messages, our contact information on GitHub, or via email at feedback@bugbrowser.net.
