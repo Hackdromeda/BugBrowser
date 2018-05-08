@@ -56,7 +56,7 @@ var goodbyeMessage = "OK, Bug Browser shutting down.";
 
 var newsIntroMessage = "These are the " + numberOfResults + " most recent security vulnerability headlines, you can read more on your Alexa app.";
 
-var newsSources = "hacker-news,wired,the-verge,techcrunch";
+var newsSources = "wired,the-verge,techcrunch,ars-technica,techradar";
 
 var newsQueries = ["security hacks", "security vulnerability", "bug bounty", "security researcher", "cybersecurity"]
 
@@ -1961,16 +1961,16 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
         }
         else if((this.event.request.token).substring(0, 13) == "newsItemToken") {
             this.attributes.lastAction = "getNewsIntent";
-            var index = parseInt(this.event.request.token.replace(/[^0-9]/g, ''), 13);
+            var index = parseInt(this.event.request.token.replace(/[^0-9]/g, ''), 10);
             var content = '';
         var options1 = {
-            uri: 'https://newsapi.org/v2/everything?sources=' + newsSources + '&apiKey=' + process.env.NEWS_KEY + '&q=' + "security hacks",
+            uri: 'https://newsapi.org/v2/everything?sources=' + newsSources + '&apiKey=' + process.env.NEWS_KEY + '&q=' + "security hack",
             transform: function (body) {
             return JSON.parse(body);
             }
        }
        var options2 = {
-            uri: 'https://newsapi.org/v2/everything?sources=' + newsSources + '&apiKey=' + process.env.NEWS_KEY + '&q=' + "security vulnerability",
+            uri: 'https://newsapi.org/v2/everything?sources=' + newsSources + '&apiKey=' + process.env.NEWS_KEY + '&q=' + "vulnerability",
             transform: function (body) {
             return JSON.parse(body);
             }
@@ -2004,9 +2004,11 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
            .spread(function (response1, response2, response3, response4, response5) {
                var articles = [];
                articles = articles.concat(response1.articles, response2.articles, response3.articles, response4.articles, response5.articles);
+               articles.sort(sortNewsByDateDesc);
+               articles = _.uniqBy(articles, 'title');
                content += sanitizeInput(articles[index].description);
-               var question = " You can use the back button or ask for the news to return to the news articles. What else would you like me to do?";
                if (supportsDisplay) {
+                var question = " You can use the back button or ask for the news to return to the news articles. What else would you like me to do?";   
                 const builder = new Alexa.templateBuilders.BodyTemplate2Builder();
                 const template = builder.setTitle(articles[index].title)
                                     .setToken('getMoreInfoNewsToken')
@@ -2018,6 +2020,7 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                 context.response.speak(articles[index].title + ': ' + content + question).listen(HelpMessage).cardRenderer(articles[index].title, articles[index].description, articles[index].urlToImage).renderTemplate(template);
                 context.emit(':responseReady');
                 } else {
+                    var question = " You can ask for the news to return to the news articles. What else would you like me to do?"; //ElementSelected does not work for VUI anyways
                     context.emit(':askWithCard', articles[index].title + ': ' + content + question, HelpMessage, articles[index].title, articles[index].description, makeImage(articles[index].urlToImage ? articles[index].urlToImage : 'https://s3.amazonaws.com/bugbrowser/images/Circuit.png'));
                 }
             }).catch(function (err) {
@@ -2062,7 +2065,7 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
         {
           "title": "Block Pop-Ups and Intrusive Advertisements",
           "description": "Browse the Web without Distraction",
-          "speakContent": "Extensions such as Ad Block Plus and uBlock can stop unwanted popups and intrusive ads from distracting from your web experience. Be aware that your data may be traced by advertisers when browsing the web. Use ad tracking protection when given the option to do so. "
+          "speakContent": "Extensions such as Ad Block Plus and uBlock Origin can stop unwanted popups and intrusive ads from distracting from your web experience. Be aware that your data may be traced by advertisers when browsing the web. Use ad tracking protection when given the option to do so. "
         },
         {
           "title": "Freeze Your Credit Reports",
@@ -2185,7 +2188,7 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
             this.emit('getHackerOneIntent');
         }
         else{
-            output = HelpMessage;
+            output = "There are no additional pages. " + HelpMessage;
             this.emit(':ask', output, HelpMessage);
         }
     },
@@ -2209,7 +2212,7 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
             this.emit('getHackerOneIntent');
         }
         else{
-            output = HelpMessage;
+            output = "There are no previous pages. " + HelpMessage;
             this.emit(':ask', output, HelpMessage);
         }
     },
@@ -2240,7 +2243,7 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
             this.emit('getMoreInfoBugCrowdIntent');
         }
         else{
-            output = HelpMessage;
+            output = "I am sorry, I did not get that. " + HelpMessage;
             this.emit(':ask', output, HelpMessage);
         }
     },
@@ -2299,13 +2302,13 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
         var content = '';
         var context = this;
         var options1 = {
-            uri: 'https://newsapi.org/v2/everything?sources=' + newsSources + '&apiKey=' + process.env.NEWS_KEY + '&q=' + "security hacks",
+            uri: 'https://newsapi.org/v2/everything?sources=' + newsSources + '&apiKey=' + process.env.NEWS_KEY + '&q=' + "security hack",
             transform: function (body) {
             return JSON.parse(body);
             }
        }
        var options2 = {
-            uri: 'https://newsapi.org/v2/everything?sources=' + newsSources + '&apiKey=' + process.env.NEWS_KEY + '&q=' + "security vulnerability",
+            uri: 'https://newsapi.org/v2/everything?sources=' + newsSources + '&apiKey=' + process.env.NEWS_KEY + '&q=' + "vulnerability",
             transform: function (body) {
             return JSON.parse(body);
             }
@@ -2340,6 +2343,8 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
            .spread(function (response1, response2, response3, response4, response5) {
                var articles = [];
                articles = articles.concat(response1.articles, response2.articles, response3.articles, response4.articles, response5.articles);
+               articles.sort(sortNewsByDateDesc);
+               articles = _.uniqBy(articles, 'title');
                if (supportsDisplay) {
                 const listItemBuilder = new Alexa.templateBuilders.ListItemBuilder();
                 const listTemplateBuilder = new Alexa.templateBuilders.ListTemplate2Builder();
@@ -2617,19 +2622,21 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                   var plurality = ((hackNum == 1) ? "Here is 1 recent hack": "Here are " + recent.length + " recent hacks");
                   var speak = plurality + " of the over " + hackNum + " major hacks in history. ";
                   var cardContent = "";
+                  for (var i = 0; i < recent.length; i++) {
+                    if (recent[i].description) {
+                        speak += sanitizeInput(recent[i].description) + " ";
+                        cardContent += (i + 1) + "." + recent[i].name + ": " + recent[i].description + "\n";
+                    }
+                }
+                speak += "What else would you like me to do?";
 
                   if (hasDisplay) {
 
                       const listItemBuilder = new Alexa.templateBuilders.ListItemBuilder();
                       const listTemplateBuilder = new Alexa.templateBuilders.ListTemplate1Builder();
                       for (var i = 0; i < recent.length; i++) {
-                          if (recent[i].description) {
-                              speak += sanitizeInput(recent[i].description) + " ";
-                              cardContent += (i + 1) + "." + recent[i].name + ": " + recent[i].description + "\n";
-                          }
                           listItemBuilder.addItem(makeImage(recent[i].image), 'generalHacksListItemToken' + i, makeRichText("<font size='2'>" + recent[i].name + "</font>"), makeRichText("<font size='1'>" + "<i>" + recent[i].dateUS + ". " + recent[i].affected + " affected." + "</i>" + "</font>"));
                       }
-                      speak += "What else would you like me to do?";
 
 
                       const listItems = listItemBuilder.build();
@@ -2687,7 +2694,7 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
 
             for (var i = 0; i < body.webPages.value.length; i++) {
                 console.log('Possible url ' + body.webPages.value[i].url);
-                if (body.webPages.value[i].url != null && !body.webPages.value[i].url.includes("tagged")) {
+                if (body.webPages.value[i].url != null && !body.webPages.value[i].url.includes("tagged") && !body.webPages.value[i].url.includes("tags")) {
                     var possibleIdArray = body.webPages.value[i].url.match(/\/questions\/(\d+)\//);
                     if (possibleIdArray) {
                         id = possibleIdArray[1];
@@ -2790,6 +2797,12 @@ sortHacksByDateDesc = function (date1, date2) {
     return 0;
 };
 
+sortNewsByDateDesc = function (date1, date2) {
+    if (new Date(date1.publishedAt) > new Date(date2.publishedAt)) return -1;
+    if (new Date(date1.publishedAt) < new Date(date2.publishedAt)) return 1;
+    return 0;
+};
+
 function formatDateUS(date) {
     var monthNames = [
       "January", "February", "March",
@@ -2833,7 +2846,9 @@ function sanitizeInput(s) {
     s = s.replace('&#62;', 'greater than');
     s = s.replace('&#34;', '');
     s = s.replace('&quot;', '');
-    s = s.replace('&apos;', '');   
+    s = s.replace('&quot', '');
+    s = s.replace('&apos;', '');
+    s = s.replace('&apos', '');     
     s = s.replace('&#39;', '');
     s = s.replace('&#162;', 'cents');
     s = s.replace('&#169;', 'copyright');
