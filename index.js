@@ -324,7 +324,7 @@ var lessons = [
 
 var bugCrowdPage = 1;
 
-var bugCrowdTotal = 3;
+var bugCrowdTotal = 2;
 
 var hackerOneMax = 25;
 
@@ -928,7 +928,7 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
     'getBugCrowdIntent': function () {
         var self = this;
         this.attributes.lastAction = "getBugCrowdIntent";
-
+        console.log("Finding programs from page " + bugCrowdPage + " of " + bugCrowdTotal)
             rp({
               uri: `https://bugcrowd.com/programs/reward?page=` + bugCrowdPage,
               transform: function (body) {
@@ -995,7 +995,9 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                 }
 
             } else {
-                this.emit(':tell', retrieveError);
+                console.log("Retrieve Error at Page " + bugCrowdPage + " of " + bugCrowdTotal);
+                var whatElse = " In the meantime, what else would you like me to do?";
+                this.emit(':ask', retrieveError + whatElse, HelpMessage);
             }
         }).catch(function (err) {
             console.log(err);
@@ -1053,7 +1055,8 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
               }
 
           } else {
-              this.emit(':tell', retrieveError);
+            var whatElse = " In the meantime, what else would you like me to do?";
+            this.emit(':ask', retrieveError + whatElse, HelpMessage);
           }
         }).catch(function (err) {
             console.log(err);
@@ -1108,7 +1111,7 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
             if(bugCrowdTempMax != null && bugCrowdTempMax > 2){
                 bugCrowdTotal = bugCrowdTempMax;
             }
-            if(this.event && this.event.request && this.event.request.intent && this.event.request.intent.slots && this.event.request.intent.slots.program.value && this.event.request.intent.slots.program.value != null && this.event.request.intent.slots.program.value != "?"){
+            if(this.event && this.event.request && this.event.request.intent && this.event.request.intent.slots && this.event.request.intent.slots.program && this.event.request.intent.slots.program.value && this.event.request.intent.slots.program.value != null && this.event.request.intent.slots.program.value != "?"){
                 index = parseInt(this.event.request.intent.slots.program.value) - 1;
             }
             else{
@@ -1153,6 +1156,7 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                         output = programs[index] + " is offering a bounty between " + rewards[index+1].replace(/–/g, 'and') + ". " + numOfVrts + validationTime + payout + ". Additional details are available at bugcrowd.com" + urls[index] + "." + hearMoreMessage;
                         var cardTitle = programs[index];
                         var cardContent = programs[index] + " is offering a bounty between " + rewards[index+1].replace(/–/g, 'and') + ". " + numOfVrts + validationTime + payout + ". Additional details are available at bugcrowd.com" + urls[index] + ".";
+                        var displayContent = programs[index] + " is offering a bounty between " + rewards[index+1].replace(/–/g, 'and') + ". " + numOfVrts + validationTime + payout + ".";
                         const imageObj = {
                             smallImageUrl: images[index],
                             largeImageUrl: images[index]
@@ -1164,8 +1168,8 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                             const template = builder.setTitle(cardTitle)
                                                 .setToken('getMoreInfoBugCrowdIntentToken')
                                                 .setBackButtonBehavior('VISIBLE')
-                                                .setBackgroundImage(makeImage('https://s3.amazonaws.com/bugbrowser/images/Encryption.png'))
-                                                .setTextContent(makeRichText('<font size="1">' + cardContent + '</font>'))
+                                                .setBackgroundImage(makeImage('http://bugbrowser.s3-accelerate.amazonaws.com/images/Search.png'))
+                                                .setTextContent(makeRichText('<font size="1">' + displayContent + '</font>'))
                                                 .setImage(makeImage(imageObj.largeImageUrl))
                                                 .build();
                             this.attributes.lastSpeech = output;
@@ -1216,7 +1220,7 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
         }).then((hackerOnePrograms) => {
             var index;
             var allowed = false;
-            if(this.event && this.event.request && this.event.request.intent && this.event.request.intent.slots && this.event.request.intent.slots.program.value && this.event.request.intent.slots.program.value != null && this.event.request.intent.slots.program.value != "?"){
+            if(this.event && this.event.request && this.event.request.intent && this.event.request.intent.slots && this.event.request.intent.slots.program && this.event.request.intent.slots.program.value && this.event.request.intent.slots.program.value != null && this.event.request.intent.slots.program.value != "?"){
                 index = parseInt(this.event.request.intent.slots.program.value) - 1 + hackerOneMax - 25;
                 allowed = ((parseInt(this.event.request.intent.slots.program.value) + hackerOneMax) < hackerOneTotal);
             }
@@ -1266,7 +1270,7 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
 
                     cardContent = cardContent.substring(0, splitIndex + 1) + " That's not all! You can find more at " + "hackerone.com" + hackerOnePrograms[index].url + ".";
                     if(hackerOnePrograms[index].about == null || hackerOnePrograms[index].about == ""){
-                        output = bounty + cardContent;
+                        output = bounty + " " + cardContent;
                     }
                     else{
                         output = bounty + " " + sanitizeInput(hackerOnePrograms[index].about.replace(/\n/g,' ')) + " That's not all! You can find more at " + "hackerone.com" + hackerOnePrograms[index].url + "."
@@ -1280,7 +1284,7 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                     };
 
                     if (this.event.context.System.device.supportedInterfaces.Display) {
-                        const builder = new Alexa.templateBuilders.BodyTemplate2Builder();
+                        const builder = new Alexa.templateBuilders.BodyTemplate3Builder();
                         const template = builder.setTitle(cardTitle)
                                             .setToken('getMoreInfoHackerOneIntentToken')
                                             .setBackButtonBehavior('VISIBLE')
@@ -1425,12 +1429,12 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                     }
                 }
                 else {
-                    this.attributes.lastSpeech = retrieveError;
-                    this.emit(':tell', retrieveError);
+                    var whatElse = " In the meantime, what else would you like me to do?";
+                    this.emit(':ask', retrieveError + whatElse, HelpMessage);
                 }
             }).catch(function (err) {
                 console.log(err);
-                self.emit(':tell', generalError);
+                self.emit(':ask', generalError, HelpMessage);
             });
     },
     'listStatusCodesIntent': function () {
@@ -1807,6 +1811,7 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                             output = programs[index] + " is offering a bounty between " + rewards[index+1].replace(/–/g, 'and') + ". " + numOfVrts + validationTime + payout + ". Additional details are available at bugcrowd.com" + urls[index] + "." + hearMoreMessage;
                             var cardTitle = programs[index];
                             var cardContent = programs[index] + " is offering a bounty between " + rewards[index+1].replace(/–/g, 'and') + ". " + numOfVrts + validationTime + payout + ". Additional details are available at bugcrowd.com" + urls[index] + ".";
+                            var displayContent = programs[index] + " is offering a bounty between " + rewards[index+1].replace(/–/g, 'and') + ". " + numOfVrts + validationTime + payout + ".";
                             const imageObj = {
                                 smallImageUrl: images[index],
                                 largeImageUrl: images[index]
@@ -1815,8 +1820,8 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                                 const template = builder.setTitle(cardTitle)
                                                     .setToken('getMoreInfoBugCrowdIntentToken')
                                                     .setBackButtonBehavior('VISIBLE')
-                                                    .setBackgroundImage(makeImage('https://s3.amazonaws.com/bugbrowser/images/Encryption.png'))
-                                                    .setTextContent(makeRichText('<font size="5">' + cardContent + '</font>'))
+                                                    .setBackgroundImage(makeImage('http://bugbrowser.s3-accelerate.amazonaws.com/images/Search.png'))
+                                                    .setTextContent(makeRichText('<font size="1">' + displayContent + '</font>'))
                                                     .setImage(makeImage(imageObj.largeImageUrl))
                                                     .build();
                                 this.response.speak(output).listen(hearMoreMessage.substring(1)).cardRenderer(cardTitle, cardContent, imageObj).renderTemplate(template);
@@ -1912,7 +1917,7 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                         };
 
                         if (this.event.context.System.device.supportedInterfaces.Display) {
-                            const builder = new Alexa.templateBuilders.BodyTemplate2Builder();
+                            const builder = new Alexa.templateBuilders.BodyTemplate3Builder();
                             const template = builder.setTitle(cardTitle)
                                                 .setToken('getMoreInfoHackerOneIntentToken')
                                                 .setBackButtonBehavior('VISIBLE')
@@ -2009,7 +2014,7 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                content += sanitizeInput(articles[index].description);
                if (supportsDisplay) {
                 var question = " You can use the back button or ask for the news to return to the news articles. What else would you like me to do?";   
-                const builder = new Alexa.templateBuilders.BodyTemplate2Builder();
+                const builder = new Alexa.templateBuilders.BodyTemplate3Builder();
                 const template = builder.setTitle(articles[index].title)
                                     .setToken('getMoreInfoNewsToken')
                                     .setBackButtonBehavior('VISIBLE')
@@ -2132,15 +2137,15 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                     var title = $('meta[property="og:title"]').attr('content');
                     var imageUrl = $('meta[property="og:image"]').attr('content');
                     var description = sanitizeInput($('meta[name="og:description"]').attr('content'));
-                    var speak = 'A bug report is a security researchers description of a potential security vulnerability in a particular product or service. Here is a bug report titled:' + title + "." + "In summary it says, " + description + " You can read more at " + selectedReportUrl + ". What else would you like to know? You can also ask me to find another report by saying repeat that.";
+                    var speak = 'A bug report is a security researchers description of a potential security vulnerability in a particular product or service. Here is a bug report titled: ' + title + "." + "In summary it says, " + description + " You can read more at " + selectedReportUrl + ". What else would you like to know? You can also ask me to find another report by saying repeat that.";
                     const imageObj = {
                         smallImageUrl: imageUrl,
                         largeImageUrl: imageUrl
                     };
-                    var cardContent = "A bug report is a security researchers description of a potential security vulnerability in a particular product or service. \n\n Title: " + title + "\n Description: " + description + " \n\n Read more: " + selectedReportUrl;
+                    var cardContent = "A bug report is a security researchers description of a potential security vulnerability in a particular product or service. \n \n Title: " + title + "\n \n Description: " + description + " \n \n Read more: " + selectedReportUrl;
                     console.log(speak);
                   if (hasDisplay) {
-                    const builder = new Alexa.templateBuilders.BodyTemplate2Builder();
+                    const builder = new Alexa.templateBuilders.BodyTemplate3Builder();
                     const template = builder.setTitle(cardTitle)
                                             .setBackButtonBehavior('VISIBLE')
                                             .setBackgroundImage(makeImage('https://s3.amazonaws.com/bugbrowser/images/Security+Vulnerability.png'))
@@ -2175,9 +2180,10 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
     'AMAZON.NextIntent': function () {
         if(this.attributes.lastAction == "getBugCrowdIntent"){
             bugCrowdPage++;
-            if(bugCrowdPage == bugCrowdTotal + 1){
+            if(bugCrowdPage > bugCrowdTotal){
                 bugCrowdPage = 1;
             }
+            console.log("BugCrowd page set to: " + bugCrowdPage + " of " + bugCrowdTotal)
             this.emit('getBugCrowdIntent');
         }
         else if(this.attributes.lastAction == "getHackerOneIntent"){
@@ -2195,7 +2201,7 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
     'AMAZON.PreviousIntent': function () {
         if(this.attributes.lastAction == "getBugCrowdIntent"){
             bugCrowdPage--;
-            if(bugCrowdPage == 0){
+            if(bugCrowdPage <= 0){
                 bugCrowdPage = bugCrowdTotal;
             }
             this.emit('getBugCrowdIntent');
@@ -2219,7 +2225,7 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
     'AMAZON.YesIntent': function () {
         if(this.attributes.lastAction == "getBugCrowdIntent"){
             bugCrowdPage++;
-            if(bugCrowdPage == bugCrowdTotal + 1){
+            if(bugCrowdPage > bugCrowdTotal){
                 bugCrowdPage = 1;
             }
             this.emit('getBugCrowdIntent');
@@ -2237,7 +2243,7 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
         }
         else if(this.attributes.lastAction == "getMoreInfoBugCrowdIntent"){
             this.attributes.randomValue = true;
-            if(bugCrowdPage == bugCrowdTotal + 1){ // requires all pages to be filled up so no +1
+            if(bugCrowdPage > bugCrowdTotal){
                 bugCrowdPage = 1;
             }
             this.emit('getMoreInfoBugCrowdIntent');
@@ -2679,97 +2685,104 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
         this.attributes.lastAction = null;
         var self = this;
         var hasDisplay = this.event.context.System.device.supportedInterfaces.Display;
-        var bug = this.event.request.intent.slots.bug.value;
-        var searchUrl = "stackoverflow.com";
-        var cardTitle = "Bug Search";
-        var speak = "";
+        if(this.event && this.event.request && this.event.request.intent && this.event.request.intent.slots && this.event.request.intent.slots.bug && this.event.request.intent.slots.bug.value && this.event.request.intent.slots.bug.value != null && this.event.request.intent.slots.bug.value.length > 1){
+            var bug = this.event.request.intent.slots.bug.value;
+            var searchUrl = "stackoverflow.com";
+            var cardTitle = "Bug Search";
+            var speak = "";
 
-        Bing.web(bug +  ' site:' + searchUrl, {
-            count: 5
-          }, function(error, res, body){
+            Bing.web(bug +  ' site:' + searchUrl, {
+                count: 5
+            }, function(error, res, body){
 
-            var id = '';
-            var rootDomain = '';
-            var hostName = '';
+                var id = '';
+                var rootDomain = '';
+                var hostName = '';
 
-            for (var i = 0; i < body.webPages.value.length; i++) {
-                console.log('Possible url ' + body.webPages.value[i].url);
-                if (body.webPages.value[i].url != null && !body.webPages.value[i].url.includes("tagged") && !body.webPages.value[i].url.includes("tags")) {
-                    var possibleIdArray = body.webPages.value[i].url.match(/\/questions\/(\d+)\//);
-                    if (possibleIdArray) {
-                        id = possibleIdArray[1];
-                        rootDomain = extractRootDomain(body.webPages.value[i].url); // unnecessary since it keeps .com
-                        hostName = extractHostname(body.webPages.value[i].url);
-                        hostName = hostName.substring(0, hostName.lastIndexOf('.'));
+                for (var i = 0; i < body.webPages.value.length; i++) {
+                    console.log('Possible url ' + body.webPages.value[i].url);
+                    if (body.webPages.value[i].url != null && !body.webPages.value[i].url.includes("tagged") && !body.webPages.value[i].url.includes("tags")) {
+                        var possibleIdArray = body.webPages.value[i].url.match(/\/questions\/(\d+)\//);
+                        if (possibleIdArray) {
+                            id = possibleIdArray[1];
+                            rootDomain = extractRootDomain(body.webPages.value[i].url); // unnecessary since it keeps .com
+                            hostName = extractHostname(body.webPages.value[i].url);
+                            hostName = hostName.substring(0, hostName.lastIndexOf('.'));
 
+                        }
+                        break;
                     }
-                    break;
                 }
-            }
 
-            var url = 'https://api.stackexchange.com/2.2/questions/' + id + '/answers?order=desc&sort=votes&site=' + hostName + '&filter=!9Z(-wzu0T';
-            console.log('URL: ' + url);
-            var options = {
-                method: 'GET',
-                uri: url,
-                headers: {
-                'Accept-Encoding': 'gzip, deflate'
-                },
-                gzip: true
-            };
+                var url = 'https://api.stackexchange.com/2.2/questions/' + id + '/answers?order=desc&sort=votes&site=' + hostName + '&filter=!9Z(-wzu0T';
+                console.log('URL: ' + url);
+                var options = {
+                    method: 'GET',
+                    uri: url,
+                    headers: {
+                    'Accept-Encoding': 'gzip, deflate'
+                    },
+                    gzip: true
+                };
 
-          request(options, function(error, response, body) {
-            body = JSON.parse(body);
-            console.log(body);
-            var possibleResponses = body.items;
-            console.log('Possible Responses: ' + possibleResponses);
-            if(response.statusCode != 200){
-                console.log(error);
-                self.emit(':ask', generalError, HelpMessage);
-            }
-            var response = '';
-                if (possibleResponses != null) {
-                    for (var i = 0; i < possibleResponses.length; i++) {
-                        if (possibleResponses[i] != null && possibleResponses[i].body != null) {
-                            response = possibleResponses[i].body;
-                            console.log('Response is now' + response);
-                            break;
+            request(options, function(error, response, body) {
+                body = JSON.parse(body);
+                console.log(body);
+                var possibleResponses = body.items;
+                console.log('Possible Responses: ' + possibleResponses);
+                if(response.statusCode != 200){
+                    console.log(error);
+                    var whatElse = "Sorry I could not find anything on your inquiry or question: " + bug + ". What else would you like me to do?";
+                    self.emit(':ask', whatElse, HelpMessage);
+                }
+                var response = '';
+                    if (possibleResponses != null) {
+                        for (var i = 0; i < possibleResponses.length; i++) {
+                            if (possibleResponses[i] != null && possibleResponses[i].body != null) {
+                                response = possibleResponses[i].body;
+                                console.log('Response is now' + response);
+                                break;
+                            }
                         }
                     }
-                }
 
-                response = response.replace(/<code>(.*?)<\/code>/g, '');
-                response = response.replace(/<(.|\n)*?>/g, '');
-                response = sanitizeInput(response);
-                response = 'Here is a possible solution to your problem or inquiry from StackOverflow. ' + response;
+                    response = response.replace(/<code>(.*?)<\/code>/g, '');
+                    response = response.replace(/<(.|\n)*?>/g, '');
+                    response = sanitizeInput(response);
+                    response = 'Here is a possible solution to your problem or inquiry from StackOverflow about ' + bug + '. \n \n ' + response;
 
-                if (response == null || response.length == 0 || response.length == '') {
-                    response = 'No search results have been found.';
-                }
-                speak = response + " What else would you like me to do?";
-                const imageObj = {
-                    smallImageUrl:'https://s3.amazonaws.com/bugbrowser/images/Bug-Bracket.jpg',
-                    largeImageUrl: 'https://s3.amazonaws.com/bugbrowser/images/Bug-Bracket.jpg'
-                };
-                if (hasDisplay) {
-                    const builder = new Alexa.templateBuilders.BodyTemplate1Builder();
-                    const template = builder.setTitle(cardTitle)
-                                            .setToken('bugSearchIntentToken')
-                                            .setBackButtonBehavior('VISIBLE')
-                                            .setBackgroundImage(makeImage('https://s3.amazonaws.com/bugbrowser/images/Bug-Window-Dark.png'))
-                                            .setTextContent(makeRichText('<font size="3">' + response + '</font>'))
-                                            .build();
-                    self.attributes.lastSpeech = speak;
-                    self.response.speak(speak).renderTemplate(template).cardRenderer(cardTitle, response, imageObj).listen(HelpMessage);
-                    self.emit(':responseReady');
-                } else {
-                    self.attributes.lastSpeech = speak;
-                    self.emit(':askWithCard', speak, HelpMessage, cardTitle, response, imageObj);
-                }
+                    if (response == null || response.length == 0 || response.length == '') {
+                        response = 'No search results have been found.';
+                    }
+                    speak = response + " What else would you like me to do?";
+                    const imageObj = {
+                        smallImageUrl:'https://s3.amazonaws.com/bugbrowser/images/Bug-Bracket.jpg',
+                        largeImageUrl: 'https://s3.amazonaws.com/bugbrowser/images/Bug-Bracket.jpg'
+                    };
+                    if (hasDisplay) {
+                        const builder = new Alexa.templateBuilders.BodyTemplate1Builder();
+                        const template = builder.setTitle(cardTitle)
+                                                .setToken('bugSearchIntentToken')
+                                                .setBackButtonBehavior('VISIBLE')
+                                                .setBackgroundImage(makeImage('https://s3.amazonaws.com/bugbrowser/images/Bug-Window-Dark.png'))
+                                                .setTextContent(makeRichText('<font size="3">' + response + '</font>'))
+                                                .build();
+                        self.attributes.lastSpeech = speak;
+                        self.response.speak(speak).renderTemplate(template).cardRenderer(cardTitle, response, imageObj).listen(HelpMessage);
+                        self.emit(':responseReady');
+                    } else {
+                        self.attributes.lastSpeech = speak;
+                        self.emit(':askWithCard', speak, HelpMessage, cardTitle, response, imageObj);
+                    }
+
+                });
 
             });
-
-          });
+        }
+        else{
+            output = "Sorry I did not get that. Could you please repeat your search inquiry? For example, you can say: search for how to fix null pointer exception in Java.";
+            self.emit(':ask', output, HelpMessage)
+        }
     },
     'AMAZON.CancelIntent': function () {
         this.emit('AMAZON.StopIntent');
