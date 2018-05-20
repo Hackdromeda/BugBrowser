@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-118755267-1"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'UA-118755267-1');
+    </script>
+    <meta charset="utf-8">
+    <meta name="keywords" content="alexa, alexa skill, bug browser, bugbrowser, InfoSec, information security, security research, education, reference, bug, programming, hack, news, cybersecurity, breaches, tips, bug bounty">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="apple-touch-icon" sizes="57x57" href="/images/favicon/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="/images/favicon/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/images/favicon/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/images/favicon/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/images/favicon/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/images/favicon/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/images/favicon/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/images/favicon/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192"  href="/images/favicon/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="/images/favicon/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon/favicon-16x16.png">
+    <link rel="manifest" href="/images/favicon/manifest.json">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="/images/ms-icon-144x144.png">
+    <meta name="theme-color" content="#ffffff">
+    <meta http-equiv="refresh" content="10; url=https://github.com/as0218PUSD/BugBrowser/blob/master/README.md">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+
+    <title>Bug Browser - README</title>
+  </head>
+  <body style="background-color:#263238">
+    <nav class="navbar navbar-expand-lg navbar-light" style="background-color:#CFD8DC">
+        <a class="navbar-brand" style="color:#212121;" href="/">Bug Browser</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+          <div class="navbar-nav">
+            <a class="nav-item nav-link" href="/">Home</a>
+            <a class="nav-item nav-link" href="/enable">Enable Skill</a>
+            <a class="nav-item nav-link" href="/privacy">Privacy</a>
+            <a class="nav-item nav-link" href="/terms">Terms</a>
+            <a class="nav-item nav-link" href="/license">License</a>
+          </div>
+        </div>
+      </nav>
+    <div class="jumbotron jumbotron-fluid">
+        <div class="container">
+          <h3 id="license">
+            Redirecting to Bug Browser README after <span id="countdown">10</span> seconds
+          </h3>
+          <!-- JavaScript part -->
+          <script type="text/javascript">
+              
+              // Total seconds to wait
+              var seconds = 10;
+              
+              function countdown() {
+                  seconds = seconds - 1;
+                  if (seconds < 0) {
+                      // Chnage your redirection link here
+                      window.location = "https://github.com/as0218PUSD/BugBrowser/blob/master/README.md";
+                  } else {
+                      // Update remaining seconds
+                      document.getElementById("countdown").innerHTML = seconds;
+                      // Count down using javascript
+                      window.setTimeout("countdown()", 1000);
+                  }
+              }
+              // Redirect courtesy of https://gist.github.com/Joel-James/62d98e8cb3a1b6b05102
+              // Run countdown function
+              countdown();
+              
+          </script>
+        </div>
+    </div> 
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+  </body>
+</html>
