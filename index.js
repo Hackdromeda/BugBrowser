@@ -1908,7 +1908,7 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                         else{
                             output = bounty + " " + sanitizeInput(hackerOnePrograms[index].about.replace(/\n/g,' ')) + " That's not all! You can find more at " + "hackerone.com" + hackerOnePrograms[index].url + "."
                         }
-                        var speak = output + " See your Alexa app for the specific program requirements for " + cardTitle + "." + hearMoreMessage; // speak includes question.
+                        var speak = output + hearMoreMessage; // speak includes question. Open case later about card renderer not working with ElementSelected
                         this.attributes.lastSpeech = speak;
 
                         const imageObj = {
