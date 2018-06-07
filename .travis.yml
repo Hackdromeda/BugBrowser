@@ -9,4 +9,4 @@ env:
     - NEWS_KEY=0
     - NYT_KEY=0
 script:
-  yarn test
+  node index.js
