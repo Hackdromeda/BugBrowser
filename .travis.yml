@@ -1,12 +1,12 @@
 language: node_js
 node_js:
-  - 7
-  - 8.1
-  - lts/*
-cache:
-  yarn: true
+  - "8.1"
+  - "lts/*"
+  - "node"
 env:
   global:
     - BING_KEY=0
     - NEWS_KEY=0
     - NYT_KEY=0
+script:
+  yarn test
