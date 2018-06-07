@@ -1,4 +1,4 @@
-# Bug Browser #
+# Bug Browser  [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE.md) [![Build Status](https://travis-ci.org/as0218PUSD/BugBrowser.svg?branch=master)](https://travis-ci.org/as0218PUSD/BugBrowser)
 **Bug Browser provides information security, programming, and bug news, education, and reference all in one skill. Bug Browser will teach you how to hack, tell you what a specific bug is, check if you have been hacked, provide a comprehensive briefing on cybersecurity around the world, a list of recent breaches, security tips, information about bug bounty programs and bug bounty platforms, the BugCrowd VRT, active HackerOne programs, and active BugCrowd bounties as well as provide additional information on these bounties.**
 
 Developed in the Bay Area by Avi Shah and Naval Patel.
