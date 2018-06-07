@@ -9,4 +9,6 @@ env:
     - NEWS_KEY=0
     - NYT_KEY=0
 script:
-  node index.js
+  - node index.js
+  - node cacheFunctions index.js
+  - node cacheFunctions hacktivity.js
