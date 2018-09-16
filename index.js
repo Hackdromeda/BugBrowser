@@ -2965,6 +2965,7 @@ function describeSymbol(s) {
     s = s.replace(' - ', ' to ');
     s = s.replace(/-+/g,'-'); //Removes consecutive dashes
     s = s.replace(/ +(?= )/g,''); //Removes double spacing
+    s = s.replace('#', 'hash symbol')
 
     return s;
 }
