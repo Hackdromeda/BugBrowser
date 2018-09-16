@@ -1,4 +1,4 @@
-# Bug Browser  [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE.md) [![Build Status](https://travis-ci.org/as0218PUSD/BugBrowser.svg?branch=master)](https://travis-ci.org/as0218PUSD/BugBrowser)
+# Bug Browser  [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE.md) [![Build Status](https://travis-ci.org/Hackdromeda/BugBrowser.svg?branch=master)](https://travis-ci.org/Hackdromeda/BugBrowser)
 **Bug Browser provides information security, programming, and bug news, education, and reference all in one skill. Bug Browser will teach you how to hack, tell you what a specific bug is, check if you have been hacked, provide a comprehensive briefing on cybersecurity around the world, a list of recent breaches, security tips, information about bug bounty programs and bug bounty platforms, the BugCrowd VRT, active HackerOne programs, and active BugCrowd bounties as well as provide additional information on these bounties.**
 
 Developed in the Bay Area by Avi Shah and Naval Patel.
@@ -44,17 +44,15 @@ To learn more about hacker lexicon, [click here](https://us.norton.com/internets
 
 **Where did the idea come from?**
 
-We initially realized that there were very few skills for [security researchers](https://www.amazon.com/s/ref=nb_sb_noss_2?url=search-alias%3Dalexa-skills&field-keywords=Hacker) and [developers](https://www.amazon.com/s/ref=nb_sb_noss_2?url=search-alias%3Dalexa-skills&field-keywords=Developer) after meeting with the principal engineer and the community manager at BugCrowd at Los Altos Hacks III. They challenged us to create a skill that would a) inform them of active bug bounties, b) provide details about the specific bounties, and c) make their lives as security researchers easier in any other way.
+We started thinking about **relevant modern issues** *(more on that in the mission)* and arrived at: **information security, cybersecurity, security vulnerabilities, and bugs**. 
 
-When we started brainstorming about what it means for an Alexa skill to be a Life Hack and a Work From Home Hac", we wanted to create something with a greater purpose that is genuinely unique as well as useful for several audiences. We first thought about doing basic things, such as reference ([Wikipedia](https://www.amazon.com/Amazon-Wikipedia/dp/B0722X4JGT), eHow, [wikiHow](https://www.amazon.com/wikiHow/dp/B01NAI70T7/), WebMD, Yelp, and Amazon.com Search/Purchasing), list management (shopping list, grocery list, item location, inventory management, etc), alarms, music and video (Bing Video, Amazon Music, Spotify, [My Media](https://www.amazon.com/bizmodeller-My-Media/dp/B06XPP135L), [Plex](https://www.amazon.com/Plex-Inc/dp/B01NBB1INY/), etc), recurring reminders (bill payment, tasks, chores, etc), traffic calculator (commute, recurring stop, school, etc), calendar integrations (appointments, day-view manager, time-manager, native Outlook/Office 365/G Suite/Google/Microsoft Exchange personal, work, and school calendar linking, etc.), timers, budget tracking, phone management (send and receive phone calls and SMS, get phone battery percentage, modify settings, and see notifications), or house management (smart home, routines, inventory/item location manager, and lists); **however, there are already several skills that do this well and/or Alexa already includes some of this functionality natively.**
+We see the value in **connecting security researchers (white-hat hackers who find bugs and ethically report them to companies) with bug bounties** and the everyday benefits they offer because preventing even one security vulnerability can save a company its reputation and unparalleled amounts of money. At the same time, each bounty rewards the security researchers who find the bugs (more in *"Why Bug Bounties?"*). Expanding beyond an audience of over 200,000 unsung ethical cyber warriors, we also tried to remove pain points for developers and the average user. 
 
-And so we started thinking about **relevant modern issues** *(more on that in mission)* and arrived at: **information security, cybersecurity, security vulnerabilities, and bugs**. We see the value in connecting security researchers (white-hat hackers who find bugs and ethically report them to companies) with bug bounties and the everyday benefits they offer because preventing even one security vulnerability can save a company its reputation and unparalleled amounts of money. At the same time, each bounty rewards the security researchers who find the bugs (more in *"Why Bug Bounties?"*). Expanding beyond an audience of over 200,000 unsung ethical cyber warriors, we also tried to remove pain points for developers and the average user. The average user should be able to ask to see if they've been hacked, what they can do after being hacked, and check on the latest list of breaches or general cybersecurity news. Developers should be able to ask complex programming questions and get an answer from the StackOverflow question and answer library without making their query robotic. These features are a real win-win for all types of users and makes the world a better place while providing the user convenience and saving them time. And so we built what is now Bug Browser keeping these features and user experience in mind.
+**The average user should be able to ask to see if they've been hacked, what they can do after being hacked, and check on the latest list of breaches or general cybersecurity news.** 
 
-**What motivated you?**
+**Developers should be able to ask complex programming questions and get an answer from the StackOverflow question and answer library without making their query robotic.**
 
-We wanted to tap the [over 166,000](https://www.hackerone.com/sites/default/files/2018-01/2018_Hacker_Report.pdf) registered ethical hackers on HackerOne (as of December 2017) and the [over 80,400](https://bugcrowd.com/programs) registered security researchers on BugCrowd and hundreds of thousands of developers who do not have many skills meant to help them with their work from home or programming passions. We also wanted to make the skill applicable to the general public.
-
-These are the crowdsourced heroes who help keep our data safe. **One thing we hate the most** is losing our precious data to black hat hackers or cyber criminals as a result of undiscovered security vulnerabilities. Companies such as Facebook and Equifax could have benefitted from larger exposure to their existing bug bounty programs or new bug bounty programs. **This is one of the places where our skill comes in, it gives larger exposure to public bug bounty programs with an emphasis on new ones (newest bounties sorted to front).**
+These features are a real win-win for all types of users and makes the world a better place while providing the user convenience and saving them time. And so we built what is now Bug Browser keeping these features and user experience in mind.
 
 ## Mission
 
@@ -63,13 +61,28 @@ These are the crowdsourced heroes who help keep our data safe. **One thing we ha
 A large part of our days now revolve around devices and being connected to the internet. Customers have come to expect security and confidence in the company handling their data. Even the best developers in the world can leave security vulnerabilities open in their applications. Platforms such as BugCrowd and HackerOne make it easier for security researchers to get connected with companies and allow companies to reach a vast network of researchers. Breaches and security vulnerabilities are expensive to recover from, much more expensive than the few-thousand-dollar reward hackers receive for their finding(s). Facebook, Equifax, Intel, 24/7 AI, eBay, Home Depot, Target, and a handful of other companies have experienced security breaches as a result of vulnerabilities exploited by black hat hackers and their reputations have suffered as a result.
 
 ## Use Cases
+*What does the Alexa skill do?*
+
+#### Connect security researchers with bug bounties
+
+#### Help developers fix bugs and security flaws in their code
+
+#### Help users keep their data secure and find out if their data has been leaked or stolen and suggest action upon the discovery of data loss
+
+#### Keep users in the loop about recent breaches through the news, even if Bug Browser is unsure they are affected
+
+#### Make users aware of preventative measures that can reduce risk of future data loss
+
+#### Help get more people interested in security research and bug bounty hunting and inspire developers to secure their own applications through a comprehensive lesson plan in security research
+
 *Who is this Alexa skill for?*
+Each group of individuals can use Bug Browser in a unique way.
 
 **1. General Public** - *All customers and clients value their private data. As such, they expect the company entrusted with their data to do everything in their power to protect that data. Now more than ever, breaches of customer data are a common occurrence. Users should not, however, become desensitized or numb to such news but rather proactively take action to protect their data.* - **Bug Browser can help anyone keep up-to-date on the latest news about security vulnerabilities, hacks, and other cybersecurity issues.**
 
   - **How does this skill provide convenience, save time, and improve the lives of the general public?**
     - **Bug Browser provides focused news on the topic of cybersecurity and a list of security breaches.** In today's fast paced news cycle, not everyone in the public is made aware of hacks and vulnerabilities that affect them.
-    - **Bug Browser can also check for security breaches that may have resulted in a users data being lost by getting a users email from account linking.** Users who learn they are affected by a security breach through Bug Browser can then take proactive steps to prevent further losses by changing their password, freezing their credit reports, activating identity protection services, canceling their credit cards, updating their computer or device software, and/or using 2-factor authentication which Bug Browser can teach users about. 
+    - **Bug Browser can also check for security breaches** that may have resulted in a users data being lost by getting a users email from account linking. Users who learn they are affected by a security breach through Bug Browser can then take proactive steps to prevent further losses by changing their password, freezing their credit reports, activating identity protection services, canceling their credit cards, updating their computer or device software, and/or using 2-factor authentication which Bug Browser can teach users about. 
  - **Bug Browser's security tips** ultimately can save the general public from the headaches of recovering lost accounts and data, reversing unauthorized transactions, and more with its proactive steps before the lost data is abused by black-hat hackers and people on the black market.
 
 **2. Developers** - *Developers who have experience with code, computers, and other fields of computer science but are not focused on hacking, cybersecurity, or security research as a career or hobby* - **Bug Browser can introduce developers to the importance of bug bounties and bug bounty platforms and ask advanced programming questions.**
@@ -105,7 +118,7 @@ When we started the skill we had not even thought about users who had displays l
 
 From the early stages of Bug Browser, our team had agreed on a few basic design principles that would increase the efficiency and reliability of Bug Browser. One of the most important of these principles was the use of asynchronous request for HTTP GET requests because it is the best practice to avoid blocking the main thread whenever possible. We used the request-promise Node.js module for writing asynchronous requests that would retrieve image assets, JSON, and other data that would be parsed with the Cheerio module for Node.js.
 
-**3. Context**
+**3. Context Maintenance**
 
 Alexa is a smart, conversational AI that, just like any human being, needs context in order to interpret speech and respond to a user query. Not only does Alexa require context, but it also needs to be able to remember session details that would help with routing requests to the correct destination. We implemented a system of context organization that would be able to determine the last intent a user was routed to and used it for page navigation between programs lists and program pages as well as news lists and news pages.
 
@@ -123,7 +136,7 @@ To improve user experience we enabled intents such as `AMAZON.RepeatIntent` shou
 
 Bug Browser consumes several APIs in order to provide users with accurate and reliable information. One of the challenges that came with developing an API consuming application was ensuring that Bug Browser was responsive and usable without making the user wait too long for a response. One of the ways we achieved this goal was using using [bluebird](https://www.npmjs.com/package/bluebird) to run several API calls in parallel. In order to mitigate the latency when consuming APIs, we heavily employed the use of an advanced caching system that uses AWS Lambda and S3 storage. We developed new accelerated Lambda functions specifically designed for caching with S3 storage. These functions periodically retrieve data from the APIs Bug Browser uses and stores them in S3 objects (JSON format) in an S3 bucket. The advantages of developing a cache system with AWS Lambda, AWS S3 Object Storage, and AWS S3 Transfer Acceleration are very noticeable because the latency for some API responses have dropped from as much as over 4900ms to just under 200ms. User experience was one of our primary concerns and we made sure to do our best to make Bug Browser feel great for everyday use. 
 
-We are reducing the response times even further by deploying Bug Browser on AWS Lambda in the following regions:
+We are **reducing the response times** even further by deploying Bug Browser on AWS Lambda in the following regions:
 - Asia Pacific (Tokyo)
 - EU (Ireland)
 - US East (N. Virginia)
@@ -157,7 +170,7 @@ To ensure a flawless user experience regardless of the user device, we used virt
 
 [Have I Been Pwned](https://haveibeenpwned.com/API/v2) - Have I Been Pwned helps us find out about data breaches that have leaked your email and other information as well as about recent security breaches that have affected large amounts of people.
 
-[Bing Cognitive Services Web Search API](https://azure.microsoft.com/en-us/services/cognitive-services/bing-web-search-api/) - Bing Web Search helps us traverse StackOverflow and aprocess natural language inputs.
+[Google Custom Search APIs](https://developers.google.com/custom-search/) - Google Custom Search helps us traverse StackOverflow and process natural language inputs.
 
 [StackExchange API](https://api.stackexchange.com/docs) - StackExchanges's StackOverflow is a popular forum for developers and helps us find information about your bug questions and inquiries.
 
@@ -173,7 +186,13 @@ General
 Learn about bugs including those in your own code (powered by StackOverflow answers)
   * Try, *Alexa ask Bug Browser to search for bug ArrayOutOfBounds exception*  
   * Try, *Alexa ask Bug Browser to search for bug NullPointerException exception*  
-  * Try, *Alexa ask Bug Browser to search for how to loop through an array in Java*  
+  * Try, *Alexa ask Bug Browser to search for how to loop through an array in Java*
+  * Try, *Alexa ask Bug Browser, how do I create a website in VueJS*
+*Not all StackOverflow answers will be helpful or work. Bug Browser will accept feedback and try to find the next best answer. **After you've asked a question, you can say:** *
+  * Try, *Alexa, that answer was not helpful*  
+  * Try, *Alexa, that did not work*  
+  * Try, *Alexa, next answer* 
+  * Try, *Alexa, previous answer* 
 
 Learn about security breaches and ones that may affect you
   * Try, *Alexa ask Bug Browser, have I been hacked?* (Account Linking Required)
@@ -230,7 +249,7 @@ Learn about the Vulnerability Rating Taxonomy (VRT) and vulnerability priorities
 Learn about HTTP status codes
   * Try, *Alexa ask Bug Browser to list HTTP status codes*
 
-Learn about cybersecurity through video tutorials (Echo Spot and Echo Show only)
+Learn about cybersecurity through video tutorials (Fire Tablet*, Echo Spot and Echo Show only)
   * Try, *Alexa ask Bug Browser to teach me how to hack*
   * Try, *Alexa ask Bug Browser to play the lesson introduction video*
   * Try, *Alexa ask Bug Browser to play lesson {number}*
@@ -249,15 +268,19 @@ Learn about cybersecurity through video tutorials (Echo Spot and Echo Show only)
   * Try, *Alexa ask Bug Browser to teach me about stream cipher key reuse*
   * Try, *Alexa ask Bug Browser to teach me about ECB mode*
 
+*Fire Tablet must support [Show Mode](https://www.amazon.com/gp/help/customer/display.html?nodeId=G3JEMFDNH3FPB4XS)
+
 ## Coming Soon:
-* Asking for program details by name so user can ask for details about the program without asking for the latest list of programs.
+*Pending API, SDK, and/or Platform Support*
+* Asking for program details by name so user can ask for details about the program without asking for the latest list of programs (Awaiting API Support)
 * Video Queue (Awaiting SDK Support)
-* Confirm Choices *ex. Did you say you want more details about program Netflix?*
 * Highlight text and automatically switch cards for Display Interface (Awaiting SDK Support)
 * Font color customized (Awaiting SDK Support)
 * Notifications on your watch list of programs (Notifications SDK is Invite-Only for Alexa)
-* Remove message on enabling that account linking is required as it is only needed for one intent (Awaiting platform support)
-* We, the developers of Bug Browser, support open source software and will be open sourcing the entire project under the MIT license on GitHub after the conclusion of the Alexa Life Hacks challenge.
+*In The Works*
+* Improve detail and response time for news articles and optimize support across all Alexa devices
+* Confirm Choices *ex. Did you say you want more details about program Netflix?*
+* More advanced use of account linking (to link more social profiles and enter more emails to check)
 
 # Built With
 * [Node.js](https://nodejs.org/en/)
@@ -269,10 +292,12 @@ Learn about cybersecurity through video tutorials (Echo Spot and Echo Show only)
 * AWS Lambda
 * AWS S3 Object Storage and Transfer Acceleration
 * AWS Identity and Access Management
-and [over 30 more dependancies](https://github.com/as0218PUSD/BugBrowser/network/dependencies)
+and [over 30 more dependencies](https://github.com/Hackdromeda/BugBrowser/network/dependencies)
 
 # Legal
 We are developers, not legal experts. If you own any of the images or content we use and would like it removed for any reason, feel free to open an issue through the Alexa App or on GitHub. We will promptly act on your request. This skill is not affiliated with or endorsed by HackerOne, BugCrowd, or any of their affiliates. All product names, logos, and brands are property of their respective owners. All company, product and service names used in this website are for identification purposes only. Use of these names, logos, and brands does not imply endorsement.
+
+For our terms of use, privacy policy, credits, contributors, and more see our [website](bugbrowser.net) or the following files:
 
 ## License
 This project is licensed under the MIT License. See the [LICENSE](LICENSE.md) for details.
