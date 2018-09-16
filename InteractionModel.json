@@ -194,7 +194,7 @@
                     "name": "getProgramsIntent",
                     "slots": [],
                     "samples": [
-                        " how do you find bounties",
+                        "how do you find bounties",
                         "how can I earn money",
                         "what companies are looking for security researchers",
                         "how do I earn money",
@@ -300,7 +300,12 @@
                 },
                 {
                     "name": "AMAZON.NextIntent",
-                    "samples": []
+                    "samples": [
+                        "next answer",
+                        "that did not help me",
+                        "that answer did not help",
+                        "unrelated answer"
+                    ]
                 },
                 {
                     "name": "AMAZON.PageUpIntent",
@@ -312,7 +317,9 @@
                 },
                 {
                     "name": "AMAZON.PreviousIntent",
-                    "samples": []
+                    "samples": [
+                        "previous answer"
+                    ]
                 },
                 {
                     "name": "AMAZON.ScrollRightIntent",
@@ -643,7 +650,16 @@
                         "what is bug {bug}",
                         "search for bug {bug}",
                         "find the solution for {bug}",
-                        "tell me about bug {bug}"
+                        "tell me about bug {bug}",
+                        "how do you {bug}",
+                        "what is the best way to {bug}",
+                        "how do I add {bug}",
+                        "{bug} is not working",
+                        "why is {bug}",
+                        "what does {bug} mean",
+                        "how to {bug}",
+                        "how do I {bug}",
+                        "tell me how to {bug}"
                     ]
                 },
                 {
