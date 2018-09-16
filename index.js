@@ -2708,7 +2708,14 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
         var self = this;
         var hasDisplay = this.event.context.System.device.supportedInterfaces.Display;
         if(this.event && this.event.request && this.event.request.intent && this.event.request.intent.slots && this.event.request.intent.slots.bug && this.event.request.intent.slots.bug.value && this.event.request.intent.slots.bug.value != null && this.event.request.intent.slots.bug.value.length > 1){
-            var bug = this.event.request.intent.slots.bug.value;
+            var bug;
+            if(this.event.request.intent.slots.bug.value != null){
+                bug = self.event.request.intent.slots.bug.value;
+                self.attributes.lastQuestion = bug;
+            }
+            else{
+                bug = self.attributes.lastQuestion;
+            }
             var searchUrl = "stackoverflow.com";
             var cardTitle = "Bug Search";
             var speak = "";
@@ -2722,21 +2729,26 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
             }).then((body) => {
                 var id = '';
                 var hostName = '';
+                var idList = [];
+                var linkList = [];
 
                 for (var i = 0; i < body.items.length; i++) {
                     var link = body.items[i].link;
                     console.log('Possible url ' + link);
                     if (link != null && !link.includes("tagged") && !link.includes("tags")) {
-                        var possibleIdArray = link.match(/\/questions\/(\d+)\//);
-                        if (possibleIdArray) {
-                            answersAvailable = possibleIdArray.length;
-                            id = possibleIdArray[currentAnswer];
+                        var possibleId = link.match(/\/questions\/(\d+)\//);
+                        if (possibleId != null && possibleId[1] != null) {
+                            idList.push(possibleId[1])
                             hostName = extractHostname(link);
                             hostName = hostName.substring(0, hostName.lastIndexOf('.'));
+                            linkList.push(hostName);
                         }
-                        break;
                     }
                 }
+
+                answersAvailable = idList.length;
+                id = idList[currentAnswer];
+                hostName = linkList[currentAnswer];
 
                 var url = 'https://api.stackexchange.com/2.2/questions/' + id + '/answers?order=desc&sort=votes&site=' + hostName + '&filter=!9Z(-wzu0T';
                 console.log('URL: ' + url);
@@ -2744,7 +2756,7 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                     method: 'GET',
                     uri: url,
                     headers: {
-                    'Accept-Encoding': 'gzip, deflate'
+                        'Accept-Encoding': 'gzip, deflate'
                     },
                     gzip: true
                 };
