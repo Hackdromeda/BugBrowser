@@ -1,5 +1,5 @@
 # Privacy Policy
-The Privacy Policy was last updated on May 19, 2018. Bug Browser and its developers may without notice to you and at its sole discretion, amend this policy. Please review this policy from time to time. 
+The Privacy Policy was last updated on September 16, 2018. Bug Browser and its developers may without notice to you and at its sole discretion, amend this policy. Please review this policy from time to time. 
 
 **Bug Browser can collect the following information and/or perform the following actions:**
 
@@ -11,7 +11,7 @@ The Privacy Policy was last updated on May 19, 2018. Bug Browser and its develop
     * [Have I Been Pwned](https://haveibeenpwned.com/API/v2) receives your email address to check for any security vulnerabilities or flaws that exposed your data.
     * [Alexa List API](https://developer.amazon.com/alexa-skills-kit/shopping-and-to-do-lists) receives the programs you want to save to your Alexa list.
     * [News API](https://newsapi.org/docs) does not receive any personal information.
-    * [Bing Web Search API](https://azure.microsoft.com/en-us/services/cognitive-services/bing-web-search-api/) receives your query which may include any personal information you speak.
+    * [Google Custom Search API](https://developers.google.com/custom-search/) receives your query which may include any personal information you speak.
     * [StackExchange API](https://api.stackexchange.com/docs) does not receive any personal information.
 
 We are committed to protecting the privacy and confidentiality of Bug Browser users' private data. We may have to provide personal information, which would be limited to any logs on AWS CloudWatch, to comply with any requests from authorities in the region you are connected to. You are connected to AWS Lambda based on your region. Bug Browser is hosted in the following regions: Asia Pacific (Tokyo), EU (Ireland), US East (N. Virginia), and US West (Oregon). Any logs and data is stored on AWS CloudWatch in that same region. If you have any questions about our data collection policies and methods, please use the contact information below.
