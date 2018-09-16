@@ -330,6 +330,10 @@ var hackerOneMax = 25;
 
 var hackerOneTotal = 100;
 
+var currentAnswer = 0;
+
+var answersAvailable = 0;
+
 var output = "";
 
 var alexa;
@@ -2193,6 +2197,15 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
             }
             this.emit('getHackerOneIntent');
         }
+        else if(this.attributes.lastAction == "bugSearchIntent"){
+            if(currentAnswer + 1 < answersAvailable){
+                currentAnswer++;
+            }
+            else{
+                currentAnswer = 0;
+            }
+            this.emit('bugSearchIntent');
+        }
         else{
             output = "There are no additional pages. " + HelpMessage;
             this.emit(':ask', output, HelpMessage);
@@ -2216,6 +2229,15 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                 hackerOneMax = limit;
             }
             this.emit('getHackerOneIntent');
+        }
+        else if(this.attributes.lastAction == "bugSearchIntent"){
+            if(currentAnswer - 1 >= 0){
+                currentAnswer--;
+            }
+            else{
+                currentAnswer = answersAvailable - 1;
+            }
+            this.emit('bugSearchIntent');
         }
         else{
             output = "There are no previous pages. " + HelpMessage;
@@ -2682,7 +2704,7 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
             });
     },
     'bugSearchIntent': function () {
-        this.attributes.lastAction = null;
+        this.attributes.lastAction = "bugSearchIntent";
         var self = this;
         var hasDisplay = this.event.context.System.device.supportedInterfaces.Display;
         if(this.event && this.event.request && this.event.request.intent && this.event.request.intent.slots && this.event.request.intent.slots.bug && this.event.request.intent.slots.bug.value && this.event.request.intent.slots.bug.value != null && this.event.request.intent.slots.bug.value.length > 1){
@@ -2690,25 +2712,27 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
             var searchUrl = "stackoverflow.com";
             var cardTitle = "Bug Search";
             var speak = "";
+            var url = "https://www.googleapis.com/customsearch/v1/siterestrict?q=" + bug + "&cx=" + process.env.CSE_CODE + "&key=" + process.env.GOOGLE;
 
-            Bing.web(bug +  ' site:' + searchUrl, {
-                count: 5
-            }, function(error, res, body){
-
+            rp({
+                uri: url,
+                transform: function (body) {
+                    return JSON.parse(body);
+                }
+            }).then((body) => {
                 var id = '';
-                var rootDomain = '';
                 var hostName = '';
 
-                for (var i = 0; i < body.webPages.value.length; i++) {
-                    console.log('Possible url ' + body.webPages.value[i].url);
-                    if (body.webPages.value[i].url != null && !body.webPages.value[i].url.includes("tagged") && !body.webPages.value[i].url.includes("tags")) {
-                        var possibleIdArray = body.webPages.value[i].url.match(/\/questions\/(\d+)\//);
+                for (var i = 0; i < body.items.length; i++) {
+                    var link = body.items[i].link;
+                    console.log('Possible url ' + link);
+                    if (link != null && !link.includes("tagged") && !link.includes("tags")) {
+                        var possibleIdArray = link.match(/\/questions\/(\d+)\//);
                         if (possibleIdArray) {
-                            id = possibleIdArray[1];
-                            rootDomain = extractRootDomain(body.webPages.value[i].url); // unnecessary since it keeps .com
-                            hostName = extractHostname(body.webPages.value[i].url);
+                            answersAvailable = possibleIdArray.length;
+                            id = possibleIdArray[currentAnswer];
+                            hostName = extractHostname(link);
                             hostName = hostName.substring(0, hostName.lastIndexOf('.'));
-
                         }
                         break;
                     }
