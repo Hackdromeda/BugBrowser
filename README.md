@@ -188,7 +188,8 @@ Learn about bugs including those in your own code (powered by StackOverflow answ
   * Try, *Alexa ask Bug Browser to search for bug NullPointerException exception*  
   * Try, *Alexa ask Bug Browser to search for how to loop through an array in Java*
   * Try, *Alexa ask Bug Browser, how do I create a website in VueJS*
-*Not all StackOverflow answers will be helpful or work. Bug Browser will accept feedback and try to find the next best answer. **After you've asked a question, you can say:** *
+
+Not all StackOverflow answers will be helpful or work. Bug Browser will accept feedback and try to find the next best answer. *After you've asked a question, you can say:*
   * Try, *Alexa, that answer was not helpful*  
   * Try, *Alexa, that did not work*  
   * Try, *Alexa, next answer* 
