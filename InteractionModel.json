@@ -129,6 +129,7 @@
                     "name": "getNewsIntent",
                     "slots": [],
                     "samples": [
+                        "what is news",
                         "flash briefing",
                         "cybersecurity news",
                         "give me a flash briefing on hacks",
@@ -301,6 +302,13 @@
                 {
                     "name": "AMAZON.NextIntent",
                     "samples": [
+                        "that did not work",
+                        "show me another answer",
+                        "not useful",
+                        "try again",
+                        "that did not help",
+                        "that didn't help",
+                        "that answer didn't help",
                         "next answer",
                         "that did not help me",
                         "that answer did not help",
@@ -362,6 +370,8 @@
                         }
                     ],
                     "samples": [
+                        "method of hacking",
+                        "how to hack",
                         "teach me the ways of hacking",
                         "train me in hacking",
                         "give me security training",
@@ -394,6 +404,7 @@
                     "name": "registerBugCrowd",
                     "slots": [],
                     "samples": [
+                        "how to use bugcrowd",
                         "how do you register for bugcrowd",
                         "how do you use bugcrowd",
                         "Teach me how to use bugcrowd"
@@ -659,7 +670,9 @@
                         "what does {bug} mean",
                         "how to {bug}",
                         "how do I {bug}",
-                        "tell me how to {bug}"
+                        "tell me how to {bug}",
+                        "should I {bug}",
+                        "what is {bug}"
                     ]
                 },
                 {
