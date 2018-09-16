@@ -2748,17 +2748,20 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
 
                     response = response.replace(/<code>(.*?)<\/code>/g, '');
                     response = response.replace(/<(.|\n)*?>/g, '');
-                    response = sanitizeInput(response);
+                    var descriptiveResponse = describeSymbol(response);
+                    response = escapeCharacter(response);
                     response = 'Here is a possible solution to your problem or inquiry from StackOverflow about ' + bug + '. \n \n ' + response;
+                    descriptiveResponse = 'Here is a possible solution to your problem or inquiry from StackOverflow about ' + bug + '. \n \n ' + response;
 
                     if (response == null || response.length == 0 || response.length == '') {
                         response = 'No search results have been found.';
                     }
-                    speak = response + " What else would you like me to do?";
+                    speak = descriptiveResponse + " What else would you like me to do?";
                     const imageObj = {
                         smallImageUrl:'https://s3.amazonaws.com/bugbrowser/images/Bug-Bracket.jpg',
                         largeImageUrl: 'https://s3.amazonaws.com/bugbrowser/images/Bug-Bracket.jpg'
                     };
+
                     if (hasDisplay) {
                         const builder = new Alexa.templateBuilders.BodyTemplate1Builder();
                         const template = builder.setTitle(cardTitle)
@@ -2878,6 +2881,70 @@ function sanitizeInput(s) {
     s = s.replace(' - ', ' to ');
     s = s.replace(/-+/g,'-'); //Removes consecutive dashes
     s = s.replace(/ +(?= )/g,''); //Removes double spacing
+
+    return s;
+}
+
+function describeSymbol(s) {
+    s = s.replace('&lt;', ' less than ');
+    s = s.replace('&gt;', ' greater than ');
+    s = s.replace('&#60;', ' less than ');
+    s = s.replace('&#62;', ' greater than ');
+    s = s.replace('&#34;', ' double quotes ');
+    s = s.replace('&quot;', ' double quotes ');
+    s = s.replace('&quot', ' double quotes ');
+    s = s.replace('&apos;', ' single quote ');
+    s = s.replace('&apos', ' single quote ');     
+    s = s.replace('&#39;', ' single quote ');
+    s = s.replace('&#162;', ' cents ');
+    s = s.replace('&#36;', ' dollar sign ');
+    s = s.replace('&#36', ' dollar sign ');
+    s = s.replace('&#35;', ' number sign');
+    s = s.replace('&#35', ' number sign ');
+    s = s.replace('&#44;', ' comma ');
+    s = s.replace('&#44', ' comma ');
+    s = s.replace('&#33;', ' exclamation point ');
+    s = s.replace('&#33', ' exclamation point ');
+    s = s.replace('&#47;', ' slash ');
+    s = s.replace('&#47', ' slash ');
+    s = s.replace('&#46;', ' period ');
+    s = s.replace('&#46', ' period ');
+    s = s.replace('&#43;', ' plus sign ');
+    s = s.replace('&#43', ' plus sign ');
+    s = s.replace('&#45;', ' minus sign ');
+    s = s.replace('&#45', ' minus sign ');
+    s = s.replace('&#40;', ' open parenthesis ');
+    s = s.replace('&#40', ' open parenthesis ');
+    s = s.replace('&#41;', ' close parenthesis ');
+    s = s.replace('&#41;', ' close parenthesis ');
+    s = s.replace('&#169;', ' copyright');
+    s = s.replace('&copy;', ' copyright');
+    s = s.replace('&reg;', ' registered trademark');
+    s = s.replace('&#174;', ' registered trademark');
+    s = s.replace('&#162;', ' cents');
+    s = s.replace('&amp;', ' and');
+    s = s.replace('http://', '');
+    s = s.replace('https://', '');
+    s = s.replace(/&/g, 'and');
+    s = s.replace(/\*/g, '\n\n *');
+    s = s.replace(/[~#^_|<>\\]/gi, '');
+    s = s.replace(' - ', ' to ');
+    s = s.replace(/-+/g,'-'); //Removes consecutive dashes
+    s = s.replace(/ +(?= )/g,''); //Removes double spacing
+
+    return s;
+}
+
+function escapeCharacter(s) {
+    s = s.replace(/<code>(.*?)<\/code>/g, '');
+    s = s.replace(/<(.|\n)*?>/g, '');
+    s = s.replace('&', '&amp;');
+    s = s.replace('"', '&quot;');
+    s = s.replace("'", '&apos;');
+    s = s.replace('<', '&lt;');
+    s = s.replace('>', '&gt;');
+    s = s.replace('\\', '\\\\');
+    s = s.replace(" ", "&#160;");
 
     return s;
 }
