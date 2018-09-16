@@ -8,7 +8,6 @@ const rp = require('request-promise');
 const Bluebird = require('bluebird');
 const _ = require('lodash')
 const alexaLists = require('@blazingedge/alexa-lists');
-const Bing = require('node-bing-api')({ accKey: process.env.BING_KEY });
 
 var states = {
     SEARCHMODE: '_SEARCHMODE'
@@ -2707,7 +2706,7 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
         this.attributes.lastAction = "bugSearchIntent";
         var self = this;
         var hasDisplay = this.event.context.System.device.supportedInterfaces.Display;
-        if(this.event && this.event.request && this.event.request.intent && this.event.request.intent.slots && this.event.request.intent.slots.bug && this.event.request.intent.slots.bug.value && this.event.request.intent.slots.bug.value != null && this.event.request.intent.slots.bug.value.length > 1){
+        if(this.event && this.event.request && this.event.request.intent && (this.event.request.intent.slots && this.event.request.intent.slots.bug && this.event.request.intent.slots.bug.value && this.event.request.intent.slots.bug.value != null && this.event.request.intent.slots.bug.value.length > 1) || (this.attributes.lastQuestion != null && this.attributes.lastQuestion.length > 1)) {
             var bug;
             if(this.event.request.intent.slots.bug.value != null){
                 bug = self.event.request.intent.slots.bug.value;
@@ -2716,7 +2715,6 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
             else{
                 bug = self.attributes.lastQuestion;
             }
-            var searchUrl = "stackoverflow.com";
             var cardTitle = "Bug Search";
             var speak = "";
             var url = "https://www.googleapis.com/customsearch/v1/siterestrict?q=" + bug + "&cx=" + process.env.CSE_CODE + "&key=" + process.env.GOOGLE;
@@ -2786,8 +2784,8 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                     response = response.replace(/<(.|\n)*?>/g, '');
                     var descriptiveResponse = describeSymbol(response);
                     response = escapeCharacter(response);
-                    response = 'Here is a possible solution to your problem or inquiry from StackOverflow about ' + bug + '. \n \n ' + response;
                     descriptiveResponse = 'Here is a possible solution to your problem or inquiry from StackOverflow about ' + bug + '. \n \n ' + response;
+                    response = 'Here is a possible solution to your problem or inquiry from StackOverflow about ' + bug + '. \n \n ' + response;
 
                     if (response == null || response.length == 0 || response.length == '') {
                         response = 'No search results have been found.';
