@@ -2895,10 +2895,15 @@ function isSimulator() {
 
 function sanitizeInput(s) {
     s = s.replace('&lt;', 'less than');
+    s = s.replace('&lt', 'less than');
     s = s.replace('&gt;', 'greater than');
+    s = s.replace('&gt', 'greater than');
     s = s.replace('&#60;', 'less than');
+    s = s.replace('&#60', 'less than');
     s = s.replace('&#62;', 'greater than');
+    s = s.replace('&#62', 'greater than');
     s = s.replace('&#34;', '');
+    s = s.replace('&#34', '');
     s = s.replace('&quot;', '');
     s = s.replace('&quot', '');
     s = s.replace('&apos;', '');
