@@ -2708,12 +2708,16 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
         var hasDisplay = this.event.context.System.device.supportedInterfaces.Display;
         if(this.event && this.event.request && this.event.request.intent && (this.event.request.intent.slots && this.event.request.intent.slots.bug && this.event.request.intent.slots.bug.value && this.event.request.intent.slots.bug.value != null && this.event.request.intent.slots.bug.value.length > 1) || (this.attributes.lastQuestion != null && this.attributes.lastQuestion.length > 1)) {
             var bug;
-            if(this.event.request.intent.slots.bug.value != null){
+            if(this.event.request.intent.slots && this.event.request.intent.slots.bug && this.event.request.intent.slots.bug.value && this.event.request.intent.slots.bug.value != null && this.event.request.intent.slots.bug.value.length > 1){
                 bug = self.event.request.intent.slots.bug.value;
                 self.attributes.lastQuestion = bug;
             }
             else{
                 bug = self.attributes.lastQuestion;
+            }
+            if(bug == null){
+                output = "Sorry I did not get that. Could you please repeat your search inquiry? For example, you can say: search for how to fix null pointer exception in Java.";
+                self.emit(':ask', output, HelpMessage)
             }
             var cardTitle = "Bug Search";
             var speak = "";
