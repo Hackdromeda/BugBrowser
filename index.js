@@ -2806,7 +2806,7 @@ var startSearchHandlers = Alexa.CreateStateHandler(states.SEARCHMODE, {
                                                 .setToken('bugSearchIntentToken')
                                                 .setBackButtonBehavior('VISIBLE')
                                                 .setBackgroundImage(makeImage('https://s3.amazonaws.com/bugbrowser/images/Bug-Window-Dark.png'))
-                                                .setTextContent(makeRichText('<font size="3">' + response + '</font>'))
+                                                .setTextContent(makeRichText('<font size="3">' + _.escapeRegExp(response) + '</font>'))
                                                 .build();
                         self.attributes.lastSpeech = speak;
                         self.response.speak(speak).renderTemplate(template).cardRenderer(cardTitle, response, imageObj).listen(HelpMessage);
