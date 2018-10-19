@@ -2922,6 +2922,8 @@ function sanitizeInput(s) {
     s = s.replace(/\*/g, '\n\n *');
     s = s.replace(/[~#^_|<>\\]/gi, '');
     s = s.replace(' - ', ' to ');
+    s = s.replace("‘", "'");
+    s = s.replace("’", "'");
     s = s.replace(/-+/g,'-'); //Removes consecutive dashes
     s = s.replace(/ +(?= )/g,''); //Removes double spacing
 
@@ -2989,6 +2991,8 @@ function escapeCharacter(s) {
     s = s.replace(/<(.|\n)*?>/g, '');
     s = s.replace('&', '&amp;');
     s = s.replace('"', '&quot;');
+    s = s.replace("‘", '&apos;');
+    s = s.replace("’", '&apos;');
     s = s.replace("'", '&apos;');
     s = s.replace('<', '&lt;');
     s = s.replace('>', '&gt;');
